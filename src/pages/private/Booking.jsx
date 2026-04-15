@@ -1,0 +1,186 @@
+import React, { useState } from "react";
+import Flatpickr from "react-flatpickr";
+import "flatpickr/dist/themes/light.css";
+import { bookingAPI } from "../../service/api";
+import { useToast } from "../../context/ToastContext";
+
+const Booking = () => {
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    date: "",
+    time: "",
+    guests: 1,
+  });
+
+  const [loading, setLoading] = useState(false);
+  const { showToast } = useToast();
+
+  const handleChange = (e) => {
+    setForm((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleDateChange = ([date]) => {
+    setForm((prev) => ({ ...prev, date }));
+  };
+
+  const handleTimeChange = ([time]) => {
+    setForm((prev) => ({ ...prev, time }));
+  };
+
+  // ================= SUBMIT =================
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // ❌ validation BEFORE API
+    if (!form.name || !form.phone || !form.date || !form.time) {
+      showToast("error", "Please fill all required fields");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const booking_date = new Date(form.date).toLocaleDateString("en-CA");
+
+      const booking_time = new Date(form.time).toLocaleTimeString("en-GB", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      await bookingAPI.create({
+        name: form.name,
+        phone: form.phone,
+        booking_date,
+        booking_time,
+        guests: form.guests,
+      });
+
+      showToast("success", "Table booked successfully 🎉");
+
+      // reset form
+      setForm({
+        name: "",
+        phone: "",
+        date: "",
+        time: "",
+        guests: 1,
+      });
+
+    } catch (err) {
+      const msg =
+        err.response?.data?.message ||
+        "Failed to book table. Please try again.";
+
+      showToast("error", msg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <section className="booking-page">
+
+      {/* HERO */}
+      <div className="booking-hero">
+        <h1 className="h1">Book A Table</h1>
+        <p className="body-md">
+          We consider all the drivers of change gives you the components you need to change to create a truly happens.
+        </p>
+      </div>
+
+      {/* FORM */}
+      <div className="booking-card-wrapper">
+
+        <form className="booking-card" onSubmit={handleSubmit}>
+
+          {/* DATE + TIME */}
+          <div className="field-row">
+
+            <div className="field date-picker">
+              <label>Date</label>
+              <Flatpickr
+                options={{
+                  dateFormat: "Y-m-d",
+                  minDate: "today",
+                }}
+                value={form.date}
+                onChange={handleDateChange}
+                placeholder="Select date"
+              />
+            </div>
+
+            <div className="field time-picker">
+              <label>Time</label>
+              <Flatpickr
+                options={{
+                  enableTime: true,
+                  noCalendar: true,
+                  dateFormat: "H:i",
+                  time_24hr: true,
+                }}
+                value={form.time}
+                onChange={handleTimeChange}
+                placeholder="Select time"
+              />
+            </div>
+
+          </div>
+
+          {/* NAME */}
+          <div className="field">
+            <label>Name</label>
+            <input
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              placeholder="Enter your name"
+            />
+          </div>
+
+          {/* PHONE */}
+          <div className="field">
+            <label>Phone</label>
+            <input
+              name="phone"
+              value={form.phone}
+              onChange={handleChange}
+              placeholder="x-xxx-xxx-xxxx"
+            />
+          </div>
+
+          {/* GUESTS */}
+          <div className="field">
+            <label>Guests</label>
+            <select
+              name="guests"
+              value={form.guests}
+              onChange={handleChange}
+            >
+              {[1, 2, 3, 4, 5, 6].map((n) => (
+                <option key={n} value={n}>
+                  {n} Person
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* BUTTON */}
+          <button className="booking-btn" disabled={loading}>
+            {loading ? "Booking..." : "Book A Table"}
+          </button>
+
+        </form>
+
+      </div>
+
+      <div className="booking-map"></div>
+
+    </section>
+  );
+};
+
+export default Booking;

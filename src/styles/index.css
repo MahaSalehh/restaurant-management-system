@@ -1,0 +1,58 @@
+@import "./variables.css";
+@import "./public.css";
+@import "./private.css";
+@import "./dashboard.css";
+@import "./auth.css";
+@import "./layout.css";
+@import "./base.css";
+/* ================= RESET ================= */
+* {
+  /* box-sizing: border-box; */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "DM Sans", sans-serif;
+}
+
+html, body {
+  overflow-x: hidden;
+}
+
+ul{
+  list-style: none;
+}
+
+/* Container spacing */
+.section {
+  padding: 100px 0;
+}
+
+/* Responsive spacing */
+@media (max-width: 992px) {
+  .section {
+    padding: 60px 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 40px 0;
+  }
+}
+
+/* Images */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Text */
+h1, h2, h3 {
+  line-height: 1.2;
+}
+
+p {
+  line-height: 1.6;
+}

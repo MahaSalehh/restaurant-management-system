@@ -1,0 +1,208 @@
+/* ================= TOP BAR ================= */
+.top-bar {
+  background: var(--neutral-09);
+  color: var(--neutral-02);
+  padding: 6px 0;
+}
+
+/* desktop social */
+.social-icons a {
+  color: var(--neutral-01);
+  font-size: var(--h3-size);
+  transition: var(--transition);
+}
+
+.social-icons svg {
+  cursor: pointer;
+  transition: var(--transition);
+  background: var(--neutral-10);
+  border-radius: var(--radius-md);
+  padding: 5px;
+}
+
+.social-icons a:hover svg {
+  transform: translateY(-2px);
+}
+
+/* ================= LOGO ================= */
+.logo {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  display: block;
+  transform: translateY(-5px);
+}
+
+/* ================= BRAND ================= */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navbar-brand span {
+  font-family: var(--font-heading);
+  font-size: 43px;
+  line-height: 1;
+  color: var(--neutral-09);
+  font-weight: var(--fw-medium);
+  font-style: italic;
+}
+
+/* ================= NAV LINKS ================= */
+.nav-link {
+  color: var(--neutral-07);
+  text-decoration: none;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  transition: var(--transition);
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: var(--neutral-03);
+}
+
+
+/* ================= FOOTER ================= */
+.footer-logo {
+  font-family: var(--font-heading);
+  font-size: var(--h3-size);
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 8px;
+  transition: var(--transition);
+}
+
+.footer-links li:hover {
+  color: var(--primary);
+}
+
+/* footer socials */
+.footer-social-icons svg {
+  font-size: 24px;
+  cursor: pointer;
+  background: var(--primary);
+  border-radius: var(--radius-md);
+  padding: 4px;
+  margin: 2px;
+  transition: var(--transition);
+}
+
+.footer-social-icons svg:hover {
+  transform: translateY(-2px);
+}
+
+.insta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.insta-grid img {
+  width: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+  transition: 0.3s;
+}
+
+.insta-grid img:hover {
+    transform: scale(1.05);
+  }
+/* ================= SCROLL BTN ================= */
+.scroll-top-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: none;
+  background: var(--neutral-03);
+  color: var(--neutral-06);
+  cursor: pointer;
+  z-index: 999;
+}
+
+/* ================= RESPONSIVE ================= */
+
+/* TABLET + MOBILE NAV */
+@media (max-width: 991.98px) {
+
+  #primary-navbar .navbar-collapse {
+    background: var(--neutral-01);
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 10px;
+  }
+
+  #primary-navbar .navbar-nav {
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .nav-link {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  #primary-navbar .d-flex.align-items-center {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 10px;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .btn-custom {
+    width: 100%;
+    text-align: center;
+  }
+
+  .navbar-brand span {
+    font-size: 28px;
+  }
+
+  .logo {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* MOBILE TOP BAR */
+@media (max-width: 768px) {
+
+  .top-bar .container {
+    flex-direction: column;
+    gap: 6px;
+    text-align: center;
+  }
+
+  .top-bar .body-md {
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12px;
+  }
+
+  .social-icons {
+    justify-content: center;
+  }
+
+  .scroll-top-btn {
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+}
