@@ -12,17 +12,13 @@ function Bookings() {
 
   const { showToast } = useToast();
 
-  // ================= FETCH BOOKINGS =================
   const fetchBookings = async () => {
     try {
       setLoading(true);
-
       const res = await bookingAPI.myBookings();
 
       const data = res.data?.data || res.data || [];
-
       setBookings(Array.isArray(data) ? data : []);
-
     } catch {
       showToast("error", "Failed to load bookings");
       setBookings([]);
@@ -35,148 +31,100 @@ function Bookings() {
     fetchBookings();
   }, []);
 
-  // ================= DATE HELPERS =================
   const now = new Date();
 
-  const isFutureBooking = (b) => {
-    const bookingDate = new Date(b.booking_date);
-    return bookingDate.getTime() >= now.getTime();
-  };
-
-  const currentBookings = bookings.filter(isFutureBooking);
+  const currentBookings = bookings.filter(
+    (b) => new Date(b.booking_date) >= now
+  );
 
   const previousBookings = bookings.filter(
-    (b) => !isFutureBooking(b)
+    (b) => new Date(b.booking_date) < now
   );
 
   const data = tab === "current" ? currentBookings : previousBookings;
 
-  // ================= BADGE =================
-  const getBadge = (status) => {
-    return {
+  const getBadge = (status) =>
+    ({
       pending: "warning",
       accepted: "success",
       rejected: "danger",
-    }[status] || "secondary";
-  };
+    }[status] || "secondary");
 
-  // ================= LOADING =================
   if (loading) {
-    return <p className="text-center body-md py-5">Loading bookings...</p>;
+    return <div className="page-state">Loading bookings...</div>;
   }
 
   return (
-    <div>
+    <div className="list-page">
 
       <h5 className="section-title">My Bookings</h5>
 
-      {/* TABS */}
       <div className="filter-bar">
-
-        <button
-          className={tab === "current" ? "active" : ""}
-          onClick={() => setTab("current")}
-        >
+        <button className={tab === "current" ? "active" : ""} onClick={() => setTab("current")}>
           Current
         </button>
 
-        <button
-          className={tab === "previous" ? "active" : ""}
-          onClick={() => setTab("previous")}
-        >
+        <button className={tab === "previous" ? "active" : ""} onClick={() => setTab("previous")}>
           Previous
         </button>
-
       </div>
 
-      {/* EMPTY STATE */}
       {data.length === 0 && (
-        <p className="text-center body-md py-4">
-          No bookings found
-        </p>
+        <div className="empty-state">No bookings found</div>
       )}
 
-      {/* LIST */}
-      <div className="order-list">
-
+      <div className="card-list">
         {data.map((b) => (
           <div
             key={b.id}
-            className="order-card"
+            className="list-card"
             onClick={() => {
               setSelectedBooking(b);
               setShowModal(true);
             }}
           >
-
             <div>
               <h6>Booking #{b.id}</h6>
               <p>{b.booking_date}</p>
             </div>
 
-            <Badge bg={getBadge(b.status)}>
-              {b.status}
-            </Badge>
-
+            <span className={`status ${b.status}`}>
+  {b.status}
+</span>
           </div>
         ))}
-
       </div>
 
       {/* MODAL */}
-      <Modal
-        show={showModal}
-        onHide={() => setShowModal(false)}
-        centered
-      >
-
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title>
-            Booking Details
-          </Modal.Title>
+          <Modal.Title>Booking Details</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
-
           {!selectedBooking ? (
-            <p>Loading...</p>
+            <div>Loading...</div>
           ) : (
             <>
-              <p>
-                <strong>Date:</strong>{" "}
-                {selectedBooking.booking_date}
-              </p>
+              <p><b>Date:</b> {selectedBooking.booking_date}</p>
+              <p><b>Time:</b> {selectedBooking.booking_time}</p>
+              <p><b>Guests:</b> {selectedBooking.guests}</p>
 
               <p>
-                <strong>Time:</strong>{" "}
-                {selectedBooking.booking_time}
-              </p>
-
-              <p>
-                <strong>Guests:</strong>{" "}
-                {selectedBooking.guests}
-              </p>
-
-              <p>
-                <strong>Status:</strong>{" "}
+                <b>Status:</b>{" "}
                 <Badge bg={getBadge(selectedBooking.status)}>
                   {selectedBooking.status}
                 </Badge>
               </p>
             </>
           )}
-
         </Modal.Body>
 
         <Modal.Footer>
-          <Button
-            variant="light"
-            onClick={() => setShowModal(false)}
-          >
+          <Button variant="light" onClick={() => setShowModal(false)}>
             Close
           </Button>
         </Modal.Footer>
-
       </Modal>
 
     </div>

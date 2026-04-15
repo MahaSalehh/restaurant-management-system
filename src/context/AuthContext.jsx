@@ -108,7 +108,16 @@ const logout = async (navigate) => {
   window.location.href = "/";
 }
 };
+  const updateUser = (data) => {
+    setUser((prev) => {
+      if (!prev) return data;
 
+      return {
+        ...prev,
+        ...data,
+      };
+    });
+  };
   return (
     <AuthContext.Provider
       value={{
@@ -118,6 +127,7 @@ const logout = async (navigate) => {
         login,
         logout,
         register,
+        updateUser,
         isAuthenticated: !!token && !!user,
       }}
     >

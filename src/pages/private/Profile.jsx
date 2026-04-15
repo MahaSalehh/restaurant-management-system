@@ -1,15 +1,6 @@
 import { useState, useEffect } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Nav,
-  Image,
-  Button,
-  Modal,
-  Form,
-} from "react-bootstrap";
-import { FaShoppingBag, FaCalendarAlt, FaUser, FaEdit } from "react-icons/fa";
+import { Modal, Button, Form } from "react-bootstrap";
+import { FaEdit } from "react-icons/fa";
 
 import { useAuth } from "../../context/AuthContext";
 import { settingsAPI } from "../../service/api";
@@ -25,7 +16,7 @@ function Profile() {
   const { showToast } = useToast();
   const navigate = useNavigate();
 
-  const [activeTab, setActiveTab] = useState("orders");
+  const [activeTab, setActiveTab] = useState("profile");
   const [showEdit, setShowEdit] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -33,13 +24,10 @@ function Profile() {
     phone: "",
   });
 
-  // ================= UPDATE PROFILE =================
-  const {
-    loading: updateLoading,
-    execute: updateProfile,
-  } = useAsync(settingsAPI.updateProfile, [], false);
+  const { loading: updateLoading, execute: updateProfile } =
+    useAsync(settingsAPI.updateProfile, [], false);
 
-  // ================= SYNC FORM =================
+  // sync form
   useEffect(() => {
     if (showEdit) {
       setFormData({
@@ -49,206 +37,178 @@ function Profile() {
     }
   }, [showEdit, user]);
 
-  // ================= UPDATE HANDLER =================
- const handleUpdate = async () => {
-  if (!formData.name || !formData.phone) {
-    showToast("error", "Name and phone are required");
-    return;
-  }
+  // ================= UPDATE =================
+  const handleUpdate = async () => {
+    if (formData.name.length < 3) {
+      showToast("error", "Name must be at least 3 characters");
+      return;
+    }
 
-  try {
-    const res = await updateProfile(formData);
+    if (formData.phone.length !== 11) {
+      showToast("error", "Phone must be 11 digits");
+      return;
+    }
 
-    const updatedUser =
-      res?.data?.data ||
-      res?.data?.user ||
-      res?.data;
+    try {
+      const res = await updateProfile(formData);
 
-    setUser(updatedUser);
+      const updatedUser =
+        res?.data?.data || res?.data?.user || res?.data || formData;
 
-    showToast("success", "Profile updated successfully 🎉");
+      // force rerender
+      setUser({ ...user, ...updatedUser, ...formData });
 
-    setShowEdit(false);
-  } catch (err) {
-    showToast(
-      "error",
-      err.response?.data?.message || "Failed to update profile"
-    );
-  }
-};
+      showToast("success", "Profile updated successfully 🎉");
+
+      setShowEdit(false);
+    } catch (err) {
+      showToast(
+        "error",
+        err?.response?.data?.message || "Update failed"
+      );
+    }
+  };
+
+  const avatar = `https://ui-avatars.com/api/?name=${user?.name}&background=random&size=128`;
+
+  if (!user) return <p className="text-center py-5">Loading...</p>;
 
   return (
-    <div className="profile-wrapper">
+    <div className="profile-page">
 
-      <Container fluid>
-        <Row>
+      <div className="profile-container">
 
-          {/* SIDEBAR */}
-          <Col md={3} className="sidebar">
+        {/* ================= CARD ================= */}
+        <div className="profile-card">
 
-            <div className="sidebar-header">
-              <Image
-                src={`https://ui-avatars.com/api/?name=${user?.name}`}
-                roundedCircle
-                width={70}
-              />
+          <div className="profile-info">
+            <img src={avatar} className="avatar" alt="user" />
 
-              <div>
-                <h6>{user?.name}</h6>
-                <span>{user?.email}</span>
-              </div>
+            <div>
+              <h5>{user?.name}</h5>
+              <p>{user?.email}</p>
             </div>
+          </div>
 
-            <Nav className="flex-column sidebar-nav">
+          <div className="profile-actions">
+            <button className="edit-btn" onClick={() => setShowEdit(true)}>
+              <FaEdit /> Edit
+            </button>
 
-              <Nav.Link
-                className={activeTab === "profile" ? "active" : ""}
-                onClick={() => setActiveTab("profile")}
-              >
-                <FaUser /> Profile
-              </Nav.Link>
+            <button
+              className="logout-btn"
+              onClick={() => logout(navigate)}
+            >
+              Logout
+            </button>
+          </div>
 
-              <Nav.Link
-                className={activeTab === "orders" ? "active" : ""}
-                onClick={() => setActiveTab("orders")}
-              >
-                <FaShoppingBag /> Orders
-              </Nav.Link>
+        </div>
 
-              <Nav.Link
-                className={activeTab === "bookings" ? "active" : ""}
-                onClick={() => setActiveTab("bookings")}
-              >
-                <FaCalendarAlt /> Bookings
-              </Nav.Link>
+        {/* ================= TABS ================= */}
+        <div className="profile-tabs">
 
-              <Button
-                onClick={() => logout(navigate)}
-                size="sm"
-                className="edit-btn"
-              >
-                Logout
-              </Button>
+          <button
+            className={activeTab === "profile" ? "active" : ""}
+            onClick={() => setActiveTab("profile")}
+          >
+            Profile
+          </button>
 
-            </Nav>
-          </Col>
+          <button
+            className={activeTab === "orders" ? "active" : ""}
+            onClick={() => setActiveTab("orders")}
+          >
+            Orders
+          </button>
 
-          {/* CONTENT */}
-          <Col md={9} className="content">
+          <button
+            className={activeTab === "bookings" ? "active" : ""}
+            onClick={() => setActiveTab("bookings")}
+          >
+            Bookings
+          </button>
 
-            {/* PROFILE CARD */}
-            <div className="profile-card">
+        </div>
 
-              <div className="profile-info">
-                <Image
-                  src={`https://ui-avatars.com/api/?name=${user?.name}`}
-                  roundedCircle
-                  width={80}
+        {/* ================= CONTENT ================= */}
+        <div className="profile-content">
+
+          {activeTab === "profile" && (
+            <div className="info-card">
+              <h6>Personal Information</h6>
+
+              <p><b>Name:</b> {user?.name}</p>
+              <p><b>Email:</b> {user?.email}</p>
+              <p><b>Phone:</b> {user?.phone || "Not set"}</p>
+            </div>
+          )}
+
+          {activeTab === "orders" && <UserOrders />}
+          {activeTab === "bookings" && <UserBookings />}
+
+        </div>
+
+        {/* ================= MODAL ================= */}
+        <Modal
+          show={showEdit}
+          onHide={() => setShowEdit(false)}
+          centered
+        >
+
+          <Modal.Header closeButton>
+            <Modal.Title>Edit Profile</Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>
+
+            <Form>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Name</Form.Label>
+
+                <Form.Control
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                 />
+              </Form.Group>
 
-                <div>
-                  <h5>{user?.name}</h5>
-                  <p>{user?.email}</p>
-                </div>
-              </div>
+              <Form.Group>
+                <Form.Label>Phone</Form.Label>
 
-              <Button
-                className="edit-btn"
-                onClick={() => setShowEdit(true)}
-              >
-                <FaEdit /> Edit
-              </Button>
+                <Form.Control
+                  value={formData.phone}
+                  onChange={(e) =>
+                    setFormData({ ...formData, phone: e.target.value })
+                  }
+                />
+              </Form.Group>
 
-            </div>
+            </Form>
 
-            {/* CONTENT AREA */}
-            <div className="card-section">
+          </Modal.Body>
 
-              {activeTab === "orders" && <UserOrders />}
-              {activeTab === "bookings" && <UserBookings />}
+          <Modal.Footer>
 
-              {activeTab === "profile" && (
-                <div className="info-card">
-                  <h6>Personal Information</h6>
+            <Button variant="secondary" onClick={() => setShowEdit(false)}>
+              Cancel
+            </Button>
 
-                  <p><strong>Name:</strong> {user?.name}</p>
-                  <p><strong>Email:</strong> {user?.email}</p>
-                  <p><strong>Phone:</strong> {user?.phone}</p>
+            <Button
+              className="save-btn"
+              onClick={handleUpdate}
+              disabled={updateLoading}
+            >
+              {updateLoading ? "Saving..." : "Save Changes"}
+            </Button>
 
-                </div>
-              )}
+          </Modal.Footer>
 
-            </div>
+        </Modal>
 
-          </Col>
-
-        </Row>
-      </Container>
-
-      {/* ================= EDIT MODAL ================= */}
-      <Modal
-        show={showEdit}
-        onHide={() => setShowEdit(false)}
-        centered
-      >
-
-        <Modal.Header closeButton>
-          <Modal.Title>Edit Profile</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-
-          <Form>
-
-            <Form.Group className="mb-3">
-              <Form.Label>Name</Form.Label>
-
-              <Form.Control
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-              />
-
-            </Form.Group>
-
-            <Form.Group>
-              <Form.Label>Phone</Form.Label>
-
-              <Form.Control
-                value={formData.phone}
-                onChange={(e) =>
-                  setFormData({ ...formData, phone: e.target.value })
-                }
-              />
-
-            </Form.Group>
-
-          </Form>
-
-        </Modal.Body>
-
-        <Modal.Footer>
-
-          <Button
-            variant="light"
-            onClick={() => setShowEdit(false)}
-          >
-            Cancel
-          </Button>
-
-          <Button
-            className="save-btn"
-            onClick={handleUpdate}
-            disabled={updateLoading}
-          >
-            {updateLoading ? "Saving..." : "Save Changes"}
-          </Button>
-
-        </Modal.Footer>
-
-      </Modal>
-
+      </div>
     </div>
   );
 }

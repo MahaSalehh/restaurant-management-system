@@ -12,11 +12,9 @@ function Orders() {
 
   const { showToast } = useToast();
 
-  // ================= FETCH ORDERS =================
   const fetchOrders = async () => {
     try {
       setLoading(true);
-
       const res = await orderAPI.myOrders();
 
       const data =
@@ -26,7 +24,6 @@ function Orders() {
         [];
 
       setOrders(Array.isArray(data) ? data : []);
-
     } catch {
       showToast("error", "Failed to load orders");
       setOrders([]);
@@ -39,7 +36,6 @@ function Orders() {
     fetchOrders();
   }, []);
 
-  // ================= FILTER =================
   const currentOrders = orders.filter((o) =>
     ["pending", "accepted", "in_progress"].includes(o.status)
   );
@@ -50,101 +46,73 @@ function Orders() {
 
   const data = tab === "current" ? currentOrders : previousOrders;
 
-  // ================= BADGE =================
-  const getBadge = (status) => {
-    return {
+  const getBadge = (status) =>
+    ({
       pending: "warning",
       accepted: "info",
       in_progress: "primary",
       delivered: "success",
       rejected: "danger",
-    }[status] || "secondary";
-  };
+    }[status] || "secondary");
 
-  // ================= LOADING =================
   if (loading) {
-    return <p className="text-center body-md py-5">Loading orders...</p>;
+    return <div className="page-state">Loading orders...</div>;
   }
 
   return (
-    <div>
+    <div className="list-page">
 
       <h5 className="section-title">My Orders</h5>
 
-      {/* TABS */}
       <div className="filter-bar">
-
-        <button
-          className={tab === "current" ? "active" : ""}
-          onClick={() => setTab("current")}
-        >
+        <button className={tab === "current" ? "active" : ""} onClick={() => setTab("current")}>
           Current
         </button>
 
-        <button
-          className={tab === "previous" ? "active" : ""}
-          onClick={() => setTab("previous")}
-        >
+        <button className={tab === "previous" ? "active" : ""} onClick={() => setTab("previous")}>
           Previous
         </button>
-
       </div>
 
-      {/* EMPTY STATE */}
       {data.length === 0 && (
-        <p className="text-center body-md py-4">
-          No orders found
-        </p>
+        <div className="empty-state">No orders found</div>
       )}
 
-      {/* LIST */}
-      <div className="order-list">
-
+      <div className="card-list">
         {data.map((order) => (
           <div
             key={order.id}
-            className="order-card"
+            className="list-card"
             onClick={() => {
               setSelectedOrder(order);
               setShowModal(true);
             }}
           >
-
             <div>
               <h6>Order #{order.id}</h6>
               <p>{order.total_price} EGP</p>
             </div>
 
-            <Badge bg={getBadge(order.status)}>
-              {order.status}
-            </Badge>
-
+            <span className={`status ${order.status}`}>
+  {order.status}
+</span>
           </div>
         ))}
-
       </div>
 
       {/* MODAL */}
-      <Modal
-        show={showModal}
-        onHide={() => setShowModal(false)}
-        centered
-      >
-
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title>
-            Order #{selectedOrder?.id || "..." }
-          </Modal.Title>
+          <Modal.Title>Order #{selectedOrder?.id}</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
-
           {!selectedOrder ? (
-            <p>Loading...</p>
+            <div>Loading...</div>
           ) : (
             <>
               <p>
-                <strong>Status:</strong>{" "}
+                <b>Status:</b>{" "}
                 <Badge bg={getBadge(selectedOrder.status)}>
                   {selectedOrder.status}
                 </Badge>
@@ -157,24 +125,19 @@ function Orders() {
               {selectedOrder.order_items?.map((item) => {
                 const price = item.menu_item?.price || 0;
                 const qty = item.quantity;
-                const subtotal = price * qty;
 
                 return (
                   <div key={item.id} className="item-row">
-
                     <div>
                       <strong>{item.menu_item?.name}</strong>
-
-                      <p className="item-meta">
+                      <p className="meta">
                         {price} EGP × {qty}
                       </p>
-
                     </div>
 
-                    <span className="item-price">
-                      {subtotal} EGP
+                    <span className="price">
+                      {price * qty} EGP
                     </span>
-
                   </div>
                 );
               })}
@@ -183,25 +146,17 @@ function Orders() {
 
               <div className="total-row">
                 <span>Total</span>
-                <strong>
-                  {selectedOrder.total_price} EGP
-                </strong>
+                <b>{selectedOrder.total_price} EGP</b>
               </div>
-
             </>
           )}
-
         </Modal.Body>
 
         <Modal.Footer>
-          <Button
-            variant="light"
-            onClick={() => setShowModal(false)}
-          >
+          <Button variant="light" onClick={() => setShowModal(false)}>
             Close
           </Button>
         </Modal.Footer>
-
       </Modal>
 
     </div>

@@ -20,8 +20,10 @@ import { FaRegClock } from "react-icons/fa";
 import { HiOutlineReceiptTax } from "react-icons/hi";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { useEffect } from "react";
+import { useAuth } from "../../context/AuthContext";
 
 function Home() {
+  const { isAuthenticated} = useAuth();
 
   // ================= FETCH =================
   const {
@@ -90,11 +92,18 @@ const showError = () => {
           </p>
 
           <div className="hero-buttons d-flex gap-3 justify-content-center">
-            <Button as={Link} to="/booking" className="btn-custom btn-primary-custom btn-lg"
+            {!isAuthenticated ? (
+              <Button as={Link} to="/booking" className="btn-custom btn-primary-custom btn-lg"
             onClick={showError}
             >
               Book A Table
             </Button>
+            ) : (
+              <Button as={Link} to="/booking" className="btn-custom btn-primary-custom btn-lg"
+            >
+              Book A Table
+            </Button>
+            )}
 
             <Button as={Link} to="/menu" className="btn-custom btn-outline-custom btn-lg">
               Explore Menu
