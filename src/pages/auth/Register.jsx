@@ -161,7 +161,7 @@ const isMatch = formData.password === formData.confirmPassword;
       name="confirmPassword"
       className={`auth-input ${
         formData.confirmPassword
-          ? formData.password === formData.confirmPassword
+          ? isMatch
             ?  "match" : "no-match" : ""
       }`}
       placeholder=" "

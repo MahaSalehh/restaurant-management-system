@@ -117,7 +117,7 @@ const Cart = () => {
               onClick={clearCart}
               disabled={actionLoading}
             >
-              Clear
+              Clear Cart
             </button>
           )}
         </div>
