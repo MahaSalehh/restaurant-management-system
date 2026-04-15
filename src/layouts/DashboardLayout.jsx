@@ -9,146 +9,106 @@ import {
   FaShoppingCart,
   FaUsers,
   FaBars,
+  FaEnvelope,
+  FaArrowRight,
 } from "react-icons/fa";
 import Notification from "../components/Notification";
+import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
+
 function DashboardLayout() {
   const { user, isAuthenticated } = useAuth();
   const location = useLocation();
-
   const [collapsed, setCollapsed] = useState(false);
+const [mobileOpen, setMobileOpen] = useState(false);
   const isActive = (path) => location.pathname === path;
 
-  // 🔐 حماية الداشبورد
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace/>;
-  }
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+
+  const menu = [
+    { path: "/dashboard", label: "Overview", icon: <FaHome /> },
+    { path: "/dashboard/orders", label: "Orders", icon: <FaShoppingCart /> },
+    { path: "/dashboard/bookings", label: "Bookings", icon: <FaShoppingCart /> },
+    { path: "/dashboard/menu", label: "Menu", icon: <FaShoppingBag /> },
+    { path: "/dashboard/categories", label: "Categories", icon: <FaShoppingCart /> },
+    { path: "/dashboard/blogs", label: "Articles", icon: <FaShoppingCart /> },
+    { path: "/dashboard/users", label: "Users", icon: <FaUsers /> },
+    { path: "/dashboard/messages", label: "Messages", icon: <FaEnvelope /> },
+  ];
 
   return (
-    <div className="d-flex">
+    <div className="dash-layout">
 
-      {/* ===== Sidebar ===== */}
-      <div
-        style={{
-          width: collapsed ? "70px" : "220px",
-          minHeight: "100vh",
-          background: "#fff",
-          borderRight: "1px solid #ddd",
-          transition: "0.3s",
-        }}
-        className="p-3"
-      >
-        <button
-          className="btn btn-light mb-4"
-          onClick={() => setCollapsed(!collapsed)}
-        >
-          <FaBars />
-        </button>
-
-        <div className="d-flex flex-column align-items-start gap-3 ">
-
-          <Link
-            to="/dashboard"
-            className={`nav-link ${isActive("/dashboard") && "active"}`}
-          >
-            <FaHome /> {!collapsed && " Dashboard"}
-          </Link>
-
-          <Link
-            to="/dashboard/orders"
-            className={`nav-link ${isActive("/dashboard/orders") && "active"}`}
-          >
-            <FaShoppingCart /> {!collapsed && " Orders"}
-          </Link>
-
-          <Link
-            to="/dashboard/bookings"
-            className={`nav-link ${isActive("/dashboard/bookings") && "active"}`}
-          >
-            <FaShoppingCart /> {!collapsed && " Bookings"}
-          </Link>
-
-          <Link
-            to="/dashboard/menu"
-            className={`nav-link ${isActive("/dashboard/menu") && "active"}`}
-          >
-            <FaShoppingBag /> {!collapsed && " Menu"}
-          </Link>
-
-          <Link
-            to="/dashboard/categories"
-            className={`nav-link ${isActive("/dashboard/categories") && "active"}`}
-          >
-            <FaShoppingCart /> {!collapsed && " Categories"}
-          </Link>
-
-          <Link
-            to="/dashboard/blogs"
-            className={`nav-link ${isActive("/dashboard/blogs") && "active"}`}
-          >
-            <FaShoppingCart /> {!collapsed && " Articles"}
-          </Link>
-
-          <Link
-            to="/dashboard/users"
-            className={`nav-link ${isActive("/dashboard/users") && "active"}`}
-          >
-            <FaUsers /> {!collapsed && " Users"}
-          </Link>
-          <Link
-            to="/dashboard/messages"
-            className={`nav-link ${isActive("/dashboard/messages") && "active"}`}
-          >
-            <FaShoppingCart /> {!collapsed && " Messages"}
-          </Link>
-
-
+      {/* SIDEBAR */}
+     <aside
+  className={`
+    dash-sidebar 
+    ${collapsed ? "collapsed" : ""} 
+    ${mobileOpen ? "open" : ""}
+  `}
+>
+        <div className="sidebar-top">
+          <button
+  className="icon-btn"
+  onClick={() => {
+    if (window.innerWidth <= 768) {
+      setMobileOpen(!mobileOpen);
+    } else {
+      setCollapsed(!collapsed);
+    }
+  }}
+>
+  <FaArrowRight />
+</button>
         </div>
-      </div>
 
-      {/* ===== Main Content ===== */}
-      <div className="flex-grow-1">
+        <nav className="sidebar-menu">
+          {menu.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`side-link ${isActive(item.path) ? "active" : ""}`}
+            >
+              <span className="icon">{item.icon}</span>
+              {!collapsed && <span>{item.label}</span>}
+            </Link>
+          ))}
+        </nav>
+      </aside>
 
-  {/* ===== Top Navbar ===== */}
-  <div
-    style={{
-      height: "60px",
-      background: "#fff",
-      borderBottom: "1px solid #ddd",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      padding: "0 20px",
-      position: "sticky",
-      top: 0,
-      zIndex: 999,
-    }}
+      {/* MAIN */}
+      <div className="dash-main">
+
+        {/* TOPBAR */}
+        <header className="dash-topbar">
+  <button
+    className="icon-btn mobile-toggle"
+    onClick={() => setMobileOpen(!mobileOpen)}
   >
-    <Navbar.Brand as={Link} to="/dashboard">
-      <span style={{ fontWeight: "700" , fontSize: "24px" }}>Dashboard</span>
-    </Navbar.Brand>
+    <FaBars />
+  </button>
 
-    <div className="d-flex align-items-center gap-3">
-      {/* 🔔 Notifications */}
-      <Notification />
+  <Navbar.Brand as={Link} to="/dashboard" className="brand">
+    Dashboard
+  </Navbar.Brand>
 
-      {/* 👤 User */}
-      <div  style={{ fontWeight: "500" }}>
-        <Link
-            to="/dashboard/admin/profile"
-            className={`nav-link`}
-          >
-            <FaUser /> {!collapsed && (user?.name )}
-          </Link>
-      </div>
-    </div>
+  <div className="top-actions">
+    
+    <Notification />
+
+    <Link to="/dashboard/admin/profile" className="icon-btn">
+      <FaUser />
+    </Link>
   </div>
+</header>
 
-  {/* ===== Page Content ===== */}
-  <Container className="my-4">
-    <Outlet />
-  </Container>
-</div>
+        {/* CONTENT */}
+        <main className="dash-content">
+          <Container fluid>
+            <Outlet />
+          </Container>
+        </main>
 
+      </div>
     </div>
   );
 }
