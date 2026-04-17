@@ -1,19 +1,21 @@
 import { useEffect, useState } from "react";
 import { adminAPI, publicAPI } from "../../service/api";
 
+import PageLayout from "./components/PageLayout";
+import DataTable from "./components/DataTable";
+import ActionButtons from "./components/ActionButtons";
+import FormField from "./components/FormField";
+
 export default function Categories() {
   const [categories, setCategories] = useState([]);
   const [name, setName] = useState("");
   const [editingId, setEditingId] = useState(null);
 
-  // ==========================
-  // GET DATA
-  // ==========================
-  
+  // ================= FETCH =================
   const fetchCategories = async () => {
     try {
       const res = await publicAPI.getCategories();
-      setCategories(res.data.data || res.data);
+      setCategories(res.data.data || res.data || []);
     } catch (err) {
       console.error(err);
     }
@@ -21,12 +23,9 @@ export default function Categories() {
 
   useEffect(() => {
     fetchCategories();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ==========================
-  // CREATE / UPDATE
-  // ==========================
+  // ================= SUBMIT =================
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -37,25 +36,20 @@ export default function Categories() {
         await adminAPI.createCategory({ name });
       }
 
-      setName("");
-      setEditingId(null);
+      resetForm();
       fetchCategories();
     } catch (err) {
       console.error(err);
     }
   };
 
-  // ==========================
-  // EDIT
-  // ==========================
+  // ================= EDIT =================
   const handleEdit = (cat) => {
     setName(cat.name);
     setEditingId(cat.id);
   };
 
-  // ==========================
-  // DELETE
-  // ==========================
+  // ================= DELETE =================
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure?")) return;
 
@@ -67,24 +61,27 @@ export default function Categories() {
     }
   };
 
-  // ==========================
-  // UI
-  // ==========================
+  // ================= RESET =================
+  const resetForm = () => {
+    setName("");
+    setEditingId(null);
+  };
+
+  // ================= UI =================
   return (
-    <div className="container mt-4">
-      <h2>Manage Categories</h2>
+    <PageLayout title="Categories">
 
       {/* FORM */}
-      <form onSubmit={handleSubmit} className="mb-4">
-        <input
-          type="text"
-          placeholder="Category Name"
+      <form onSubmit={handleSubmit} className="card p-3">
+
+        <FormField
+          label="Category Name"
+          name="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="form-control mb-2"
         />
 
-        <button className="btn btn-primary">
+        <button className="btn btn-dark">
           {editingId ? "Update" : "Create"}
         </button>
 
@@ -92,10 +89,7 @@ export default function Categories() {
           <button
             type="button"
             className="btn btn-secondary ms-2"
-            onClick={() => {
-              setName("");
-              setEditingId(null);
-            }}
+            onClick={resetForm}
           >
             Cancel
           </button>
@@ -103,39 +97,35 @@ export default function Categories() {
       </form>
 
       {/* TABLE */}
-      <table className="table table-bordered">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Actions</th>
+      <DataTable columns={["ID", "Name", "Actions"]}>
+        {(categories || []).map((cat) => (
+          <tr key={cat.id}>
+            <td>{cat.id}</td>
+            <td>{cat.name}</td>
+
+            <td>
+              <ActionButtons
+  actions={[
+    {
+      label: "delete",
+      variant: "danger",
+      onClick: () => {
+        handleDelete(cat.id);
+      }},
+      {
+      label: "edit",
+      varient: "light",
+      onClick: () => {
+        handleEdit(cat)
+      }
+      }
+    ]}
+/>
+            </td>
           </tr>
-        </thead>
+        ))}
+      </DataTable>
 
-        <tbody>
-          {categories.map((cat) => (
-            <tr key={cat.id}>
-              <td>{cat.id}</td>
-              <td>{cat.name}</td>
-              <td>
-                <button
-                  className="btn btn-warning btn-sm me-2"
-                  onClick={() => handleEdit(cat)}
-                >
-                  Edit
-                </button>
-
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => handleDelete(cat.id)}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    </PageLayout>
   );
 }

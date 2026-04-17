@@ -115,13 +115,13 @@ const showError = () => {
 
       {/* ================= CATEGORIES ================= */}
       <Container className="py-5">
-        <h1 className="h2 text-center mb-4">Explore Our Menu</h1>
+        <h1 className="h2 text-center mb-4">Browse Our Menu</h1>
 
         <Row className="mt-5 g-4">
           {categories.map((item) => (
             <Col lg={3} md={6} sm={12} key={item.id}>
 
-              <Card className="menu-card card-base card-padding-lg card-hover-up text-center">
+              <Card className="category-card card-base card-padding-lg card-hover-up text-center">
 
                 <div className="icon-wrapper">
                   <img src={iconsMap[item.name]} alt={item.name} />
@@ -197,7 +197,7 @@ const showError = () => {
             {/* big card */}
             <Col md={6}>
               {featured && (
-                <Card className="h-100 card-base card-hover-shadow">
+                <Card className="h-100 card-base">
                   <Card.Img src={STORAGE_URL + featured.image_url} />
 
                   <Card.Body>
@@ -219,7 +219,7 @@ const showError = () => {
 
                 {sideArticles.map((item) => (
                   <Col md={6} key={item.id}>
-                    <Card className="card-base card-hover-shadow">
+                    <Card className="card-base">
                       <Card.Img src={STORAGE_URL + item.image_url} />
 
                       <Card.Body>

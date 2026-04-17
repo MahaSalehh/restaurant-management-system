@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { adminAPI, publicAPI, STORAGE_URL } from "../../service/api";
 
+import PageLayout from "./components/PageLayout";
+import DataTable from "./components/DataTable";
+import ActionButtons from "./components/ActionButtons";
+import FormField from "./components/FormField";
+
 function Blogs() {
   const [articles, setArticles] = useState([]);
 
@@ -12,11 +17,11 @@ function Blogs() {
 
   const [editingId, setEditingId] = useState(null);
 
-  // ================= FETCH
+  // ================= FETCH =================
   const fetchData = async () => {
     try {
       const res = await publicAPI.getArticles();
-      setArticles(res.data.data || res.data);
+      setArticles(res.data.data || res.data || []);
     } catch (err) {
       console.error(err);
     }
@@ -24,10 +29,9 @@ function Blogs() {
 
   useEffect(() => {
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ================= HANDLE INPUT
+  // ================= INPUT =================
   const handleChange = (e) => {
     const { name, value, files } = e.target;
 
@@ -38,7 +42,7 @@ function Blogs() {
     }
   };
 
-  // ================= CREATE / UPDATE
+  // ================= SUBMIT =================
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -56,7 +60,7 @@ function Blogs() {
       } else {
         await adminAPI.createArticle(formData);
       }
-console.log(form.image_url);
+
       resetForm();
       fetchData();
     } catch (err) {
@@ -64,7 +68,7 @@ console.log(form.image_url);
     }
   };
 
-  // ================= EDIT
+  // ================= EDIT =================
   const handleEdit = (item) => {
     setForm({
       title: item.title,
@@ -75,7 +79,7 @@ console.log(form.image_url);
     setEditingId(item.id);
   };
 
-  // ================= DELETE
+  // ================= DELETE =================
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure?")) return;
 
@@ -87,6 +91,7 @@ console.log(form.image_url);
     }
   };
 
+  // ================= RESET =================
   const resetForm = () => {
     setForm({
       title: "",
@@ -96,19 +101,18 @@ console.log(form.image_url);
     setEditingId(null);
   };
 
+  // ================= UI =================
   return (
-    <div className="container mt-4">
-      <h2>Manage Articles</h2>
+    <PageLayout title="Articles">
 
       {/* FORM */}
-      <form onSubmit={handleSubmit} className="mb-4">
-        <input
-          type="text"
+      <form onSubmit={handleSubmit} className="card p-3">
+
+        <FormField
+          label="Title"
           name="title"
-          placeholder="Title"
           value={form.title}
           onChange={handleChange}
-          className="form-control mb-2"
         />
 
         <textarea
@@ -117,6 +121,7 @@ console.log(form.image_url);
           value={form.content}
           onChange={handleChange}
           className="form-control mb-2"
+          rows={4}
         />
 
         <input
@@ -126,62 +131,59 @@ console.log(form.image_url);
           className="form-control mb-2"
         />
 
-        <button className="btn btn-primary">
+        <button className="btn btn-dark">
           {editingId ? "Update" : "Create"}
         </button>
 
-        {editingId && (
-          <button
-            type="button"
-            className="btn btn-secondary ms-2"
-            onClick={resetForm}
-          >
-            Cancel
-          </button>
-        )}
       </form>
 
       {/* TABLE */}
-      <table className="table table-bordered">
-        <thead>
-          <tr>
-            <th>Image</th>
-            <th>Title</th>
-            <th>Content</th>
-            <th>Actions</th>
+      <DataTable columns={["Image", "Title", "Content", "Actions"]}>
+        {(articles || []).map((item) => (
+          <tr key={item.id}>
+            <td>
+              {item.image_url && (
+                <img
+                  src={STORAGE_URL + item.image_url}
+                  width="60"
+                  alt=""
+                />
+              )}
+            </td>
+
+            <td>{item.title}</td>
+
+            {/* ✅ SLICED CONTENT */}
+            <td>
+              {item.content?.length > 80
+                ? item.content.slice(0, 80) + "..."
+                : item.content}
+            </td>
+
+            <td>
+              <ActionButtons
+                actions={[
+                  {
+                    label: "delete",
+                    variant: "danger",
+                    onClick: () => {
+                      handleDelete(item.id);
+                    }},
+                    {
+                    label: "edit",
+                    varient: "light",
+                    onClick: () => {
+                      handleEdit(item)
+                    }
+                    }
+                  ]}
+              />
+            </td>
           </tr>
-        </thead>
+        ))}
+      </DataTable>
 
-        <tbody>
-          {articles.map((item) => (
-            <tr key={item.id}>
-              <td>
-                {item.image_url && (
-                  <img src={STORAGE_URL + item.image_url} width="60" />
-                )}
-              </td>
-              <td>{item.title}</td>
-              <td>{item.content}</td>
-              <td>
-                <button
-                  className="btn btn-warning btn-sm me-2"
-                  onClick={() => handleEdit(item)}
-                >
-                  Edit
-                </button>
-
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => handleDelete(item.id)}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    </PageLayout>
   );
 }
 

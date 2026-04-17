@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { adminAPI } from "../../service/api";
 
+import PageLayout from "./components/PageLayout";
+import DataTable from "./components/DataTable";
+import ActionButtons from "./components/ActionButtons";
+import Modal from "./components/Modal";
+import StatusBadge from "./components/StatusBadge";
+
 function Bookings() {
   const [bookings, setBookings] = useState([]);
   const [activeStatus, setActiveStatus] = useState(null);
@@ -10,11 +16,11 @@ function Bookings() {
 
   const statuses = ["pending", "accepted", "rejected"];
 
-  // ================= FETCH =================
+  // FETCH
   const fetchBookings = async () => {
     try {
       const res = await adminAPI.getAllBookings();
-      setBookings(res.data.data || res.data.data.data);
+      setBookings(res.data.data || res.data || []);
     } catch (err) {
       console.error(err);
     }
@@ -24,7 +30,7 @@ function Bookings() {
     fetchBookings();
   }, []);
 
-  // ================= UPDATE STATUS =================
+  // STATUS UPDATE
   const handleStatusChange = async (bookingId, newStatus) => {
     try {
       setLoadingId(bookingId);
@@ -39,8 +45,7 @@ function Bookings() {
         )
       );
 
-      // update modal if open
-      if (selectedBooking && selectedBooking.id === bookingId) {
+      if (selectedBooking?.id === bookingId) {
         setSelectedBooking((prev) => ({
           ...prev,
           status: newStatus,
@@ -53,153 +58,73 @@ function Bookings() {
     }
   };
 
-  // ================= VIEW =================
-  const handleViewBooking = (booking) => {
-    setSelectedBooking(booking);
-    setShowModal(true);
-  };
-
-  // ================= FILTER =================
   const filteredBookings = activeStatus
     ? bookings.filter((b) => b.status === activeStatus)
     : bookings;
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "pending":
-        return "#ffc107";
-      case "accepted":
-        return "#28a745";
-      case "rejected":
-        return "#dc3545";
-      default:
-        return "#ddd";
-    }
-  };
-
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Bookings</h1>
+    <PageLayout title="Bookings">
 
-      
-<div
-  style={{
-    marginBottom: "20px",
-    display: "flex",
-    gap: "10px",
-    flexWrap: "wrap",
-  }}
->
-  {/* All */}
-  <button
-    onClick={() => setActiveStatus(null)}
-    style={{
-      padding: "8px 16px",
-      background: activeStatus === null ? "black" : "#ddd",
-      color: activeStatus === null ? "white" : "black",
-      border: "none",
-      borderRadius: "8px",
-      cursor: "pointer",
-    }}
-  >
-    All
-  </button>
+      {/* FILTER */}
+      <div className=" dash-filters">
+        <button
+          className={`btn ${activeStatus === null ? "btn-dark" : "btn-light"}`}
+          onClick={() => setActiveStatus(null)}
+        >
+          All
+        </button>
 
-  {/* Status Tabs */}
-  {statuses.map((status) => (
-    <button
-      key={status}
-      onClick={() => setActiveStatus(status)}
-      style={{
-        padding: "8px 16px",
-        background: activeStatus === status ? "black" : "#ddd",
-        color: activeStatus === status ? "white" : "black",
-        border: "none",
-        borderRadius: "8px",
-        cursor: "pointer",
-        textTransform: "capitalize",
-      }}
-    >
-      {status}
-    </button>
-  ))}
-</div>
+        {statuses.map((s) => (
+          <button
+            key={s}
+            className={`btn ${activeStatus === s ? "btn-dark" : "btn-light"}`}
+            onClick={() => setActiveStatus(s)}
+          >
+            {s}
+          </button>
+        ))}
+      </div>
+
       {/* TABLE */}
-      <table className="table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>User</th>
-            <th>Date</th>
-            <th>Guests</th>
-            <th>Status</th>
-            <th>Actions</th>
+      <DataTable columns={["ID", "User", "Date", "Guests", "Status", "Actions"]}>
+        {(filteredBookings || []).map((b) => (
+          <tr key={b.id}>
+            <td>{b.id}</td>
+            <td>{b.user?.name}</td>
+            <td>{b.booking_date}</td>
+            <td>{b.guests}</td>
+
+            <td>
+              <StatusBadge status={b.status} />
+            </td>
+
+            <td>
+              <ActionButtons
+  actions={[
+    {
+      label: "View",
+      variant: "primary",
+      onClick: () => {
+        setSelectedBooking(b);
+        setShowModal(true);
+      },
+    },
+    
+  ]}
+/>
+            </td>
           </tr>
-        </thead>
-
-        <tbody>
-          {filteredBookings.map((booking) => (
-            <tr key={booking.id}>
-              <td>{booking.id}</td>
-              <td>{booking.user?.name}</td>
-              <td>{booking.booking_date}</td>
-              <td>{booking.guests}</td>
-
-              <td>
-                <span
-                  style={{
-                    padding: "4px 8px",
-                    borderRadius: "6px",
-                    backgroundColor: getStatusColor(booking.status),
-                    color: "white",
-                  }}
-                >
-                  {booking.status}
-                </span>
-              </td>
-
-              <td>
-                <button onClick={() => handleViewBooking(booking)}
-                    style={{
-      padding: "6px 12px",
-      border: "none",
-      borderRadius: "6px",
-      background: "black",
-      color: "white",
-      cursor: "pointer",}}>
-                  View
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        ))}
+      </DataTable>
 
       {/* MODAL */}
-      {showModal && selectedBooking && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            background: "rgba(0,0,0,0.5)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{
-              background: "white",
-              padding: "20px",
-              borderRadius: "10px",
-              width: "400px",
-            }}
-          >
-            <h3>Booking Details</h3>
-
+      <Modal
+        open={showModal}
+        title="Booking Details"
+        onClose={() => setShowModal(false)}
+      >
+        {selectedBooking && (
+          <div>
             <p><strong>ID:</strong> {selectedBooking.id}</p>
             <p><strong>User:</strong> {selectedBooking.user?.name}</p>
             <p><strong>Phone:</strong> {selectedBooking.user?.phone}</p>
@@ -207,21 +132,9 @@ function Bookings() {
             <p><strong>Time:</strong> {selectedBooking.booking_time}</p>
             <p><strong>Guests:</strong> {selectedBooking.guests}</p>
 
-            {/* STATUS UPDATE */}
-            <p><strong>Status:</strong></p>
+            <StatusBadge status={selectedBooking.status} />
 
-            <div style={{ display: "flex", gap: "10px" }}>
-              <span
-                style={{
-                  padding: "4px 8px",
-                  borderRadius: "6px",
-                  backgroundColor: getStatusColor(selectedBooking.status),
-                  color: "white",
-                }}
-              >
-                {selectedBooking.status}
-              </span>
-
+            <div className="mt-3">
               <select
                 value={selectedBooking.status}
                 disabled={loadingId === selectedBooking.id}
@@ -229,32 +142,18 @@ function Bookings() {
                   handleStatusChange(selectedBooking.id, e.target.value)
                 }
               >
-                {statuses.map((status) => (
-                  <option key={status} value={status}>
-                    {status}
+                {statuses.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
                   </option>
                 ))}
               </select>
             </div>
-
-            <button
-              onClick={() => setShowModal(false)}
-              style={{
-          marginTop: "10px",
-          padding: "8px 16px",
-          border: "none",
-          borderRadius: "6px",
-          background: "red",
-          color: "white",
-          cursor: "pointer",
-        }}
-            >
-              Close
-            </button>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </Modal>
+
+    </PageLayout>
   );
 }
 

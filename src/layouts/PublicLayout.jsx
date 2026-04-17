@@ -12,6 +12,7 @@ import ScrollTopBtn from "../components/ScrollTopBtn";
 function PublicLayout() {
   const { isAuthenticated, loading } = useAuth();
   const location = useLocation();
+  const isArticlesActive = location.pathname.startsWith("/articles");
   const isMenuPage = location.pathname === "/menu";
   const navbarClass = isMenuPage ? "bg-white" : "bg-light";
   const isActive = (path) => location.pathname === path;
@@ -63,7 +64,7 @@ function PublicLayout() {
         <Link to="/" className={`nav-link ${isActive("/") ? "active" : ""}`}>Home</Link>
         <Link to="/about" className={`nav-link ${isActive("/about") ? "active" : ""}`}>About</Link>
         <Link to="/menu" className={`nav-link ${isActive("/menu") ? "active" : ""}`}>Menu</Link>
-        <Link to="/articles" className={`nav-link ${isActive("/articles") ? "active" : ""}`}>Articles</Link>
+        <Link to="/articles" className={`nav-link ${isArticlesActive ? "active" : ""}`}>Articles</Link> 
         <Link to="/contact" className={`nav-link ${isActive("/contact") ? "active" : ""}`}>Contact</Link>
 
       </Nav>

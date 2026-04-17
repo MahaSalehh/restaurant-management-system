@@ -3,6 +3,7 @@ import { publicAPI, STORAGE_URL } from "../../service/api";
 import { useNavigate } from "react-router-dom";
 import { useAsync } from "../../hooks/useAsync";
 import { useToast } from "../../context/ToastContext";
+import { Card } from "react-bootstrap";
 
 function Articles() {
   const navigate = useNavigate();
@@ -27,32 +28,35 @@ function Articles() {
     <section className="py-5 bg-light-section">
       <div className="container">
 
-        <h1 className="h2 text-center mb-4">
-          Articles
+        <h1 className="h1 text-center mb-4">
+          Our Blog & Articles
         </h1>
+        <p className="body-lg text-center text-container-sm neutral6 mb-5">We consider all the drivers of change gives you the components you need to change to create a truly happens.</p>
 
         <div className="articles-grid">
+  {articles.slice(5).map((item) => (
+    <div
+      key={item.id}
+      className="articles-card"
+      onClick={() => navigate(`/articles/${item.id}`)}
+    >
+      <img
+        src={STORAGE_URL + item.image_url}
+        alt={item.title}
+      />
 
-          {articles.map((item) => (
-            <div
-              key={item.id}
-              className="article-card card-base card-padding-md card-hover-scale"
-              onClick={() => navigate(`/articles/${item.id}`)}
-            >
-              <img
-                src={STORAGE_URL + item.image_url}
-                alt={item.title}
-                className="article-img img-cover img-rounded img-lg"
-              />
+      <div className="articles-content">
+        <span className=" neutral5">
+          {new Date(item.created_at).toLocaleDateString()}
+        </span>
 
-              <h3 className="body-md body-md-bold mt-3">
-                {item.title}
-              </h3>
-
-            </div>
-          ))}
-
-        </div>
+        <p className=" mt-2">
+          {item.title}
+        </p>
+      </div>
+    </div>
+  ))}
+</div>
 
       </div>
     </section>

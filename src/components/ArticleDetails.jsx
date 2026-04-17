@@ -1,39 +1,48 @@
-import { useEffect, useState } from "react";
+import { useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { publicAPI, STORAGE_URL } from "../service/api";
 import { useToast } from "../context/ToastContext";
+import { useAsync } from "../hooks/useAsync";
+import { Card } from "react-bootstrap";
 
 function ArticleDetails() {
   const { id } = useParams();
-
-  const [article, setArticle] = useState(null);
-  const [loading, setLoading] = useState(true);
-
   const { showToast } = useToast();
 
-  // ================= FETCH ARTICLE =================
-  const fetchArticle = async () => {
-    try {
-      setLoading(true);
-
-      const res = await publicAPI.getArticle(id);
-
-      const data = res?.data?.data || res?.data || null;
-
-      setArticle(data);
-
-    } catch {
-      showToast("error", "Failed to load article");
-      setArticle(null);
-
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchArticle();
+  // ================= FETCH SINGLE ARTICLE =================
+  const fetchArticle = useCallback(() => {
+    return publicAPI.getArticle(id);
   }, [id]);
+
+  const {
+    data: articleData,
+    loading,
+    error,
+    execute,
+  } = useAsync(fetchArticle, false);
+
+  // ================= FETCH ALL ARTICLES =================
+  const {
+    data: articlesData,
+  } = useAsync(publicAPI.getArticles);
+
+  // ================= DATA =================
+  const article =
+    articleData?.data?.data || articleData?.data || null;
+
+  const articles = articlesData?.data || [];
+
+  // ================= TRIGGER FETCH =================
+  useEffect(() => {
+    execute();
+  }, [id]);
+
+  // ================= ERROR HANDLING =================
+  useEffect(() => {
+    if (error) {
+      showToast("error", "Failed to load article");
+    }
+  }, [error]);
 
   // ================= LOADING =================
   if (loading) {
@@ -44,7 +53,7 @@ function ArticleDetails() {
     );
   }
 
-  // ================= EMPTY STATE =================
+  // ================= EMPTY =================
   if (!article) {
     return (
       <p className="text-center body-md py-5 text-danger">
@@ -54,33 +63,62 @@ function ArticleDetails() {
   }
 
   return (
-    <div
-      style={{
-        padding: "20px",
-        maxWidth: "800px",
-        margin: "auto",
-      }}
-    >
+    <>
+    <section className="bg-light-section">
+      <div className="article-container">
+        <h2 className="h2 text-center">{article.title}</h2>
 
-      <h1>{article.title}</h1>
+        <img
+          src={STORAGE_URL + article.image_url}
+          alt={article.title}
+          className="article-image"
+        />
 
-      <img
-        src={STORAGE_URL + article.image_url}
-        alt={article.title}
-        style={{
-          width: "100%",
-          height: "400px",
-          objectFit: "cover",
-          borderRadius: "10px",
-          margin: "20px 0",
-        }}
-      />
+        <p className="article-content">
+          {article.content}
+        </p>
+      </div>
+      </section>
 
-      <p style={{ lineHeight: "1.6", fontSize: "18px" }}>
-        {article.content}
-      </p>
+    <div className="container">
+      <div className="read-more text-center text-container-sm mt-5">
+        <h2 className="h2">Read More Articles</h2>
 
-    </div>
+        <p className="body-lg">
+          We consider all the drivers of change gives you the components you
+          need to change to create a truly happens.
+        </p>
+      </div>
+
+      <div className="articles-grid mt-4">
+          {articles.length > 0 &&
+            articles
+              .filter((item) => item.id !== article.id) // 🔥 exclude current article
+              .slice(0, 4)
+              .map((item) => (
+                <div
+                  key={item.id}
+                  className="articles-card"
+                >
+                  <img
+                    src={STORAGE_URL + item.image_url}
+                    alt={item.title}
+                  />
+
+                  <div className="articles-content">
+                    <span className="body-sm body-sm-medium neutral5">
+                      {new Date(item.created_at).toLocaleDateString()}
+                    </span>
+
+                    <p className="body-xl body-xl-medium mt-3">
+                      {item.title}
+                    </p>
+                  </div>
+                </div>
+              ))}
+      </div>
+      </div>
+      </>
   );
 }
 

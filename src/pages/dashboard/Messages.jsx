@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
 import { api } from "../../service/api";
 
+import PageLayout from "./components/PageLayout";
+import DataTable from "./components/DataTable";
+import ActionButtons from "./components/ActionButtons";
+
 function Messages() {
   const [messages, setMessages] = useState([]);
 
+  // ================= FETCH =================
   const fetchData = async () => {
     try {
       const res = await api.get("/admin/contacts");
-      setMessages(res.data.data || res.data);
+      setMessages(res.data.data || res.data || []);
     } catch (err) {
       console.error(err);
     }
@@ -17,6 +22,7 @@ function Messages() {
     fetchData();
   }, []);
 
+  // ================= DELETE =================
   const handleDelete = async (id) => {
     if (!window.confirm("Delete message?")) return;
 
@@ -28,39 +34,34 @@ function Messages() {
     }
   };
 
+  // ================= UI =================
   return (
-    <div className="container mt-4">
-      <h2>Contact Messages</h2>
+    <PageLayout title="Contact Messages">
 
-      <table className="table table-bordered">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Message</th>
-            <th>Action</th>
+      <DataTable columns={["Name", "Email", "Message", "Actions"]}>
+        {(messages || []).map((msg) => (
+          <tr key={msg.id}>
+            <td>{msg.name}</td>
+            <td>{msg.email}</td>
+
+            <td style={{ maxWidth: "300px" }}>
+              <span>
+                {msg.message?.length > 80
+                  ? msg.message.slice(0, 80) + "..."
+                  : msg.message}
+              </span>
+            </td>
+
+            <td>
+              <ActionButtons
+                onDelete={() => handleDelete(msg.id)}
+              />
+            </td>
           </tr>
-        </thead>
+        ))}
+      </DataTable>
 
-        <tbody>
-          {messages.map((msg) => (
-            <tr key={msg.id}>
-              <td>{msg.name}</td>
-              <td>{msg.email}</td>
-              <td>{msg.message}</td>
-              <td>
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => handleDelete(msg.id)}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    </PageLayout>
   );
 }
 

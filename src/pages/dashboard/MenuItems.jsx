@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
 import { adminAPI, publicAPI, STORAGE_URL } from "../../service/api";
+
+import PageLayout from "./components/PageLayout";
+import DataTable from "./components/DataTable";
+import ActionButtons from "./components/ActionButtons";
+import FormField from "./components/FormField";
+
 function MenuItems() {
   const [items, setItems] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -14,72 +20,61 @@ function MenuItems() {
 
   const [editingId, setEditingId] = useState(null);
 
-  // ==========================
-  // GET DATA
-  // ==========================
+  // ================= FETCH =================
   const fetchData = async () => {
-  try {
-    const res = await publicAPI.getMenuItems();
-    setItems(res.data.data || res.data);
+    try {
+      const res = await publicAPI.getMenuItems();
+      setItems(res.data.data || res.data);
 
-    const catRes = await publicAPI.getCategories();
-    setCategories(catRes.data.data || catRes.data);
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-useEffect(() => {
-  fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, []);
-
-  // ==========================
-  // HANDLE INPUT
-  // ==========================
-  const handleChange = (e) => {
-  const { name, value, files } = e.target;
-
-  if (name === "image_url") {
-    setForm({ ...form, image_url: files[0] }); // ✅ file
-  } else {
-    setForm({ ...form, [name]: value });
-  }
-};
-
-  // ==========================
-  // CREATE / UPDATE
-  // ==========================
-
-    const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  try {
-    const formData = new FormData();
-
-    Object.keys(form).forEach((key) => {
-      if (form[key] !== null) {
-        formData.append(key, form[key]);
-      }
-    });
-
-    if (editingId) {
-      await adminAPI.updateMenuItem(editingId, formData);
-    } else {
-      await adminAPI.createMenuItem(formData);
+      const catRes = await publicAPI.getCategories();
+      setCategories(catRes.data.data || catRes.data);
+    } catch (err) {
+      console.error(err);
     }
-console.log(form.image_url);
-    resetForm();
+  };
+
+  useEffect(() => {
     fetchData();
-  } catch (err) {
-    console.error(err.response?.data || err);
-  }
-};
+  }, []);
 
+  // ================= INPUT =================
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
 
-  // ==========================
-  // EDIT
-  // ==========================
+    if (name === "image_url") {
+      setForm({ ...form, image_url: files[0] });
+    } else {
+      setForm({ ...form, [name]: value });
+    }
+  };
+
+  // ================= SUBMIT =================
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData();
+
+      Object.keys(form).forEach((key) => {
+        if (form[key] !== null) {
+          formData.append(key, form[key]);
+        }
+      });
+
+      if (editingId) {
+        await adminAPI.updateMenuItem(editingId, formData);
+      } else {
+        await adminAPI.createMenuItem(formData);
+      }
+
+      resetForm();
+      fetchData();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // ================= EDIT =================
   const handleEdit = (item) => {
     setForm({
       name: item.name,
@@ -92,9 +87,7 @@ console.log(form.image_url);
     setEditingId(item.id);
   };
 
-  // ==========================
-  // DELETE
-  // ==========================
+  // ================= DELETE =================
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure?")) return;
 
@@ -106,9 +99,7 @@ console.log(form.image_url);
     }
   };
 
-  // ==========================
-  // RESET
-  // ==========================
+  // ================= RESET =================
   const resetForm = () => {
     setForm({
       name: "",
@@ -120,40 +111,33 @@ console.log(form.image_url);
     setEditingId(null);
   };
 
-  // ==========================
-  // UI
-  // ==========================
+  // ================= UI =================
   return (
-    <div className="container mt-4">
-      <h2>Manage Menu Items</h2>
+    <PageLayout title="Menu Items">
 
       {/* FORM */}
-      <form onSubmit={handleSubmit} className="mb-4">
-        <input
-          type="text"
+      <form onSubmit={handleSubmit} className="card p-3">
+
+        <FormField
+          label="Name"
           name="name"
-          placeholder="Name"
           value={form.name}
           onChange={handleChange}
-          className="form-control mb-2"
         />
 
-        <input
-          type="text"
+        <FormField
+          label="Description"
           name="description"
-          placeholder="Description"
           value={form.description}
           onChange={handleChange}
-          className="form-control mb-2"
         />
 
-        <input
+        <FormField
+          label="Price"
           type="number"
           name="price"
-          placeholder="Price"
           value={form.price}
           onChange={handleChange}
-          className="form-control mb-2"
         />
 
         <select
@@ -173,76 +157,62 @@ console.log(form.image_url);
         <input
           type="file"
           name="image_url"
-          accept="image/*"
           onChange={handleChange}
           className="form-control mb-2"
         />
 
-        <button className="btn btn-primary">
+        <button className="btn btn-dark">
           {editingId ? "Update" : "Create"}
         </button>
 
-        {editingId && (
-          <button
-            type="button"
-            className="btn btn-secondary ms-2"
-            onClick={resetForm}
-          >
-            Cancel
-          </button>
-        )}
       </form>
 
       {/* TABLE */}
-      <table className="table table-bordered">
-        <thead>
-          <tr>
-            <th>Image</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Category</th>
-            <th>Actions</th>
+      <DataTable
+        columns={["Image", "Name", "Description", "Price", "Category", "Actions"]}
+      >
+        {(items || []).map((item) => (
+          <tr key={item.id}>
+            <td>
+              {item.image_url && (
+                <img
+                  src={STORAGE_URL + item.image_url}
+                  width="50"
+                  alt=""
+                />
+              )}
+            </td>
+
+            <td>{item.name}</td>
+            <td>{item.description}</td>
+            <td>{item.price}</td>
+            <td>{item.category?.name}</td>
+
+            <td>
+              <ActionButtons
+                actions={[
+                  {
+                    label: "delete",
+                    variant: "danger",
+                    onClick: () => {
+                      handleDelete(item.id);
+                    }},
+                    {
+                    label: "edit",
+                    varient: "light",
+                    onClick: () => {
+                      handleEdit(item)
+                    }
+                    }
+                  ]}
+              />
+            </td>
           </tr>
-        </thead>
+        ))}
+      </DataTable>
 
-        <tbody>
-          {items.map((item) => (
-            <tr key={item.id}>
-              <td>
-                {item.image_url && (
-                  <img
-                    src={STORAGE_URL + item.image_url}
-                    alt=""
-                    width="60"
-                  />
-                )}
-              </td>
-              <td>{item.name}</td>
-              <td>{item.description}</td>
-              <td>{item.price}</td>
-              <td>{item.category?.name}</td>
-              <td>
-                <button
-                  className="btn btn-warning btn-sm me-2"
-                  onClick={() => handleEdit(item)}
-                >
-                  Edit
-                </button>
-
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => handleDelete(item.id)}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      
-    </div>
+    </PageLayout>
   );
 }
+
 export default MenuItems;

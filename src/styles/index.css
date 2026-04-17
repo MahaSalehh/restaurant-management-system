@@ -42,17 +42,4 @@ ul{
   }
 }
 
-/* Images */
-img {
-  max-width: 100%;
-  height: auto;
-}
 
-/* Text */
-h1, h2, h3 {
-  line-height: 1.2;
-}
-
-p {
-  line-height: 1.6;
-}
