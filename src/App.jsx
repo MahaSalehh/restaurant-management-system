@@ -15,7 +15,6 @@ import Articles from "./pages/public/Articles";
 import Cart from "./pages/private/Cart";
 import Profile from "./pages/private/Profile";
 import Checkout from "./pages/private/Checkout";
-// import Notifications from "./pages/private/Notifications";
 
 import Dashboard from "./pages/dashboard/Dashboard";
 import MenuItems from "./pages/dashboard/MenuItems";
@@ -24,16 +23,15 @@ import Orders from "./pages/dashboard/Orders";
 import Bookings from "./pages/dashboard/Bookings";
 import Users from "./pages/dashboard/Users";
 import AdminProfile from "./pages/dashboard/AdminProfile";
-import Notifications from "./pages/dashboard/Notifications";
 import Blogs from "./pages/dashboard/Blogs";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import Messages from "./pages/dashboard/Messages";
-import ArticleDetails from "./components/ArticleDetails";
+import ArticleDetails from "./pages/public/ArticleDetails";
 import Booking from "./pages/private/Booking";
-import NotificationsSidebar from "./components/Notification";
 
 import "./styles/index.css";
+import NotificationsPage from "./components/Notification";
 
 function App() {
   return (
@@ -54,7 +52,7 @@ function App() {
             <Route path="cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
             <Route path="checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
             <Route path="profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-            <Route path="notifications-sidebar" element={<ProtectedRoute><NotificationsSidebar /></ProtectedRoute>} />
+            <Route path="notifications" element={<ProtectedRoute><NotificationsPage></NotificationsPage></ProtectedRoute>} />
           </Route>
             {/* Admin dashboard routes */}
           <Route path="/dashboard" element= {<AdminRoute><DashboardLayout /></AdminRoute>}>
@@ -67,7 +65,7 @@ function App() {
             <Route path="users" element={<Users />} />
             <Route path="messages" element={<Messages />} />
             <Route path="admin/profile" element={<AdminProfile />} />
-            <Route path="admin/notifications" element={<Notifications />} />
+            <Route path="admin/notifications" element={<NotificationsPage />} />
           </Route>
         </Routes>
     </BrowserRouter>

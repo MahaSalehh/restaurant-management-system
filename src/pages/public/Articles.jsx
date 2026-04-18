@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAsync } from "../../hooks/useAsync";
 import { useToast } from "../../context/ToastContext";
 import { Card } from "react-bootstrap";
+import Loader from "../../components/Loader";
 
 function Articles() {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ function Articles() {
 
   // ================= LOADING =================
   if (loading)
-    return <p className="text-center body-md py-5">Loading...</p>;
+    return <Loader />
 
   return (
     <section className="py-5 bg-light-section">

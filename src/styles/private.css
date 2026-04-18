@@ -489,7 +489,34 @@
   background: var(--neutral-02);
   padding: 60px 0;
 }
+.checkout-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 20px;
+}
 
+.back-button {
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 14px;
+}
+.checkout-title{
+  margin: 0;
+  text-align: left;
+}
+/* responsive */
+@media (max-width: 576px) {
+  .checkout-header {
+    gap: 10px;
+  }
+
+  .back-button {
+    font-size: 12px;
+    padding: 5px 12px;
+  }
+}
 /* FORM CARD */
 .checkout-card {
   background: var(--neutral-01);
@@ -819,87 +846,196 @@
   }
 }
 
-.notif-wrapper {
-  position: relative;
-}
-
-.notif-btn {
-  position: relative;
-  border-radius: var(--radius-sm);
-  border: none;
-  background-color: var(--neutral-02);
-}
-
-.notif-badge {
-  position: absolute;
-  top: 0;
-  right: 0;
-  transform: translate(40%, -40%);
-  background: #ff3b3b;
-  color: var(--neutral-01);
-  font-size: 11px;
-  padding: 2px 6px;
-  border-radius: 20px;
-}
-
-.notif-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(2px);
-  z-index: 2000;
-}
-
-.notif-sidebar {
-  position: fixed;
-  top: 0;
-  right: -420px;
-  width: 380px;
-  height: 100vh;
-
+/* =========================
+   NOTIFICATIONS PAGE
+========================= */
+.notif-page {
+  min-height: 100vh;
   background: var(--neutral-02);
-  box-shadow: var(--shadow-hover);
-  z-index: 2100;
+  padding: 40px 20px;
+}
 
+/* HEADER */
+.notif-page-header {
+  max-width: 900px;
+  margin: auto;
+  margin-bottom: 20px;
+}
+
+.notif-page-header h2 {
+  margin: 0;
+}
+
+.notif-page-header p {
+  margin: 5px 0 0;
+  color: var(--neutral-05);
+}
+
+/* FILTER */
+.notif-filter {
   display: flex;
-  flex-direction: column;
-
-  transition: right 0.3s ease;
+  gap: 10px;
+  max-width: 900px;
+  margin: auto;
+  margin-bottom: 20px;
 }
 
-.notif-sidebar.open {
-  right: 0;
-}
-
-.notif-sidebar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  padding: 16px;
-  border-bottom: 1px solid var(--neutral-03);
-}
-
-.notif-sidebar-body {
-  flex: 1;
-  overflow-y: auto;
-}
-
-.notif-item {
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--neutral-03);
+.notif-filter button {
+  border: none;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--neutral-03);
   cursor: pointer;
   transition: var(--transition);
 }
 
-.notif-item:hover {
-  background: var(--neutral-02);
+.notif-filter button.active {
+  background: var(--primary);
+  color: white;
 }
 
-.notif-item.unread {
-  background: rgba(13, 110, 253, 0.06);
+/* LIST */
+.notif-page-body {
+  max-width: 900px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.notif-item.read {
-  opacity: 0.8;
+/* CARD */
+.notif-card {
+  background: var(--neutral-01);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--neutral-03);
+  cursor: pointer;
+  transition: 0.2s;
+  position: relative;
+}
+
+.notif-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* TITLE */
+.notif-card-title {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* MESSAGE */
+.notif-card-msg {
+  margin: 6px 0 0;
+  color: var(--neutral-05);
+}
+
+/* UNREAD STATE */
+.notif-card.unread {
+  background: rgba(13, 110, 253, 0.08);
+  border-left: 4px solid var(--primary);
+}
+
+/* READ STATE */
+.notif-card.read {
+  opacity: 0.6;
+}
+
+/* DOT */
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
+/* CHECK ICON */
+.read-icon {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  color: #2ecc71;
+}
+
+/* EMPTY */
+.notif-empty {
+  text-align: center;
+  color: var(--neutral-05);
+  padding: 40px;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .notif-filter {
+    flex-wrap: wrap;
+  }
+}
+.notif-time {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--neutral-05);
+}
+
+/* =========================
+   BELL ICON WRAPPER
+========================= */
+.icon-badge-wrapper{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-btn {
+  position: relative; /* IMPORTANT for badge positioning */
+  align-items: center;
+  justify-content: center;
+  background: transparent !important;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  display: inline-flex;
+}
+
+/* =========================
+   NOTIFICATION BADGE (BELL)
+========================= */
+.notif-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+
+  background: #ff3b3b;
+  color: #fff;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;
+  line-height: 1;
+
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* small screen tweak */
+@media (max-width: 768px) {
+  .notif-badge {
+    top: -5px;
+    right: -5px;
+    min-width: 16px;
+    height: 16px;
+    font-size: 10px;
+  }
 }

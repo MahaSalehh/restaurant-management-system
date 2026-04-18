@@ -3,6 +3,7 @@ import { cartAPI, orderAPI } from "../../service/api";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../context/ToastContext";
 import { Button } from "react-bootstrap";
+import Loader from "../../components/Loader";
 
 const Checkout = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -78,21 +79,22 @@ const Checkout = () => {
   const handleBack = () => navigate(-1);
 
   if (loading)
-    return <p className="text-center py-5">Loading...</p>;
+    return <Loader />
 
   return (
     <section className="checkout-section">
 
       <div className="menu-container">
+        <div className="checkout-header">
         <Button
           variant="dark"
           onClick={handleBack}
-          className="mb-3"
+          className="back-button"
         >
           ← Back
         </Button>
-        <h2 className="text-start mb-5">Checkout </h2>
-
+        <h2 className="checkout-title">Checkout </h2>
+</div>
         <div className="row g-4">
 
           <div className="col-lg-7">

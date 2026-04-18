@@ -3,6 +3,7 @@ import { Container, Navbar } from "react-bootstrap";
 import { Link, useLocation, Outlet, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import {
+  FaBell,
   FaUser,
   FaHome,
   FaShoppingBag,
@@ -10,17 +11,18 @@ import {
   FaUsers,
   FaBars,
   FaEnvelope,
-  FaArrowRight,
 } from "react-icons/fa";
-import Notification from "../components/Notification";
-import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
+import { useNotifications } from "../context/NotificationsContext";
+import { FaAnglesRight } from "react-icons/fa6";
 
 function DashboardLayout() {
-  const { user, isAuthenticated } = useAuth();
+  const {isAuthenticated } = useAuth();
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
 const [mobileOpen, setMobileOpen] = useState(false);
   const isActive = (path) => location.pathname === path;
+  const notifContext = useNotifications();
+  const unreadCount = notifContext?.unreadCount || 0;
 
   if (!isAuthenticated) return <Navigate to="/login" replace />;
 
@@ -57,7 +59,7 @@ const [mobileOpen, setMobileOpen] = useState(false);
     }
   }}
 >
-  <FaArrowRight />
+  <FaAnglesRight />
 </button>
         </div>
 
@@ -93,7 +95,16 @@ const [mobileOpen, setMobileOpen] = useState(false);
 
   <div className="top-actions">
     
-    <Notification />
+    <Link to="admin/notifications" className="icon-btn notif-icon">
+                      <div className="icon-badge-wrapper">
+                        <FaBell />
+                        {unreadCount > 0 && (
+                          <span className="notif-badge">
+                            {unreadCount > 99 ? "99+" : unreadCount}
+                          </span>
+                        )}
+                      </div>
+                    </Link>
 
     <Link to="/dashboard/admin/profile" className="icon-btn">
       <FaUser />

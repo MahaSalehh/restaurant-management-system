@@ -1,5 +1,3 @@
-import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
 import {
   FaTwitter,
   FaInstagram,
@@ -16,48 +14,45 @@ const instaImages = [img1, img2, img3, img4];
 
 const Footer = () => {
   return (
-    <footer className="footer-wrapper bg-dark-section py-5">
-      <Container>
-        <Row className="gy-4">
+    <footer className="footer-wrapper">
+      <div className="container">
 
-          {/* Column 1 - Brand */}
-          <Col md={3}>
-          <div className="d-flex align-items-center footer-logo neutral1">
-          <img src={logo} alt="Logo" className="logo" />
-            <h4 className="">Bistro Bliss</h4>
+        <div className="footer-main">
+
+          <div className="footer-col">
+            <div className="footer-logo">
+              <img src={logo} alt="logo" className="logo" />
+              <h4>Bistro Bliss</h4>
             </div>
-            <p className="body-sm neutral4">
+
+            <p className="footer-desc neutral4">
               In the new era of technology we look a in the future with certainty and pride to for our company and.
             </p>
 
-            <div className="d-flex footer-social-icons neutral1 mt-3">
+            <div className="footer-social">
               <FaTwitter />
               <FaFacebookF />
               <FaInstagram />
               <FaGithub />
             </div>
-          </Col>
+          </div>
 
-          <Col md={1} />
-
-          {/* Column 2 - Pages */}
-          <Col md={2}>
-            <h6 className="body-md body-md-bold neutral1 mb-3">Pages</h6>
-            <ul className="footer-links neutral3">
+          <div className="footer-col">
+            <h6>Pages</h6>
+            <ul>
               <li>Home</li>
               <li>About</li>
               <li>Menu</li>
               <li>Pricing</li>
-              <li>Pricing</li>
-              <li>Pricing</li>
+              <li>Blog</li>
+              <li>Contact</li>
               <li>Delivery</li>
             </ul>
-          </Col>
+          </div>
 
-          {/* Column 3 - Contact */}
-          <Col md={3}>
-            <h6 className="body-md body-md-bold neutral1 mb-3">Utility Pages</h6>
-            <ul className="footer-links neutral3">
+          <div className="footer-col">
+            <h6>Utility Pages</h6>
+            <ul>
               <li>Start Here</li>
               <li>Styleguide</li>
               <li>Password Protected</li>
@@ -65,31 +60,26 @@ const Footer = () => {
               <li>Licenses</li>
               <li>Changelog</li>
               <li>View More</li>
-
             </ul>
-          </Col>
+          </div>
 
-          {/* Column 4 - Instagram */}
-          <Col md={3}>
-            <h6 className="body-md body-md-bold neutral1 mb-3">
-              Follow Us On Instagram
-            </h6>
+          <div className="footer-col footer-images">
+            <h6>Follow Us On Instagram</h6>
 
             <div className="insta-grid">
               {instaImages.map((img, i) => (
-                <img key={i} src={img} alt={`insta-${i}`} />
+                <img key={i} src={img} alt="" />
               ))}
             </div>
-          </Col>
+          </div>
 
-        </Row>
+        </div>
 
-        <hr className="footer-line" />
-
-        <p className="text-center body-sm neutral4 mb-0">
+        <div className="footer-bottom neutral4">
           Copyright © 2023 Hashtag Developer. All Rights Reserved
-        </p>
-      </Container>
+        </div>
+
+      </div>
     </footer>
   );
 };

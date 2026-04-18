@@ -1,14 +1,15 @@
 import { useEffect, useCallback } from "react";
-import { useParams } from "react-router-dom";
-import { publicAPI, STORAGE_URL } from "../service/api";
-import { useToast } from "../context/ToastContext";
-import { useAsync } from "../hooks/useAsync";
+import { useNavigate,  useParams } from "react-router-dom";
+import { publicAPI, STORAGE_URL } from "../../service/api";
+import { useToast } from "../../context/ToastContext";
+import { useAsync } from "../../hooks/useAsync";
 import { Card } from "react-bootstrap";
+import Loader from "../../components/Loader";
 
 function ArticleDetails() {
   const { id } = useParams();
   const { showToast } = useToast();
-
+  const navigate = useNavigate();
   // ================= FETCH SINGLE ARTICLE =================
   const fetchArticle = useCallback(() => {
     return publicAPI.getArticle(id);
@@ -45,14 +46,7 @@ function ArticleDetails() {
   }, [error]);
 
   // ================= LOADING =================
-  if (loading) {
-    return (
-      <p className="text-center body-md py-5">
-        Loading article...
-      </p>
-    );
-  }
-
+  if (loading) return <Loader />
   // ================= EMPTY =================
   if (!article) {
     return (
@@ -99,6 +93,8 @@ function ArticleDetails() {
                 <div
                   key={item.id}
                   className="articles-card"
+                  onClick={() => navigate(`/articles/${item.id}`)}
+
                 >
                   <img
                     src={STORAGE_URL + item.image_url}

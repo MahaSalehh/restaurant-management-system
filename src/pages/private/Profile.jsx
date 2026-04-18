@@ -8,8 +8,9 @@ import { useAsync } from "../../hooks/useAsync";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../context/ToastContext";
 
-import UserOrders from "../../components/MyOrders";
-import UserBookings from "../../components/MyBookings";
+import UserOrders from "./MyOrders";
+import UserBookings from "./MyBookings";
+import Loader from "../../components/Loader";
 
 function Profile() {
   const { user, setUser, logout } = useAuth();
@@ -71,7 +72,7 @@ function Profile() {
 
   const avatar = `https://ui-avatars.com/api/?name=${user?.name}&background=random&size=128`;
 
-  if (!user) return <p className="text-center py-5">Loading...</p>;
+  if (!user) return <Loader />
 
   return (
     <div className="profile-page">

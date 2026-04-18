@@ -3,6 +3,7 @@ import { cartAPI, STORAGE_URL } from "../../service/api";
 import { useAsync } from "../../hooks/useAsync";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../context/ToastContext";
+import Loader from "../../components/Loader";
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -98,7 +99,7 @@ const Cart = () => {
 
   // ================= LOADING =================
   if (loading)
-    return <div className="text-center body-md py-5">Loading...</div>;
+    return <Loader />
 
   return (
     <section className="cart-page">

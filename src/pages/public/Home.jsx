@@ -21,6 +21,7 @@ import { HiOutlineReceiptTax } from "react-icons/hi";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
+import Loader from "../../components/Loader";
 
 function Home() {
   const { isAuthenticated} = useAuth();
@@ -76,8 +77,7 @@ const showError = () => {
   };
 
   // ================= LOADING =================
-  if (categoriesLoading || articlesLoading)
-    return <p className="text-center py-5">Loading...</p>;
+  if (categoriesLoading || articlesLoading) return <Loader />
 
   return (
     <>

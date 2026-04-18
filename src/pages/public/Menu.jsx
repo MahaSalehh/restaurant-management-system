@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { publicAPI, STORAGE_URL, cartAPI } from "../../service/api";
 import { useAuth } from "../../context/AuthContext";
 import { useAsync } from "../../hooks/useAsync";
@@ -13,6 +13,7 @@ import delivercoo from "../../assets/Menu/apps/delivercoo.svg";
 import instacort from "../../assets/Menu/apps/instacort.svg";
 import justEat from "../../assets/Menu/apps/justEat.svg";
 import didiFood from "../../assets/Menu/apps/didiFood.svg";
+import Loader from "../../components/Loader";
 function Menu() {
   const { isAuthenticated } = useAuth();
   const { showToast } = useToast();
@@ -106,7 +107,6 @@ function Menu() {
   const updateQty = async (item, newQty) => {
     const current = cartState[item.id];
 
-    // 🗑️ REMOVE
     if (newQty === 0) {
       try {
         await cartAPI.removeItem(current.cartItemId);
@@ -167,8 +167,7 @@ function Menu() {
     { title: "DiDi Food", img: didiFood },
   ];
   // ================= LOADING =================
-  if (categoriesLoading || menuLoading)
-    return <p className="text-center py-5">Loading...</p>;
+  if (categoriesLoading || menuLoading) return <Loader />
 
   return (
     <>

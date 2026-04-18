@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { bookingAPI } from "../service/api";
+import { bookingAPI } from "../../service/api";
 import { Modal, Button, Badge } from "react-bootstrap";
-import { useToast } from "../context/ToastContext";
+import { useToast } from "../../context/ToastContext";
+import Loader from "../../components/Loader";
 
 function Bookings() {
   const [bookings, setBookings] = useState([]);
@@ -50,9 +51,9 @@ function Bookings() {
       rejected: "danger",
     }[status] || "secondary");
 
-  if (loading) {
-    return <div className="page-state">Loading bookings...</div>;
-  }
+  if (loading) 
+    return <Loader />
+  
 
   return (
     <div className="list-page">

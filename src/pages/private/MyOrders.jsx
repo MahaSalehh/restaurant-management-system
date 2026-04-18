@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { orderAPI } from "../service/api";
+import { orderAPI } from "../../service/api";
 import { Modal, Button, Badge } from "react-bootstrap";
-import { useToast } from "../context/ToastContext";
+import { useToast } from "../../context/ToastContext";
+import Loader from "../../components/Loader";
 
 function Orders() {
   const [orders, setOrders] = useState([]);
@@ -55,9 +56,9 @@ function Orders() {
       rejected: "danger",
     }[status] || "secondary");
 
-  if (loading) {
-    return <div className="page-state">Loading orders...</div>;
-  }
+  if (loading) 
+    return <Loader />
+  
 
   return (
     <div className="list-page">
