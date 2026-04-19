@@ -4,7 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useAsync } from "../../hooks/useAsync";
 import { useToast } from "../../context/ToastContext";
 import { FaPlus, FaMinus, FaTrash, FaShoppingCart } from "react-icons/fa";
-import UberEats from "../../assets/Menu/apps/UberEats.svg";
+import UberEats from "../../assets/Menu/apps/uber-eats.svg";
 import GrubHub from "../../assets/Menu/apps/GrubHub.svg";
 import PostMates from "../../assets/Menu/apps/Postmates.svg";
 import DoorDash from "../../assets/Menu/apps/DoorDash.svg";
