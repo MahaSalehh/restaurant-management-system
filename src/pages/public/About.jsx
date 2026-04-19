@@ -7,7 +7,7 @@ import icon1 from "../../assets/About/icon1.svg";
 import icon2 from "../../assets/About/icon2.svg";
 import icon3 from "../../assets/About/icon3.svg";
 import image from "../../assets/About/about-section.png";
-
+import { FaPlay } from "react-icons/fa";
 const About = () => {
   const services = [
     {
@@ -37,7 +37,7 @@ const About = () => {
       {/* VIDEO SECTION */}
       <section className="video-section">
         <div className="overlay overlay-center text-center">
-          <button className="play-btn btn-circle btn-circle-lg btn-hover-scal">▶</button>
+          <button className="play-btn btn-circle btn-circle-lg btn-hover-scal"> <FaPlay/> </button>
 
           <h2 className="h2 mt-3 neutral1 text-container-sm">
             Feel the authentic & original taste from us
