@@ -92,8 +92,8 @@
 @media (max-width: 992px) {
   .category-card {
     padding: 16px !important;
-    right: -20px;
-    bottom: -20px;
+    right: 0;
+    bottom: 0;
   }
 }
 @media (max-width: 768px) {

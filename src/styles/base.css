@@ -145,7 +145,7 @@
   color: var(--neutral-01);
 }
 
-.btn-primary-custom:hover {
+.btn-primary-custom:hover{
   border: 2px solid #922d35;
   background: #922d35;
   transform: translateY(-2px);
@@ -161,8 +161,10 @@
 
 .btn-outline-custom:hover {
   background: var(--neutral-07);
+  border: 2px solid var(--neutral-07);
   color: var(--neutral-01);
 }
+
 
 
 /* SIZES */

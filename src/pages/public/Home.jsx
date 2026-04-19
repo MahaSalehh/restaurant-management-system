@@ -94,21 +94,21 @@ const showError = () => {
 
           <div className="hero-buttons d-flex gap-3 justify-content-center">
             {!isAuthenticated ? (
-              <Button as={Link} to="/booking" className="btn-custom btn-primary-custom btn-lg"
+              <Link to="/booking" className="btn-custom btn-primary-custom btn-lg"
             onClick={showError}
             >
               Book A Table
-            </Button>
+            </Link>
             ) : (
-              <Button as={Link} to="/booking" className="btn-custom btn-primary-custom btn-lg"
+              <Link to="/booking" className="btn-custom btn-primary-custom btn-lg"
             >
               Book A Table
-            </Button>
+            </Link>
             )}
 
-            <Button as={Link} to="/menu" className="btn-custom btn-outline-custom btn-lg">
+            <Link to="/menu" className="btn-custom btn-outline-custom btn-lg">
               Explore Menu
-            </Button>
+            </Link>
           </div>
 
         </div>
@@ -118,7 +118,7 @@ const showError = () => {
       <Container className="py-5">
         <h1 className="h2 text-center mb-4">Browse Our Menu</h1>
 
-        <Row className="mt-5 g-4">
+        <Row className="mt-5 g-4 justify-content-center">
           {categories.map((item) => (
             <Col lg={3} md={6} sm={6} xs={6} key={item.id}>
                 <div className="category-scale">
