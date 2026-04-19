@@ -123,7 +123,7 @@ function PublicLayout() {
           {/* RIGHT */}
           <div className="d-flex align-items-center gap-3 ms-auto">
             {!isAuthenticated ? (
-              <Link to="/login" className="btn-custom btn-outline-custom btn-sm">
+              <Link to="/login" className="btn-custom btn-outline-custom signin">
                 Hello, Sign in
               </Link>
             ) : (

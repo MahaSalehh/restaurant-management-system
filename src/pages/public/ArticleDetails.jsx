@@ -3,7 +3,6 @@ import { useNavigate,  useParams } from "react-router-dom";
 import { publicAPI, STORAGE_URL } from "../../service/api";
 import { useToast } from "../../context/ToastContext";
 import { useAsync } from "../../hooks/useAsync";
-import { Card } from "react-bootstrap";
 import Loader from "../../components/Loader";
 
 function ArticleDetails() {

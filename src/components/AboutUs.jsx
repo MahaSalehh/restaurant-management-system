@@ -11,7 +11,7 @@ function AboutUs({ img }) {
         <Row className="align-items-center g-4">
 
           {/* LEFT IMAGE */}
-          <Col lg={5} md={12} className="position-relative text-center">
+          <Col lg={5} md={5} className="position-relative text-center">
           <div className="about-img-wrapper">
             <img src={img} alt="food" className="about-img img-fluid rounded-4" />
 
@@ -39,7 +39,7 @@ function AboutUs({ img }) {
           </Col>
 
           {/* RIGHT TEXT */}
-          <Col lg={7} md={12} className="d-flex align-items-center ps-lg-5">
+          <Col lg={7} md={7} className="d-flex align-items-center ps-lg-5">
             <div className="about-content text-container-md text-left mx-lg-auto">
               <h2 className="h2 mb-4">
                 We provide healthy food for your family.

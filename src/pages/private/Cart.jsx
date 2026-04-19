@@ -108,7 +108,7 @@ const Cart = () => {
         {/* HEADER */}
         <div className="cart-header">
           <div>
-            <h2>Your Cart</h2>
+            <h2 className="h2">Your Cart</h2>
             <p>{cartItems.length} items</p>
           </div>
 
@@ -126,7 +126,7 @@ const Cart = () => {
         {/* EMPTY */}
         {cartItems.length === 0 ? (
           <div className="cart-empty">
-            <h3>Your cart is empty</h3>
+            <h3 className="h3">Your cart is empty</h3>
 
             <button onClick={() => navigate("/menu")}>
               Browse Menu
@@ -151,7 +151,7 @@ const Cart = () => {
                           ? item.menu_item.image_url
                           : STORAGE_URL + item.menu_item?.image_url
                       }
-                      alt=""
+                      alt={item.menu_item?.name}
                     />
 
                     <div className="cart-details">

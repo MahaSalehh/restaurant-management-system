@@ -13,7 +13,7 @@ import UserBookings from "./MyBookings";
 import Loader from "../../components/Loader";
 
 function Profile() {
-  const { user, setUser, logout } = useAuth();
+  const { user, updateUser, refreshUser, logout } = useAuth();
   const { showToast } = useToast();
   const navigate = useNavigate();
 
@@ -30,45 +30,51 @@ function Profile() {
 
   // sync form
   useEffect(() => {
-    if (showEdit) {
-      setFormData({
-        name: user?.name || "",
-        phone: user?.phone || "",
-      });
-    }
-  }, [showEdit, user]);
+  setFormData({
+    name: user?.name || "",
+    phone: user?.phone || "",
+  });
+}, [user]);
 
   // ================= UPDATE =================
   const handleUpdate = async () => {
-    if (formData.name.length < 3) {
-      showToast("error", "Name must be at least 3 characters");
-      return;
+  if (formData.name.length < 3) {
+    showToast("error", "Name must be at least 3 characters");
+    return;
+  }
+
+  if (formData.phone.length !== 11) {
+    showToast("error", "Phone must be 11 digits");
+    return;
+  }
+
+  try {
+    const res = await updateProfile(formData);
+
+    // أهم سطر هنا 👇
+    const updatedUser =
+      res?.data?.user ||
+      res?.data?.data?.user ||
+      res?.data;
+
+    if (!updatedUser) {
+      throw new Error("Invalid response from server");
     }
 
-    if (formData.phone.length !== 11) {
-      showToast("error", "Phone must be 11 digits");
-      return;
-    }
+    // ✅ خلي الـ user هو المصدر الحقيقي فقط
+    updateUser(updatedUser);
+    await refreshUser();
+    setShowEdit(false);
+    showToast("success", "Profile updated successfully");
 
-    try {
-      const res = await updateProfile(formData);
-
-      const updatedUser =
-        res?.data?.data || res?.data?.user || res?.data || formData;
-
-      // force rerender
-      setUser({ ...user, ...updatedUser, ...formData });
-
-      showToast("success", "Profile updated successfully 🎉");
-
-      setShowEdit(false);
-    } catch (err) {
-      showToast(
-        "error",
-        err?.response?.data?.message || "Update failed"
-      );
-    }
-  };
+    setShowEdit(false);
+  } catch (err) {
+    showToast(
+      "error",
+      err?.response?.data?.message || err.message || "Update failed"
+    );
+  }
+};
 
   const avatar = `https://ui-avatars.com/api/?name=${user?.name}&background=random&size=128`;
 
@@ -141,7 +147,7 @@ function Profile() {
 
               <p><b>Name:</b> {user?.name}</p>
               <p><b>Email:</b> {user?.email}</p>
-              <p><b>Phone:</b> {user?.phone || "Not set"}</p>
+              <p><b>Phone:</b> {user?.phone}</p>
             </div>
           )}
 

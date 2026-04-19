@@ -1,5 +1,5 @@
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { publicAPI, STORAGE_URL } from "../../service/api";
 import { useAsync } from "../../hooks/useAsync";
 import { useToast } from "../../context/ToastContext";
@@ -24,6 +24,7 @@ import { useAuth } from "../../context/AuthContext";
 import Loader from "../../components/Loader";
 
 function Home() {
+  const navigate = useNavigate();
   const { isAuthenticated} = useAuth();
 
   // ================= FETCH =================
@@ -119,17 +120,17 @@ const showError = () => {
 
         <Row className="mt-5 g-4">
           {categories.map((item) => (
-            <Col lg={3} md={6} sm={12} key={item.id}>
-
+            <Col lg={3} md={6} sm={6} xs={6} key={item.id}>
+                <div className="category-scale">
               <Card className="category-card card-base card-padding-lg card-hover-up text-center">
 
                 <div className="icon-wrapper">
                   <img src={iconsMap[item.name]} alt={item.name} />
                 </div>
 
-                <h3 className="h3">{item.name}</h3>
+                <h3 className="h3 category-title">{item.name}</h3>
 
-                <p className="body-md neutral6">
+                <p className="body-md neutral6 category-text">
                   {captionsMap[item.name]}
                 </p>
 
@@ -138,7 +139,7 @@ const showError = () => {
                 </Link>
 
               </Card>
-
+</div>
             </Col>
           ))}
         </Row>
@@ -153,25 +154,26 @@ const showError = () => {
         <Container className="py-5">
           <Row className="align-items-center g-5">
 
-            <Col md={6} className="text-center">
+            <Col lg={7} md={6}>
               <img src={img} className="img-fluid rounded-3" />
             </Col>
 
-            <Col md={6} className="text-container-md">
+            <Col lg={4}  md={6} xs={12} className="ps-lg-5">
+            <div className="stats-text mx-lg-auto">
               <h2 className="h2 mb-3">
                 Fastest Food Delivery in City
               </h2>
 
-              <p className="body-md neutral5 mb-4">
+              <p className="body-md neutral6 mb-4">
                 Our visual designer lets you quickly and of drag a down your way to customapps for both keep desktop. 
               </p>
 
               <ul className="body-xl body-xl-medium list-unstyled d-grid gap-3 mb-0">
-                <li className="d-flex align-items-center gap-2"><span className="icon-boxs"><FaRegClock /></span> Delivery within 30 minutes</li>
-                <li className="d-flex align-items-center gap-2"><span className="icon-boxs"><HiOutlineReceiptTax /></span> Best Offer & Prices</li>
-                <li className="d-flex align-items-center gap-2"><span className="icon-boxs"><AiOutlineShoppingCart /></span> Online Services Available</li>
+                <li className="d-flex align-items-center gap-3"><span className="icon-boxs"><FaRegClock /></span> Delivery within 30 minutes</li>
+                <li className="d-flex align-items-center gap-3"><span className="icon-boxs"><HiOutlineReceiptTax /></span> Best Offer & Prices</li>
+                <li className="d-flex align-items-center gap-3"><span className="icon-boxs"><AiOutlineShoppingCart /></span> Online Services Available</li>
               </ul>
-
+</div>
             </Col>
 
           </Row>
@@ -187,7 +189,7 @@ const showError = () => {
           <div className="d-flex justify-content-between align-items-center">
             <h2 className="h2">Our Blog & Articles</h2>
 
-            <Button as={Link} to="/articles" className="btn-custom btn-primary-custom btn-lg">
+            <Button as={Link} to="/articles" className="btn-custom btn-primary-custom btn-sm">
               Read All Articles
             </Button>
           </div>
@@ -195,9 +197,13 @@ const showError = () => {
           <Row className="mt-4 g-3 blog-cards">
 
             {/* big card */}
-            <Col md={6}>
+            <Col md={6} className="d-none d-md-block">
               {featured && (
-                <Card className="h-100 card-base">
+                <Card 
+                className="h-100 card-bse blog-card"
+                  onClick={() => navigate(`/articles/${featured.id}`)}
+                  style={{ cursor: "pointer" }}
+                >
                   <Card.Img src={STORAGE_URL + featured.image_url} />
 
                   <Card.Body>
@@ -214,19 +220,22 @@ const showError = () => {
             </Col>
 
             {/* small cards */}
-            <Col md={6}>
+            <Col md={6} xs={12}>
               <Row className="g-3">
 
                 {sideArticles.map((item) => (
-                  <Col md={6} key={item.id}>
-                    <Card className="card-base">
+                  <Col md={6} xs={6} key={item.id}>
+                    <Card 
+                    className="card-bse blog-card"
+                      onClick={() => navigate(`/articles/${item.id}`)}
+                      style={{ cursor: "pointer" }}
+                    >
                       <Card.Img src={STORAGE_URL + item.image_url} />
 
                       <Card.Body>
-                        <span className="body-sm neutral5">
-                          {new Date(item.created_at).toLocaleDateString()}
-                        </span>
-
+                          <span className="body-sm neutral5">
+                          {new Date(item.created_at).toLocaleDateString()}</span>
+                      
                         <h6 className="body-md body-md-medium neutral7 mt-1">{item.title}</h6>
                       </Card.Body>
                     </Card>

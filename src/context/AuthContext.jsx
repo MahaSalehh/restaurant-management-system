@@ -118,6 +118,10 @@ const logout = async (navigate) => {
       };
     });
   };
+  const refreshUser = async () => {
+  const res = await settingsAPI.getProfile();
+  setUser(res.data.data);
+};
   return (
     <AuthContext.Provider
       value={{
@@ -128,6 +132,7 @@ const logout = async (navigate) => {
         logout,
         register,
         updateUser,
+        refreshUser,
         isAuthenticated: !!token && !!user,
       }}
     >

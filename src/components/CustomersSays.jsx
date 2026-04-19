@@ -43,7 +43,7 @@ const CustomersSays = () => {
         <Row className="g-4">
 
           {testimonials.map((t, i) => (
-            <Col lg={4} md={6} sm={12} key={i}>
+            <Col lg={4} md={4} sm={6} xs={12} key={i}>
 
               {/* <Card className="testimonial-card h-100 p-4 text-start"> */}
               <Card className="card-base card-padding-md card-hover-shadow text-start bg-light-section">

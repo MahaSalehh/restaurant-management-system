@@ -25,7 +25,7 @@ const Services = () => {
         <Row className="mt-4 g-4">
 
           {services.map((s, i) => (
-            <Col md={3} sm={6} xs={12} key={i}>
+            <Col lg={3} md={6} sm={6} xs={6} key={i}>
               <Card className="service-card h-100 border-0">
                 
                 <Card.Img
@@ -33,15 +33,15 @@ const Services = () => {
                   className="service-img"
                 />
 
-                <Card.Body className="text-start">
-                  <h6 className="body-md body-md-bold">
+                <div className="pt-4">
+                  <h3 className="h3 body-xl-bold">
                     {s.title}
-                  </h6>
+                  </h3>
 
-                  <p className="body-sm mt-2">
+                  <p className="body-md neutral6">
                     In the new era of technology we look in the future with certainty for life.
                   </p>
-                </Card.Body>
+                </div>
 
               </Card>
             </Col>

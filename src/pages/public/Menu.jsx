@@ -207,11 +207,11 @@ function Menu() {
                   <img src={STORAGE_URL + item.image_url} alt={item.name} />
 
                   <div className="menu-content text-center p-3">
-                    <h3 className="h3">$ {item.price}</h3>
-                    <h4 className="body-xl body-xl-bold neutral6">
+                    <h3 className="h3 body-xl-bold">$ {item.price}</h3>
+                    <h4 className="body-xl-bold neutral6">
                       {item.name}
                     </h4>
-                    <p className="body-md neutral5">{item.description}</p>
+                    <p className="neutral5">{item.description}</p>
 
                     {isAuthenticated && (
                       <div className="cart-control neutral7">
@@ -261,13 +261,13 @@ function Menu() {
         <div className="menu-container">
           <div className="row align-items-center delivery-wrapper">
             {/* LEFT TEXT */}
-            <div className="col-lg-6 delivery-text">
+            <div className="col-lg-6 col-md-6 col-12 delivery-text">
               <h2 className="h2 mb-3 "> You can order through apps </h2>
-              <p className="body-md neutral6">
+              <p className="neutral6">
                 Lorem ipsum dolor sit amet consectetur adipiscing elit enim bibendum sed et aliquet aliquet risus tempor semper.
               </p>
             </div>
-            <div className="col-lg-7">
+            <div className="col-lg-6 col-md-6 col-12">
               <div className="delivery-logos">
 
   {/* ROW 1 */}

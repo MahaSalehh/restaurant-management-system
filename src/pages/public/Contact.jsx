@@ -62,13 +62,13 @@ const handleSubmit = async (e) => {
     {/* FORM CARD */}
     <Row className="justify-content-center">
       <Col lg={8} md={10}>
-        <Card className="contact-cards card-base card-padding-lg">
+        <Card className="contact-cards card-padding-lg">
 
           <Form onSubmit={handleSubmit}>
 
             <Row>
               <Col md={6}>
-                <Form.Group className="field">
+                <Form.Group className="contact-field">
                   <Form.Label>Name</Form.Label>
                   <Form.Control
                     name="name"
@@ -81,7 +81,7 @@ const handleSubmit = async (e) => {
               </Col>
 
               <Col md={6}>
-                <Form.Group className="field">
+                <Form.Group className="contact-field">
                   <Form.Label>Email</Form.Label>
                   <Form.Control
                     type="email"
@@ -95,7 +95,7 @@ const handleSubmit = async (e) => {
               </Col>
             </Row>
 
-            <Form.Group className="field">
+            <Form.Group className="contact-field">
               <Form.Label>Subject</Form.Label>
               <Form.Control
                 name="subject"
@@ -106,7 +106,7 @@ const handleSubmit = async (e) => {
               />
             </Form.Group>
 
-            <Form.Group className="field">
+            <Form.Group className="contact-field">
               <Form.Label>Message</Form.Label>
               <Form.Control
                 as="textarea"
@@ -136,28 +136,30 @@ const handleSubmit = async (e) => {
 
           </Form>
         </Card>
-      </Col>
-    </Row>
-
-    {/* INFO SECTION */}
-    <Row className="contact-info mt-5 text-center text-md-start">
-      <Col md={4}>
+        <Row className="contact-info mt-5 text-center text-md-start justify-content-center">
+      <Col lg={4} md={6} xs={6}>
         <h6>Call Us</h6>
         <h3 className="h3">+1-234-567-8900</h3>
       </Col>
 
-      <Col md={4}>
+      <Col lg={4} md={6} xs={6}>
         <h6>Hours</h6>
-        <p>Mon-Fri: 11am - 8pm Sat</p>
-        <p>Sun: 9am - 10pm</p>
+        <p>Mon-Fri: 11am - 8pm</p>
+        <p>Sat, Sun: 9am - 10pm</p>
       </Col>
 
-      <Col md={4}>
+      <Col lg={4} md={6}  xs={6}>
         <h6>Our Location</h6>
         <p>123 Bridge Street</p>
-        <p>Nowhere Land, LA 12345 United States</p>
+        <p>Nowhere Land, LA 12345 </p>
+        <p>United States</p>
       </Col>
     </Row>
+      </Col>
+    </Row>
+
+    {/* INFO SECTION */}
+    
 
   </Container>
 </section>

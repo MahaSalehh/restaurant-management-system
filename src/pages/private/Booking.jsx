@@ -100,7 +100,7 @@ const Booking = () => {
           {/* DATE + TIME */}
           <div className="field-row">
 
-            <div className="field date-picker">
+            <div className="contact-field date-picker">
               <label>Date</label>
               <Flatpickr
                 options={{
@@ -113,7 +113,7 @@ const Booking = () => {
               />
             </div>
 
-            <div className="field time-picker">
+            <div className="contact-field time-picker">
               <label>Time</label>
               <Flatpickr
                 options={{
@@ -129,9 +129,9 @@ const Booking = () => {
             </div>
 
           </div>
-
+<div className="field-row">
           {/* NAME */}
-          <div className="field">
+          <div className="contact-field">
             <label>Name</label>
             <input
               name="name"
@@ -142,7 +142,7 @@ const Booking = () => {
           </div>
 
           {/* PHONE */}
-          <div className="field">
+          <div className="contact-field">
             <label>Phone</label>
             <input
               name="phone"
@@ -151,16 +151,16 @@ const Booking = () => {
               placeholder="x-xxx-xxx-xxxx"
             />
           </div>
-
+</div>
           {/* GUESTS */}
-          <div className="field">
+          <div className="contact-field">
             <label>Guests</label>
             <select
               name="guests"
               value={form.guests}
               onChange={handleChange}
             >
-              {[1, 2, 3, 4, 5, 6].map((n) => (
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
                 <option key={n} value={n}>
                   {n} Person
                 </option>
