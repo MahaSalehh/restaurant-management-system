@@ -7,7 +7,7 @@ export const api = axios.create({
   baseURL: API_BASE_URL,
 });
 
-export const STORAGE_URL = `${API_BASE_URL}/storage/`;
+export const STORAGE_URL = "https://restaurant-api-production-b087.up.railway.app/storage/";
 
 // ==========================
 // Request Interceptor (Token + Headers handling)
