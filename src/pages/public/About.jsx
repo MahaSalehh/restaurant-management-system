@@ -1,4 +1,3 @@
-import React from "react";
 import AboutUs from "../../components/AboutUs";
 import CustomersSays from "../../components/CustomersSays";
 
@@ -7,7 +6,7 @@ import icon1 from "../../assets/About/icon1.svg";
 import icon2 from "../../assets/About/icon2.svg";
 import icon3 from "../../assets/About/icon3.svg";
 import image from "../../assets/About/about-section.png";
-import { FaPlay } from "react-icons/fa";
+import { FaPlay} from "react-icons/fa";
 const About = () => {
   const services = [
     {
@@ -34,7 +33,6 @@ const About = () => {
     <>
       <AboutUs img={foodImg} />
 
-      {/* VIDEO SECTION */}
       <section className="video-section">
         <div className="overlay overlay-center text-center">
           <button className="play-btn btn-circle btn-circle-lg btn-hover-scal"> <FaPlay/> </button>
@@ -45,7 +43,6 @@ const About = () => {
         </div>
       </section>
 
-      {/* FEATURES */}
       <section className="features-section py-5">
         <div className="container">
           <div className="row g-4 justify-content-center">
@@ -78,7 +75,6 @@ const About = () => {
         </div>
       </section>
 
-      {/* STATS */}
       <div className="stats bg-light-section">
       <section className="container">
         <div className="row align-items-center g-4">

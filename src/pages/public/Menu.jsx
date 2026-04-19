@@ -20,10 +20,8 @@ function Menu() {
 
   const [activeCategory, setActiveCategory] = useState(null);
 
-  // 🔥 IMPORTANT STRUCTURE
   const [cartState, setCartState] = useState({});
 
-  // ================= FETCH MENU =================
   const {
     data: categoriesData,
     loading: categoriesLoading,
@@ -39,7 +37,6 @@ function Menu() {
   const categories = categoriesData?.data || [];
   const menuItems = menuData?.data || [];
 
-  // ================= ERROR =================
   useEffect(() => {
     if (categoriesError) showToast("error", "Failed to load categories");
   }, [categoriesError]);
@@ -48,12 +45,12 @@ function Menu() {
     if (menuError) showToast("error", "Failed to load menu items");
   }, [menuError]);
 
-  // ================= FILTER =================
+
   const filteredItems = activeCategory
     ? menuItems.filter((item) => item.category?.id === activeCategory)
     : menuItems;
 
-  // ================= FETCH CART =================
+
   useEffect(() => {
     if (isAuthenticated) {
       fetchCart();
@@ -79,7 +76,6 @@ function Menu() {
     }
   };
 
-  // ================= ADD =================
   const addToCart = async (item) => {
     try {
       const res = await cartAPI.addItem({
@@ -103,7 +99,6 @@ function Menu() {
     }
   };
 
-  // ================= INCREASE =================
   const updateQty = async (item, newQty) => {
     const current = cartState[item.id];
 
@@ -125,7 +120,6 @@ function Menu() {
       return;
     }
 
-    // 🔥 optimistic update
     setCartState((prev) => ({
       ...prev,
       [item.id]: {
@@ -139,7 +133,6 @@ function Menu() {
         quantity: newQty,
       });
 
-      // ✅ TOAST HERE
       if (newQty > current.quantity) {
         showToast("success", "Added one more");
       } else {
@@ -148,7 +141,6 @@ function Menu() {
     } catch {
       showToast("error", "Failed to update");
 
-      // rollback
       setCartState((prev) => ({
         ...prev,
         [item.id]: current,
@@ -166,20 +158,18 @@ function Menu() {
     { title: "JUST EAT", img: justEat },
     { title: "DiDi Food", img: didiFood },
   ];
-  // ================= LOADING =================
   if (categoriesLoading || menuLoading) return <Loader />
 
   return (
     <>
       <section className="menu-page">
         <div className="menu-container container">
-          {/* HEADER */}
+
           <div className="text-center mb-5">
             <h1 className="h1 mb-3">Our Menu</h1>
             <p className="body-lg">We consider all the drivers of change gives you the components you need to change to create a truly happens.</p>
           </div>
 
-          {/* CATEGORIES */}
           <div className="d-flex flex-wrap justify-content-center gap-3 mb-5">
             <button
               className={`category-btn ${activeCategory === null ? "active" : ""}`}
@@ -199,7 +189,6 @@ function Menu() {
             ))}
           </div>
 
-          {/* ITEMS */}
           <div className="menu-grid row g-4">
             {filteredItems.map((item) => (
               <div key={item.id} className="col-lg-3 col-md-4 col-sm-6">
@@ -256,11 +245,11 @@ function Menu() {
           </div>
         </div>
       </section>
-      {/* ================= DELIVERY APPS ================= */}
+
       <section className="delivery-section section">
         <div className="menu-container">
           <div className="row align-items-center delivery-wrapper">
-            {/* LEFT TEXT */}
+
             <div className="col-lg-6 col-md-6 col-12 delivery-text">
               <h2 className="h2 mb-3 "> You can order through apps </h2>
               <p className="neutral6">
@@ -270,32 +259,29 @@ function Menu() {
             <div className="col-lg-6 col-md-6 col-12">
               <div className="delivery-logos">
 
-  {/* ROW 1 */}
-  <div className="logos-row">
-    {apps.slice(0, 3).map((app, i) => (
-      <div key={i} className="logo-box">
-      <img src={app.img} alt={app.title} />
-      </div>
-    ))}
-  </div>
+                <div className="logos-row">
+                  {apps.slice(0, 3).map((app, i) => (
+                    <div key={i} className="logo-box">
+                      <img src={app.img} alt={app.title} />
+                    </div>
+                  ))}
+                </div>
 
-  {/* ROW 2 (BIGGER) */}
-  <div className="logos-row center-row">
-    {apps.slice(3, 6).map((app, i) => (
-      <div key={i} className="logo-box">
-      <img src={app.img} alt={app.title} />
-    </div>))}
-  </div>
+                <div className="logos-row center-row">
+                  {apps.slice(3, 6).map((app, i) => (
+                    <div key={i} className="logo-box">
+                      <img src={app.img} alt={app.title} />
+                    </div>))}
+                </div>
 
-  {/* ROW 3 */}
-  <div className="logos-row">
-    {apps.slice(6, 9).map((app, i) => (
-      <div key={i} className="logo-box">
-      <img src={app.img} alt={app.title} />
-    </div>))}
-  </div>
+                <div className="logos-row">
+                  {apps.slice(6, 9).map((app, i) => (
+                    <div key={i} className="logo-box">
+                      <img src={app.img} alt={app.title} />
+                    </div>))}
+                </div>
 
-</div>
+              </div>
             </div>
           </div>
         </div>
