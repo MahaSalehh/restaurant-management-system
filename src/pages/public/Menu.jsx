@@ -4,10 +4,10 @@ import { useAuth } from "../../context/AuthContext";
 import { useAsync } from "../../hooks/useAsync";
 import { useToast } from "../../context/ToastContext";
 import { FaPlus, FaMinus, FaTrash, FaShoppingCart } from "react-icons/fa";
-import uberEats from "../../assets/Menu/apps/UberEats.svg";
-import grubHub from "../../assets/Menu/apps/GrubHub.svg";
-import postMates from "../../assets/Menu/apps/Postmates.svg";
-import doorDash from "../../assets/Menu/apps/DoorDash.svg";
+import UberEats from "../../assets/Menu/apps/UberEats.svg";
+import GrubHub from "../../assets/Menu/apps/GrubHub.svg";
+import PostMates from "../../assets/Menu/apps/Postmates.svg";
+import DoorDash from "../../assets/Menu/apps/DoorDash.svg";
 import foodpanda from "../../assets/Menu/apps/foodpanda.svg";
 import delivercoo from "../../assets/Menu/apps/delivercoo.svg";
 import instacort from "../../assets/Menu/apps/instacort.svg";
@@ -156,10 +156,10 @@ function Menu() {
     }
   };
   const apps = [
-    { title: "Uber Eats", img: uberEats },
-    { title: "GRUBHUB", img: grubHub },
-    { title: "Postmates", img: postMates },
-    { title: "DOORDASH", img: doorDash },
+    { title: "Uber Eats", img: UberEats },
+    { title: "GRUBHUB", img: GrubHub },
+    { title: "Postmates", img: PostMates },
+    { title: "DOORDASH", img: DoorDash },
     { title: "foodpanda", img: foodpanda },
     { title: "deliveroo", img: delivercoo },
     { title: "instacart", img: instacort },
