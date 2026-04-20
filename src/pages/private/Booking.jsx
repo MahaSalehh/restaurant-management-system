@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/light.css";
 import { bookingAPI } from "../../service/api";
 import { useToast } from "../../context/ToastContext";
+import flatpickr from "flatpickr";
 
 const Booking = () => {
   const [form, setForm] = useState({
@@ -77,6 +78,12 @@ const Booking = () => {
       setLoading(false);
     }
   };
+  useEffect(() => {
+  flatpickr(".date-picker input", {
+    position: "auto right",
+    disableMobile: true,
+  });
+}, []);
 
   return (
     <section className="booking-page">
