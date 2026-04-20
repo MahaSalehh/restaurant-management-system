@@ -749,25 +749,27 @@
 
 
 .flatpickr-input {
-  padding-right: 44px;
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  background-size: 18px;
+
 }
 
-
-.contact-field input,
-.contact-field textarea,
-.contact-field select,
 .contact-field .flatpickr-input {
+  all: unset;
   width: 100%;
   height: 48px;
-  padding: 12px;
+  padding: 12px 14px;
+  padding-right: 44px;
+  background-repeat: no-repeat;
+  
+  background-position: right 14px center;
+  background-size: 18px;
   border: 1px solid var(--neutral-03);
   border-radius: 72px;
-  font-family: inherit;
   font-size: 14px;
+  font-family: inherit;
+  background: white;
   box-sizing: border-box;
+  display: flex;
+  align-items: center;
 }
 
 .date-picker .flatpickr-input {
