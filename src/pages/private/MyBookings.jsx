@@ -51,9 +51,7 @@ function Bookings() {
       rejected: "danger",
     }[status] || "secondary");
 
-  if (loading) 
-    return <Loader />
-  
+  if (loading) return <Loader />;
 
   return (
     <div className="list-page">
@@ -61,11 +59,17 @@ function Bookings() {
       <h5 className="section-title">My Bookings</h5>
 
       <div className="filter-bar">
-        <button className={tab === "current" ? "active" : ""} onClick={() => setTab("current")}>
+        <button
+          className={tab === "current" ? "active" : ""}
+          onClick={() => setTab("current")}
+        >
           Current
         </button>
 
-        <button className={tab === "previous" ? "active" : ""} onClick={() => setTab("previous")}>
+        <button
+          className={tab === "previous" ? "active" : ""}
+          onClick={() => setTab("previous")}
+        >
           Previous
         </button>
       </div>
@@ -90,13 +94,12 @@ function Bookings() {
             </div>
 
             <span className={`status ${b.status}`}>
-  {b.status}
-</span>
+              {b.status}
+            </span>
           </div>
         ))}
       </div>
 
-      {/* MODAL */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Booking Details</Modal.Title>

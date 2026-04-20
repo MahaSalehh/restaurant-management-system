@@ -1,4 +1,4 @@
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { Container, Row, Col, Card } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { publicAPI, STORAGE_URL } from "../../service/api";
 import { useAsync } from "../../hooks/useAsync";
@@ -19,50 +19,52 @@ import foodImg from "../../assets/Home/about.png";
 import { FaRegClock } from "react-icons/fa";
 import { HiOutlineReceiptTax } from "react-icons/hi";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { useAuth } from "../../context/AuthContext";
 import Loader from "../../components/Loader";
 
 function Home() {
   const navigate = useNavigate();
-  const { isAuthenticated} = useAuth();
+  const { isAuthenticated } = useAuth();
+  const { showToast } = useToast();
 
-  // ================= FETCH =================
+  const getCategories = useCallback(() => publicAPI.getCategories(), []);
+  const getArticles = useCallback(() => publicAPI.getArticles(), []);
+
   const {
     data: categoriesData,
     loading: categoriesLoading,
     error: categoriesError,
-  } = useAsync(publicAPI.getCategories);
+  } = useAsync(getCategories, []);
 
   const {
     data: articlesData,
     loading: articlesLoading,
     error: articlesError,
-  } = useAsync(publicAPI.getArticles);
+  } = useAsync(getArticles, []);
 
   const categories = categoriesData?.data || [];
   const articles = articlesData?.data || [];
 
   const featured = articles[0];
   const sideArticles = articles.slice(1, 5);
-const { showToast } = useToast();
-const showError = () => {
-  showToast("error", "Please Login First");
-}
-  // ================= ERROR HANDLING (CONTROLLED TOAST) =================
+
+  const showError = () => {
+    showToast("error", "Please Login First");
+  };
+
   useEffect(() => {
     if (categoriesError) {
-      showToast("error", "Failed to Load Categories")
+      showToast("error", "Failed to Load Categories");
     }
-  },[categoriesError]);
+  }, [categoriesError]);
 
   useEffect(() => {
     if (articlesError) {
-      showToast("error", "Failed to Load Articles")
+      showToast("error", "Failed to Load Articles");
     }
   }, [articlesError]);
 
-  // ================= MAPS =================
   const iconsMap = {
     Breakfast,
     "Main Dishes": MainDishes,
@@ -71,39 +73,46 @@ const showError = () => {
   };
 
   const captionsMap = {
-    Breakfast: "In the new era of technology we look in the future with certainty and pride for our life.",
-    "Main Dishes": "In the new era of technology we look in the future with certainty and pride for our life.",
-    Drinks: "In the new era of technology we look in the future with certainty and pride for our life.",
-    Desserts: "In the new era of technology we look in the future with certainty and pride for our life.",
+    Breakfast:
+      "In the new era of technology we look in the future with certainty and pride for our life.",
+    "Main Dishes":
+      "In the new era of technology we look in the future with certainty and pride for our life.",
+    Drinks:
+      "In the new era of technology we look in the future with certainty and pride for our life.",
+    Desserts:
+      "In the new era of technology we look in the future with certainty and pride for our life.",
   };
 
-  // ================= LOADING =================
-  if (categoriesLoading || articlesLoading) return <Loader />
+  if (categoriesLoading || articlesLoading) return <Loader />;
 
   return (
     <>
-      {/* ================= HERO ================= */}
       <section className="upper_sec section bg-cover full-height flex-center text-center">
         <div className="hero text-container neutral7">
 
           <h1 className="h1">Best food for your taste</h1>
 
           <p className="body-lg">
-            Discover delectable cuisine and unforgettable moments<br /> in our welcoming, culinary haven.
+            Discover delectable cuisine and unforgettable moments
+            <br /> in our welcoming, culinary haven.
           </p>
 
           <div className="hero-buttons d-flex gap-3 justify-content-center">
             {!isAuthenticated ? (
-              <Link to="/booking" className="btn-custom btn-primary-custom btn-lg"
-            onClick={showError}
-            >
-              Book A Table
-            </Link>
+              <Link
+                to="/booking"
+                className="btn-custom btn-primary-custom btn-lg"
+                onClick={showError}
+              >
+                Book A Table
+              </Link>
             ) : (
-              <Link to="/booking" className="btn-custom btn-primary-custom btn-lg"
-            >
-              Book A Table
-            </Link>
+              <Link
+                to="/booking"
+                className="btn-custom btn-primary-custom btn-lg"
+              >
+                Book A Table
+              </Link>
             )}
 
             <Link to="/menu" className="btn-custom btn-outline-custom btn-lg">
@@ -114,42 +123,39 @@ const showError = () => {
         </div>
       </section>
 
-      {/* ================= CATEGORIES ================= */}
       <Container className="py-5">
         <h1 className="h2 text-center mb-4">Browse Our Menu</h1>
 
         <Row className="mt-5 g-4 justify-content-center">
           {categories.map((item) => (
             <Col lg={3} md={6} sm={6} xs={6} key={item.id}>
-                <div className="category-scale">
-              <Card className="category-card card-base card-padding-lg card-hover-up text-center">
+              <div className="category-scale">
+                <Card className="category-card card-base card-padding-lg card-hover-up text-center">
 
-                <div className="icon-wrapper">
-                  <img src={iconsMap[item.name]} alt={item.name} />
-                </div>
+                  <div className="icon-wrapper">
+                    <img src={iconsMap[item.name]} alt={item.name} />
+                  </div>
 
-                <h3 className="h3 category-title">{item.name}</h3>
+                  <h3 className="h3 category-title">{item.name}</h3>
 
-                <p className="body-md neutral6 category-text">
-                  {captionsMap[item.name]}
-                </p>
+                  <p className="body-md neutral6 category-text">
+                    {captionsMap[item.name]}
+                  </p>
 
-                <Link to="/menu" className="explore-link">
-                  Explore Menu
-                </Link>
+                  <Link to="/menu" className="explore-link">
+                    Explore Menu
+                  </Link>
 
-              </Card>
-</div>
+                </Card>
+              </div>
             </Col>
           ))}
         </Row>
       </Container>
 
-      {/* ================= SECTIONS ================= */}
       <div className="bg-light-section"><AboutUs img={foodImg} /></div>
       <Services />
 
-      {/* ================= STATS ================= */}
       <div className="bg-light-section stats">
         <Container className="py-5">
           <Row className="align-items-center g-5">
@@ -158,22 +164,31 @@ const showError = () => {
               <img src={img} className="img-fluid rounded-3" />
             </Col>
 
-            <Col lg={4}  md={6} xs={12} className="ps-lg-5">
-            <div className="stats-text mx-lg-auto">
-              <h2 className="h2 mb-3">
-                Fastest Food Delivery in City
-              </h2>
+            <Col lg={4} md={6} xs={12} className="ps-lg-5">
+              <div className="stats-text mx-lg-auto">
+                <h2 className="h2 mb-3">
+                  Fastest Food Delivery in City
+                </h2>
 
-              <p className="body-md neutral6 mb-4">
-                Our visual designer lets you quickly and of drag a down your way to customapps for both keep desktop. 
-              </p>
+                <p className="body-md neutral6 mb-4">
+                  Our visual designer lets you quickly and of drag a down your way to customapps for both keep desktop.
+                </p>
 
-              <ul className="body-xl body-xl-medium list-unstyled d-grid gap-3 mb-0">
-                <li className="d-flex align-items-center gap-3"><span className="icon-boxs"><FaRegClock /></span> Delivery within 30 minutes</li>
-                <li className="d-flex align-items-center gap-3"><span className="icon-boxs"><HiOutlineReceiptTax /></span> Best Offer & Prices</li>
-                <li className="d-flex align-items-center gap-3"><span className="icon-boxs"><AiOutlineShoppingCart /></span> Online Services Available</li>
-              </ul>
-</div>
+                <ul className="body-xl body-xl-medium list-unstyled d-grid gap-3 mb-0">
+                  <li className="d-flex align-items-center gap-3">
+                    <span className="icon-boxs"><FaRegClock /></span>
+                    Delivery within 30 minutes
+                  </li>
+                  <li className="d-flex align-items-center gap-3">
+                    <span className="icon-boxs"><HiOutlineReceiptTax /></span>
+                    Best Offer & Prices
+                  </li>
+                  <li className="d-flex align-items-center gap-3">
+                    <span className="icon-boxs"><AiOutlineShoppingCart /></span>
+                    Online Services Available
+                  </li>
+                </ul>
+              </div>
             </Col>
 
           </Row>
@@ -182,25 +197,23 @@ const showError = () => {
 
       <CustomersSays />
 
-      {/* ================= BLOG ================= */}
       <div className="bg-light-section">
         <Container className="py-5">
 
           <div className="d-flex justify-content-between align-items-center">
             <h2 className="h2">Our Blog & Articles</h2>
 
-            <Link as={Link} to="/articles" className="btn-custom btn-primary-custom btn-lg">
+            <Link to="/articles" className="btn-custom btn-primary-custom btn-lg">
               Read All Articles
             </Link>
           </div>
 
           <Row className="mt-4 g-3 blog-cards">
 
-            {/* big card */}
             <Col md={6} className="d-none d-md-block">
               {featured && (
-                <Card 
-                className="h-100 card-bse blog-card"
+                <Card
+                  className="h-100 card-bse blog-card"
                   onClick={() => navigate(`/articles/${featured.id}`)}
                   style={{ cursor: "pointer" }}
                 >
@@ -211,37 +224,41 @@ const showError = () => {
                       {new Date(featured.created_at).toLocaleDateString()}
                     </span>
 
-                    <h4 className="body-xl body-xl-medium neutral7 mt-2">{featured.title}</h4>
+                    <h4 className="body-xl body-xl-medium neutral7 mt-2">
+                      {featured.title}
+                    </h4>
 
-                    <p className="body-sm neutral6">{featured.content?.slice(0, 120)}...</p>
+                    <p className="body-sm neutral6">
+                      {featured.content?.slice(0, 120)}...
+                    </p>
                   </Card.Body>
                 </Card>
               )}
             </Col>
 
-            {/* small cards */}
             <Col md={6} xs={12}>
               <Row className="g-3">
-
                 {sideArticles.map((item) => (
                   <Col md={6} xs={6} key={item.id}>
-                    <Card 
-                    className="card-bse blog-card"
+                    <Card
+                      className="card-bse blog-card"
                       onClick={() => navigate(`/articles/${item.id}`)}
                       style={{ cursor: "pointer" }}
                     >
                       <Card.Img src={STORAGE_URL + item.image_url} />
 
                       <Card.Body>
-                          <span className="body-sm neutral5">
-                          {new Date(item.created_at).toLocaleDateString()}</span>
-                      
-                        <h6 className="body-md body-md-medium neutral7 mt-1">{item.title}</h6>
+                        <span className="body-sm neutral5">
+                          {new Date(item.created_at).toLocaleDateString()}
+                        </span>
+
+                        <h6 className="body-md body-md-medium neutral7 mt-1">
+                          {item.title}
+                        </h6>
                       </Card.Body>
                     </Card>
                   </Col>
                 ))}
-
               </Row>
             </Col>
 

@@ -10,35 +10,37 @@ function AboutUs({ img }) {
       <Container>
         <Row className="align-items-center g-4">
 
-          {/* LEFT IMAGE */}
           <Col lg={5} md={5} className="position-relative text-center">
-          <div className="about-img-wrapper">
-            <img src={img} alt="food" className="about-img img-fluid rounded-4" />
+            <div className="about-img-wrapper">
+              <img
+                src={img}
+                alt="food"
+                className="about-img img-fluid rounded-4"
+              />
 
-            <div className="contact-card text-start neutral1 neutral9">
-              <h3 className="h3 neutral1 mb-5">
-                Come and visit us
-              </h3>
+              <div className="contact-card text-start neutral1 neutral9">
+                <h3 className="h3 neutral1 mb-5">
+                  Come and visit us
+                </h3>
 
-              <p className="body-sm d-flex align-items-center gap-2">
-                <FiPhone /> (414) 857 - 0107
-              </p>
+                <p className="body-sm d-flex align-items-center gap-2">
+                  <FiPhone /> (414) 857 - 0107
+                </p>
 
-              <p className="body-sm d-flex align-items-center gap-2">
-                <FaRegEnvelope /> happytummy@restaurant.com
-              </p>
+                <p className="body-sm d-flex align-items-center gap-2">
+                  <FaRegEnvelope /> happytummy@restaurant.com
+                </p>
 
-              <p className="body-sm d-flex align-items-start gap-2">
-                <HiOutlineLocationMarker />
-                <span>
-                  837 W. Marshall Lane Marshalltown, IA 50158, Los Angeles
-                </span>
-              </p>
-            </div>
+                <p className="body-sm d-flex align-items-start gap-2">
+                  <HiOutlineLocationMarker />
+                  <span>
+                    837 W. Marshall Lane Marshalltown, IA 50158, Los Angeles
+                  </span>
+                </p>
+              </div>
             </div>
           </Col>
 
-          {/* RIGHT TEXT */}
           <Col lg={7} md={7} className="d-flex align-items-center ps-lg-5">
             <div className="about-content text-container-md text-left mx-lg-auto">
               <h2 className="h2 mb-4">

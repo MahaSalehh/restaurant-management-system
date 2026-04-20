@@ -56,9 +56,7 @@ function Orders() {
       rejected: "danger",
     }[status] || "secondary");
 
-  if (loading) 
-    return <Loader />
-  
+  if (loading) return <Loader />;
 
   return (
     <div className="list-page">
@@ -66,11 +64,17 @@ function Orders() {
       <h5 className="section-title">My Orders</h5>
 
       <div className="filter-bar">
-        <button className={tab === "current" ? "active" : ""} onClick={() => setTab("current")}>
+        <button
+          className={tab === "current" ? "active" : ""}
+          onClick={() => setTab("current")}
+        >
           Current
         </button>
 
-        <button className={tab === "previous" ? "active" : ""} onClick={() => setTab("previous")}>
+        <button
+          className={tab === "previous" ? "active" : ""}
+          onClick={() => setTab("previous")}
+        >
           Previous
         </button>
       </div>
@@ -95,13 +99,12 @@ function Orders() {
             </div>
 
             <span className={`status ${order.status}`}>
-  {order.status}
-</span>
+              {order.status}
+            </span>
           </div>
         ))}
       </div>
 
-      {/* MODAL */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Order #{selectedOrder?.id}</Modal.Title>

@@ -9,9 +9,9 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
       <NotificationProvider>
-      <ToastProvider>
-      <App />
-      </ToastProvider>
+        <ToastProvider>
+          <App />
+        </ToastProvider>
       </NotificationProvider>
     </AuthProvider>
   </StrictMode>,

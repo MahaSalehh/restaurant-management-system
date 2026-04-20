@@ -9,9 +9,9 @@ export const api = axios.create({
 
 export const STORAGE_URL = "https://restaurant-api-production-b087.up.railway.app/storage/";
 
-// ==========================
+
 // Request Interceptor (Token + Headers handling)
-// ==========================
+
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("ACCESS_TOKEN");
@@ -20,7 +20,7 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
 
-    // ✅ Important: don't force JSON when sending FormData
+
     if (!(config.data instanceof FormData)) {
       config.headers["Content-Type"] = "application/json";
     }
@@ -30,9 +30,7 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// ==========================
-// Response Interceptor (401)
-// ==========================
+
 api.interceptors.response.use(
   (res) => res,
   (error) => {
@@ -45,9 +43,8 @@ api.interceptors.response.use(
 
 
 
-// ==========================
+
 // AUTH
-// ==========================
 export const authAPI = {
   register: (data) => api.post("/register", data),
   login: (data) => api.post("/login", data),
@@ -56,9 +53,8 @@ export const authAPI = {
 
 
 
-// ==========================
+
 // PROFILE + NOTIFICATIONS
-// ==========================
 export const settingsAPI = {
   getProfile: () => api.get("/profile"),
   updateProfile: (data) => api.put("/profile", data),
@@ -69,10 +65,7 @@ export const settingsAPI = {
 };
 
 
-
-// ==========================
 // PUBLIC
-// ==========================
 export const publicAPI = {
   getCategories: () => api.get("/categories"),
   getCategory: (id) => api.get(`/categories/${id}`),
@@ -84,11 +77,7 @@ export const publicAPI = {
   getArticle: (id) => api.get(`/articles/${id}`),
 };
 
-
-
-// ==========================
 // CART
-// ==========================
 export const cartAPI = {
   getCart: () => api.get("/cart"),
   getCartCount: () => api.get("/cart/count"),
@@ -99,10 +88,7 @@ export const cartAPI = {
 };
 
 
-
-// ==========================
 // ORDERS
-// ==========================
 export const orderAPI = {
   create: (data) => api.post("/orders", data),
   myOrders: () => api.get("/my-orders"),
@@ -110,30 +96,19 @@ export const orderAPI = {
 };
 
 
-
-// ==========================
 // BOOKINGS
-// ==========================
 export const bookingAPI = {
   create: (data) => api.post("/bookings", data),
   myBookings: () => api.get("/bookings/me"),
   getById: (id) => api.get(`/bookings/${id}`),
 };
 
-
-
-// ==========================
 // CONTACT
-// ==========================
 export const contactAPI = {
   send: (data) => api.post("/contacts", data),
 };
 
-
-
-// ==========================
 // ADMIN
-// ==========================
 export const adminAPI = {
 
   // ---------- USERS ----------
@@ -153,22 +128,22 @@ export const adminAPI = {
   deleteCategory: (id) =>
     api.delete(`/admin/categories/${id}`),
 
-  // ---------- MENU ITEMS (WITH IMAGE) ----------
+  // ---------- MENU ITEMS----------
   createMenuItem: (data) =>
-    api.post("/admin/menu-items", data), // supports FormData
+    api.post("/admin/menu-items", data),
 
   updateMenuItem: (id, data) =>
-    api.post(`/admin/menu-items/${id}?_method=PUT`, data), // for FormData
+    api.post(`/admin/menu-items/${id}?_method=PUT`, data), 
 
   deleteMenuItem: (id) =>
     api.delete(`/admin/menu-items/${id}`),
 
-  // ---------- ARTICLES (WITH IMAGE) ----------
+  // ---------- ARTICLES ----------
   createArticle: (data) =>
-    api.post("/admin/articles", data), // FormData supported
+    api.post("/admin/articles", data), 
 
   updateArticle: (id, data) =>
-    api.post(`/admin/articles/${id}?_method=PUT`, data), // FormData
+    api.post(`/admin/articles/${id}?_method=PUT`, data),
 
   deleteArticle: (id) =>
     api.delete(`/admin/articles/${id}`),

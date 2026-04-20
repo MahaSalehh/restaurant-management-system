@@ -9,7 +9,7 @@ export function useToastError(error) {
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
-      return; // ❌ ignore first render completely
+      return;
     }
 
     if (!error) return;
@@ -19,7 +19,6 @@ export function useToastError(error) {
       error?.message ||
       "Something went wrong";
 
-    // ❌ prevent duplicate spam
     if (lastMessage.current === msg) return;
 
     lastMessage.current = msg;

@@ -1,14 +1,15 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { settingsAPI } from "../service/api";
+import { useAuth } from "./AuthContext";
 
 const NotificationContext = createContext(null);
 
 export const useNotifications = () => useContext(NotificationContext);
 
 export const NotificationProvider = ({ children }) => {
+  const { token } = useAuth();
   const [notifications, setNotifications] = useState([]);
 
-  // ================= FETCH =================
   const fetchNotifications = async () => {
     try {
       const res = await settingsAPI.getNotifications();
@@ -18,20 +19,19 @@ export const NotificationProvider = ({ children }) => {
     }
   };
 
-  // ================= AUTO REFRESH =================
   useEffect(() => {
+    if (!token) return;
+
     fetchNotifications();
 
     const interval = setInterval(fetchNotifications, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [token]);
 
-  // ================= ACTIONS =================
   const markAsRead = async (id) => {
     try {
       await settingsAPI.markAsRead(id);
 
-      // ✅ Optimistic update
       setNotifications((prev) =>
         prev.map((n) =>
           n.id === id ? { ...n, is_read: true } : n
@@ -54,7 +54,6 @@ export const NotificationProvider = ({ children }) => {
     }
   };
 
-  // ================= DERIVED =================
   const unreadCount = notifications.filter(
     (n) => !n.is_read
   ).length;

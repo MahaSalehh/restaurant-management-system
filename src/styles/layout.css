@@ -1,25 +1,15 @@
-/* =========================
-   TOP BAR
-========================= */
 .top-bar {
   background: var(--neutral-09);
   color: var(--neutral-02);
   padding: 6px 0;
-  /* overflow-x: auto; */
 }
 
 .top-bar .container {
   display: flex !important;
   justify-content: space-between;
   align-items: center;
-  /* flex-wrap: nowrap !important; */
   gap: 10px;
 }
-
-/* .top-bar .d-flex {
-  flex-wrap: nowrap !important;
-  min-width: 0;
-} */
 
 .top-bar span {
   white-space: nowrap;
@@ -48,9 +38,6 @@
   transform: translateY(-2px);
 }
 
-/* =========================
-   LOGO
-========================= */
 .logo {
   object-fit: contain;
   display: block;
@@ -76,9 +63,6 @@
   white-space: nowrap;
 }
 
-/* =========================
-   NAV LINKS (DESKTOP + OFFCANVAS)
-========================= */
 .nav-center {
   flex: 1;
   justify-content: center;
@@ -101,6 +85,7 @@
 .nav-link.active {
   background: var(--neutral-03);
 }
+
 .signin {
   padding: 8px 16px;
   font-size: 14px;
@@ -109,22 +94,20 @@
 }
 
 @media (max-width: 320px) {
-
-  .signin{
+  .signin {
     padding: 4px 8px;
     font-size: 12px;
     white-space: nowrap;
   }
 }
-/* =========================
-   ICON BUTTONS
-========================= */
-.icon-badge-wrapper{
+
+.icon-badge-wrapper {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
+
 .icon-btn {
   background: transparent !important;
   border: none;
@@ -132,11 +115,13 @@
   padding: 0;
   display: inline-flex;
 }
+
 .custom-toggler {
   border: none !important;
   padding: 4px 6px;
   box-shadow: none !important;
 }
+
 .custom-toggler:hover {
   background: var(--neutral-03);
 }
@@ -151,12 +136,10 @@
     justify-content: center;
   }
 }
-/* =========================
-   OFFCANVAS (MOBILE SIDEBAR)
-========================= */
+
 .offcanvas {
   background: var(--neutral-01);
-  width: 240px !important; 
+  width: 240px !important;
 }
 
 @media (min-width: 768px) {
@@ -170,12 +153,15 @@
     width: 340px !important;
   }
 }
+
 .offcanvas-header {
   border-bottom: 1px solid var(--neutral-03);
 }
+
 .offcanvas .nav {
   align-items: flex-start !important;
 }
+
 .offcanvas-body {
   display: flex;
   text-align: left;
@@ -184,7 +170,6 @@
   padding: 20px;
 }
 
-/* NAV LINKS INSIDE SIDEBAR */
 .offcanvas .nav-link {
   width: 100%;
   justify-content: flex-start;
@@ -192,23 +177,16 @@
   border-radius: 10px;
 }
 
-/* ACTION BUTTONS INSIDE SIDEBAR */
 .offcanvas .btn-custom,
 .offcanvas .icon-btn {
   width: 100%;
   justify-content: flex-start;
 }
 
-
-
-/* =========================
-   FOOTER (UNCHANGED BUT CLEAN)
-========================= */
 .footer-wrapper {
   background: #444;
   color: #ddd;
   padding: 60px 0 30px;
-  overflow-x: auto;
 }
 
 .footer-main {
@@ -251,7 +229,6 @@
   max-width: 260px;
 }
 
-
 .footer-col h6 {
   margin-bottom: 40px;
   font-weight: var(--fw-bold);
@@ -268,7 +245,6 @@
   color: var(--neutral-03);
   font-size: clamp(14px, 1vw, 16px);
 }
-
 
 .footer-social svg {
   background: var(--primary);
@@ -292,17 +268,23 @@
   object-fit: cover;
   border-radius: 10px;
 }
-.insta-grid img:hover { transform: scale(1.05); }
-@media (max-width: 735px) { .footer-images { display: none; } }
+
+.insta-grid img:hover {
+  transform: scale(1.05);
+}
+
+@media (max-width: 735px) {
+  .footer-images {
+    display: none;
+  }
+}
+
 .footer-bottom {
   margin-top: 40px;
   text-align: center;
   font-size: clamp(10px, 1vw, 14px);
 }
 
-/* =========================
-   SCROLL TO TOP BUTTON
-========================= */
 .scroll-top-btn {
   position: fixed;
   bottom: 30px;
@@ -317,7 +299,6 @@
   z-index: 999;
 }
 
-/* mobile sizing */
 @media (max-width: 768px) {
   .scroll-top-btn {
     bottom: 20px;

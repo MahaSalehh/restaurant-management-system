@@ -76,25 +76,28 @@ const Checkout = () => {
       setSubmitting(false);
     }
   };
+
   const handleBack = () => navigate(-1);
 
-  if (loading)
-    return <Loader />
+  if (loading) return <Loader />;
 
   return (
     <section className="checkout-section">
 
       <div className="menu-container">
+
         <div className="checkout-header">
-        <Button
-          variant="dark"
-          onClick={handleBack}
-          className="back-button"
-        >
-          ← Back
-        </Button>
-        <h2 className="checkout-title">Checkout </h2>
-</div>
+          <Button
+            variant="dark"
+            onClick={handleBack}
+            className="back-button"
+          >
+            ← Back
+          </Button>
+
+          <h2 className="checkout-title">Checkout</h2>
+        </div>
+
         <div className="row g-4">
 
           <div className="col-lg-7">
@@ -154,8 +157,11 @@ const Checkout = () => {
           </div>
 
           <div className="col-lg-5">
+
             <div className="checkout-summary">
+
               <h5>Order Summary</h5>
+
               {cartItems.map((item) => (
                 <div className="summary-row" key={item.id}>
                   <span>
@@ -181,6 +187,7 @@ const Checkout = () => {
         </div>
 
       </div>
+
     </section>
   );
 };

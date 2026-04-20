@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { publicAPI, STORAGE_URL, cartAPI } from "../../service/api";
 import { useAuth } from "../../context/AuthContext";
 import { useAsync } from "../../hooks/useAsync";
@@ -14,25 +14,28 @@ import instacort from "../../assets/Menu/apps/instacort.svg";
 import justEat from "../../assets/Menu/apps/just-eat.svg";
 import didiFood from "../../assets/Menu/apps/didi-food.svg";
 import Loader from "../../components/Loader";
+
 function Menu() {
   const { isAuthenticated } = useAuth();
   const { showToast } = useToast();
 
   const [activeCategory, setActiveCategory] = useState(null);
-
   const [cartState, setCartState] = useState({});
+
+  const getCategories = useCallback(() => publicAPI.getCategories(), []);
+  const getMenuItems = useCallback(() => publicAPI.getMenuItems(), []);
 
   const {
     data: categoriesData,
     loading: categoriesLoading,
     error: categoriesError,
-  } = useAsync(publicAPI.getCategories);
+  } = useAsync(getCategories, []);
 
   const {
     data: menuData,
     loading: menuLoading,
     error: menuError,
-  } = useAsync(publicAPI.getMenuItems);
+  } = useAsync(getMenuItems, []);
 
   const categories = categoriesData?.data || [];
   const menuItems = menuData?.data || [];
@@ -45,11 +48,9 @@ function Menu() {
     if (menuError) showToast("error", "Failed to load menu items");
   }, [menuError]);
 
-
   const filteredItems = activeCategory
     ? menuItems.filter((item) => item.category?.id === activeCategory)
     : menuItems;
-
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -147,6 +148,7 @@ function Menu() {
       }));
     }
   };
+
   const apps = [
     { title: "Uber Eats", img: UberEats },
     { title: "GRUBHUB", img: GrubHub },
@@ -158,21 +160,26 @@ function Menu() {
     { title: "JUST EAT", img: justEat },
     { title: "DiDi Food", img: didiFood },
   ];
-  if (categoriesLoading || menuLoading) return <Loader />
+
+  if (categoriesLoading || menuLoading) return <Loader />;
 
   return (
     <>
       <section className="menu-page">
         <div className="menu-container container">
-
           <div className="text-center mb-5">
             <h1 className="h1 mb-3">Our Menu</h1>
-            <p className="body-lg">We consider all the drivers of change gives you the components you need to change to create a truly happens.</p>
+            <p className="body-lg">
+              We consider all the drivers of change gives you the components you
+              need to change to create a truly happens.
+            </p>
           </div>
 
           <div className="d-flex flex-wrap justify-content-center gap-3 mb-5">
             <button
-              className={`category-btn ${activeCategory === null ? "active" : ""}`}
+              className={`category-btn ${
+                activeCategory === null ? "active" : ""
+              }`}
               onClick={() => setActiveCategory(null)}
             >
               All
@@ -181,7 +188,9 @@ function Menu() {
             {categories.map((cat) => (
               <button
                 key={cat.id}
-                className={`category-btn ${activeCategory === cat.id ? "active" : ""}`}
+                className={`category-btn ${
+                  activeCategory === cat.id ? "active" : ""
+                }`}
                 onClick={() => setActiveCategory(cat.id)}
               >
                 {cat.name}
@@ -189,17 +198,15 @@ function Menu() {
             ))}
           </div>
 
-          <div className="menu-grid ">
+          <div className="menu-grid">
             {filteredItems.map((item) => (
-              <div key={item.id} className="">
+              <div key={item.id}>
                 <div className="menu-card">
                   <img src={STORAGE_URL + item.image_url} alt={item.name} />
 
                   <div className="menu-content text-center p-3">
                     <h3 className="h3 body-xl-bold">$ {item.price}</h3>
-                    <h4 className="body-xl-bold neutral6">
-                      {item.name}
-                    </h4>
+                    <h4 className="body-xl-bold neutral6">{item.name}</h4>
                     <p className="neutral5">{item.description}</p>
 
                     {isAuthenticated && (
@@ -215,7 +222,10 @@ function Menu() {
                           <div className="quantity-box">
                             <button
                               onClick={() =>
-                                updateQty(item, cartState[item.id].quantity - 1)
+                                updateQty(
+                                  item,
+                                  cartState[item.id].quantity - 1
+                                )
                               }
                             >
                               {cartState[item.id].quantity === 1 ? (
@@ -229,7 +239,10 @@ function Menu() {
 
                             <button
                               onClick={() =>
-                                updateQty(item, cartState[item.id].quantity + 1)
+                                updateQty(
+                                  item,
+                                  cartState[item.id].quantity + 1
+                                )
                               }
                             >
                               <FaPlus />
@@ -249,16 +262,16 @@ function Menu() {
       <section className="delivery-section section">
         <div className="menu-container">
           <div className="row align-items-center delivery-wrapper">
-
             <div className="col-lg-6 col-md-6 col-12 delivery-text">
-              <h2 className="h2 mb-3 "> You can order through apps </h2>
+              <h2 className="h2 mb-3">You can order through apps</h2>
               <p className="neutral6">
-                Lorem ipsum dolor sit amet consectetur adipiscing elit enim bibendum sed et aliquet aliquet risus tempor semper.
+                Lorem ipsum dolor sit amet consectetur adipiscing elit enim
+                bibendum sed et aliquet aliquet risus tempor semper.
               </p>
             </div>
+
             <div className="col-lg-6 col-md-6 col-12">
               <div className="delivery-logos">
-
                 <div className="logos-row">
                   {apps.slice(0, 3).map((app, i) => (
                     <div key={i} className="logo-box">
@@ -271,16 +284,17 @@ function Menu() {
                   {apps.slice(3, 6).map((app, i) => (
                     <div key={i} className="logo-box">
                       <img src={app.img} alt={app.title} />
-                    </div>))}
+                    </div>
+                  ))}
                 </div>
 
                 <div className="logos-row">
                   {apps.slice(6, 9).map((app, i) => (
                     <div key={i} className="logo-box">
                       <img src={app.img} alt={app.title} />
-                    </div>))}
+                    </div>
+                  ))}
                 </div>
-
               </div>
             </div>
           </div>

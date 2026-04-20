@@ -33,7 +33,7 @@ const testimonials = [
 
 const CustomersSays = () => {
   return (
-    <section className="py-5 ">
+    <section className="py-5">
       <Container>
 
         <h2 className="h2 text-center mb-5">
@@ -45,21 +45,26 @@ const CustomersSays = () => {
           {testimonials.map((t, i) => (
             <Col lg={4} md={4} sm={6} xs={12} key={i}>
 
-              {/* <Card className="testimonial-card h-100 p-4 text-start"> */}
               <Card className="card-base card-padding-md card-hover-shadow text-start bg-light-section">
 
-                <h3 className="h3 mb-3  primary">
+                <h3 className="h3 mb-3 primary">
                   {t.quote}
                 </h3>
 
-                <p className="body-sm testimonial-message mb-4 ">
+                <p className="body-sm testimonial-message mb-4">
                   {t.message}
                 </p>
 
                 <div className="divider-line"></div>
 
                 <div className="d-flex align-items-center gap-3 mt-4">
-                  <img src={t.img} alt={t.name} className="rounded-circle" width="50" height="50" />
+                  <img
+                    src={t.img}
+                    alt={t.name}
+                    className="rounded-circle"
+                    width="50"
+                    height="50"
+                  />
 
                   <div>
                     <h6 className="mb-0 body-md body-md-bold">

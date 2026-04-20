@@ -16,13 +16,16 @@ import { useNotifications } from "../context/NotificationsContext";
 import { FaAnglesRight } from "react-icons/fa6";
 
 function DashboardLayout() {
-  const {isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const location = useLocation();
+
   const [collapsed, setCollapsed] = useState(false);
-const [mobileOpen, setMobileOpen] = useState(false);
-  const isActive = (path) => location.pathname === path;
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   const notifContext = useNotifications();
   const unreadCount = notifContext?.unreadCount || 0;
+
+  const isActive = (path) => location.pathname === path;
 
   if (!isAuthenticated) return <Navigate to="/login" replace />;
 
@@ -40,27 +43,26 @@ const [mobileOpen, setMobileOpen] = useState(false);
   return (
     <div className="dash-layout">
 
-      {/* SIDEBAR */}
-     <aside
-  className={`
-    dash-sidebar 
-    ${collapsed ? "collapsed" : ""} 
-    ${mobileOpen ? "open" : ""}
-  `}
->
+      <aside
+        className={`
+          dash-sidebar
+          ${collapsed ? "collapsed" : ""}
+          ${mobileOpen ? "open" : ""}
+        `}
+      >
         <div className="sidebar-top">
           <button
-  className="icon-btn"
-  onClick={() => {
-    if (window.innerWidth <= 768) {
-      setMobileOpen(!mobileOpen);
-    } else {
-      setCollapsed(!collapsed);
-    }
-  }}
->
-  <FaAnglesRight />
-</button>
+            className="icon-btn"
+            onClick={() => {
+              if (window.innerWidth <= 768) {
+                setMobileOpen(!mobileOpen);
+              } else {
+                setCollapsed(!collapsed);
+              }
+            }}
+          >
+            <FaAnglesRight />
+          </button>
         </div>
 
         <nav className="sidebar-menu">
@@ -77,42 +79,42 @@ const [mobileOpen, setMobileOpen] = useState(false);
         </nav>
       </aside>
 
-      {/* MAIN */}
       <div className="dash-main">
 
-        {/* TOPBAR */}
         <header className="dash-topbar">
-  <button
-    className="icon-btn mobile-toggle"
-    onClick={() => setMobileOpen(!mobileOpen)}
-  >
-    <FaBars />
-  </button>
 
-  <Navbar.Brand as={Link} to="/dashboard" className="brand">
-    Dashboard
-  </Navbar.Brand>
+          <button
+            className="icon-btn mobile-toggle"
+            onClick={() => setMobileOpen(!mobileOpen)}
+          >
+            <FaBars />
+          </button>
 
-  <div className="top-actions">
-    
-    <Link to="admin/notifications" className="icon-btn notif-icon">
-                      <div className="icon-badge-wrapper">
-                        <FaBell />
-                        {unreadCount > 0 && (
-                          <span className="notif-badge">
-                            {unreadCount > 99 ? "99+" : unreadCount}
-                          </span>
-                        )}
-                      </div>
-                    </Link>
+          <Navbar.Brand as={Link} to="/dashboard" className="brand">
+            Dashboard
+          </Navbar.Brand>
 
-    <Link to="/dashboard/admin/profile" className="icon-btn">
-      <FaUser />
-    </Link>
-  </div>
-</header>
+          <div className="top-actions">
 
-        {/* CONTENT */}
+            <Link to="/dashboard/notifications" className="icon-btn notif-icon">
+              <div className="icon-badge-wrapper">
+                <FaBell />
+                {unreadCount > 0 && (
+                  <span className="notif-badge">
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </span>
+                )}
+              </div>
+            </Link>
+
+            <Link to="/dashboard/profile" className="icon-btn">
+              <FaUser />
+            </Link>
+
+          </div>
+
+        </header>
+
         <main className="dash-content">
           <Container fluid>
             <Outlet />
@@ -120,6 +122,7 @@ const [mobileOpen, setMobileOpen] = useState(false);
         </main>
 
       </div>
+
     </div>
   );
 }

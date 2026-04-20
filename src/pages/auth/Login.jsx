@@ -1,12 +1,16 @@
 import { useState } from "react";
-import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useToast } from "../../context/ToastContext";
 import bg from "../../assets/auth.png";
 
 function Login() {
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
   const [loading, setLoading] = useState(false);
 
   const { login } = useAuth();
@@ -44,100 +48,96 @@ function Login() {
   };
 
   const handleBack = () => {
-    if (window.history.length > 1) {
-      
-      navigate("/");
-    }
+    navigate("/");
   };
 
   return (
-      <section className="auth-container d-flex align-items-center">
-  <Container fluid>
-    <Row className="g-0 min-vh-100">
+    <section className="auth-container d-flex align-items-center">
+      <Container fluid>
+        <Row className="g-0 min-vh-100">
 
-      {/* LEFT FORM */}
-      <Col
-        md={6}
-        className="d-flex align-items-center justify-content-center position-relative"
-      >
-        <Button
-          className="back-btn"
-          onClick={handleBack}
-          variant="light"
-        >
-          ← Back
-        </Button>
+          <Col
+            md={6}
+            className="d-flex align-items-center justify-content-center position-relative"
+          >
+            <Button
+              className="back-btn"
+              onClick={handleBack}
+              variant="light"
+            >
+              ← Back
+            </Button>
 
-        <div className="auth-box">
+            <div className="auth-box">
 
-          <div className="auth-header">
-            <h2 className="h2">Welcome back!</h2>
-            <p className="body-sm neutral5">
-              Enter your credentials to access your account
-            </p>
-          </div>
+              <div className="auth-header text-center mb-4">
+                <h2 className="h2">Welcome back!</h2>
+                <p className="body-sm neutral5">
+                  Enter your credentials to access your account
+                </p>
+              </div>
 
-          <Form onSubmit={handleSubmit} className="auth-form">
+              <Form onSubmit={handleSubmit}>
 
-  <div className="input-group-custom mb-3">
-    <Form.Control
-      className="auth-input"
-      type="email"
-      name="email"
-      placeholder=" "
-      value={formData.email}
-      onChange={handleChange}
-      required
-    />
-    <label>Email</label>
-  </div>
+                <div className="input-group-custom mb-3">
+                  <Form.Control
+                    className="auth-input"
+                    type="email"
+                    name="email"
+                    placeholder=" "
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                  />
+                  <label>Email</label>
+                </div>
 
-  <div className="input-group-custom mb-4">
-    <Form.Control
-      className="auth-input"
-      type="password"
-      name="password"
-      placeholder=" "
-      minLength={8}
-      value={formData.password}
-      onChange={handleChange}
-      required
-    />
-    <label>Password</label>
-  </div>
+                <div className="input-group-custom mb-4">
+                  <Form.Control
+                    className="auth-input"
+                    type="password"
+                    name="password"
+                    placeholder=" "
+                    minLength={8}
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                  />
+                  <label>Password</label>
+                </div>
 
-  <Button
-    type="submit"
-    className="auth-btn"
-    disabled={loading}
-  >
-    {loading ? "Signing in..." : "Sign In"}
-  </Button>
+                <Button
+                  type="submit"
+                  className="auth-btn w-100"
+                  disabled={loading}
+                >
+                  {loading ? "Signing in..." : "Sign In"}
+                </Button>
 
-</Form>
-<div className="text-center mt-4">
-            <span className="text-muted">
-              Don't have an account?{" "}
-            </span>
+              </Form>
 
-            <Link to="/register" className="auth-link">
-              Sign Up
-            </Link>
-          </div>
+              <div className="text-center mt-4">
+                <span className="text-muted">
+                  Don't have an account?{" "}
+                </span>
 
-        </div>
-      </Col>
+                <Link to="/register" className="auth-link">
+                  Sign Up
+                </Link>
+              </div>
 
-      {/* RIGHT IMAGE */}
-      <Col
-        md={6}
-        className="image-side d-none d-md-block"
-        style={{ backgroundImage: `url(${bg})` }}
-      />
+            </div>
+          </Col>
 
-    </Row>
-  </Container>
-</section>
+          <Col
+            md={6}
+            className="image-side d-none d-md-block p-0"
+            style={{ backgroundImage: `url(${bg})` }}
+          />
+
+        </Row>
+      </Container>
+    </section>
   );
 }
 

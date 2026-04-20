@@ -1,4 +1,3 @@
-import React from "react";
 import { Container, Row, Col, Card } from "react-bootstrap";
 
 import service1 from "../assets/Home/service.png";
@@ -27,7 +26,7 @@ const Services = () => {
           {services.map((s, i) => (
             <Col lg={3} md={6} sm={6} xs={6} key={i}>
               <Card className="service-card h-100 border-0">
-                
+
                 <Card.Img
                   src={s.img}
                   className="service-img"
@@ -48,6 +47,7 @@ const Services = () => {
           ))}
 
         </Row>
+
       </Container>
     </section>
   );

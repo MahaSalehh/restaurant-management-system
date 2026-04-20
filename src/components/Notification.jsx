@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { settingsAPI } from "../service/api";
 import { useToast } from "../context/ToastContext";
 import { FaCheckCircle } from "react-icons/fa";
 
-/* ================= TIME FORMAT ================= */
 const formatTime = (dateString) => {
   const date = new Date(dateString);
   const now = new Date();
@@ -14,13 +13,10 @@ const formatTime = (dateString) => {
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
   if (diffMins < 1) return "Just now";
-
   if (diffMins < 60)
     return `${diffMins} min${diffMins > 1 ? "s" : ""} ago`;
-
   if (diffHours < 24)
     return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
-
   if (diffDays === 1) return "Yesterday";
 
   return date.toLocaleDateString();
@@ -33,24 +29,20 @@ function NotificationsPage() {
 
   const { showToast } = useToast();
 
-  /* ================= FETCH ================= */
-  const fetchNotifications = async () => {
+ const fetchNotifications = async () => {
     try {
       setLoading(true);
 
       const res = await settingsAPI.getNotifications();
-      const data = res.data?.data || [];
+      const data = res.data?.data ?? [];
 
-      const formatted = data.map((n) => ({
+      const formatted = (Array.isArray(data) ? data : []).map((n) => ({
         ...n,
-        is_read: n.is_read === true || n.is_read === 1 || n.is_read === "true",
+        is_read:
+          n.is_read === true ||
+          n.is_read === 1 ||
+          n.is_read === "true",
       }));
-
-      /* SORT: NEWEST FIRST */
-      formatted.sort(
-        (a, b) =>
-          new Date(b.created_at) - new Date(a.created_at)
-      );
 
       setNotifications(formatted);
     } catch {
@@ -65,38 +57,48 @@ function NotificationsPage() {
     fetchNotifications();
   }, []);
 
-  /* ================= MARK AS READ ================= */
-  const markAsRead = async (id) => {
+  const sortedNotifications = useMemo(() => {
+    return [...notifications].sort(
+      (a, b) =>
+        new Date(b.created_at) - new Date(a.created_at)
+    );
+  }, [notifications]);
+
+    const filtered = useMemo(() => {
+    if (filter === "unread")
+      return sortedNotifications.filter((n) => !n.is_read);
+
+    if (filter === "read")
+      return sortedNotifications.filter((n) => n.is_read);
+
+    return sortedNotifications;
+  }, [filter, sortedNotifications]);
+
+    const markAsRead = async (id) => {
+    const old = notifications;
+
+    setNotifications((prev) =>
+      prev.map((n) =>
+        n.id === id ? { ...n, is_read: true } : n
+      )
+    );
+
     try {
       await settingsAPI.markAsRead(id);
-
-      setNotifications((prev) =>
-        prev.map((n) =>
-          n.id === id ? { ...n, is_read: true } : n
-        )
-      );
     } catch {
       showToast("error", "Failed to update notification");
+      setNotifications(old);
     }
   };
-
-  /* ================= FILTER ================= */
-  const filtered = notifications.filter((n) => {
-    if (filter === "unread") return !n.is_read;
-    if (filter === "read") return n.is_read;
-    return true;
-  });
 
   return (
     <div className="notif-page">
 
-      {/* HEADER */}
       <div className="notif-page-header">
         <h2>Notifications</h2>
         <p>Stay updated with your latest activity</p>
       </div>
 
-      {/* FILTER */}
       <div className="notif-filter">
         <button
           className={filter === "all" ? "active" : ""}
@@ -120,7 +122,6 @@ function NotificationsPage() {
         </button>
       </div>
 
-      {/* LIST */}
       <div className="notif-page-body">
 
         {loading ? (
@@ -139,25 +140,19 @@ function NotificationsPage() {
               onClick={() => markAsRead(note.id)}
             >
 
-              {/* TITLE */}
               <div className="notif-card-title">
                 {!note.is_read && <span className="dot" />}
                 {note.title}
               </div>
 
-              {/* MESSAGE */}
               <p className="notif-card-msg">
                 {note.message}
               </p>
 
-              {/* TIME */}
               <small className="notif-time">
-                {formatTime(
-                  note.created_at || note.updated_at
-                )}
+                {formatTime(note.created_at || note.updated_at)}
               </small>
 
-              {/* READ ICON */}
               {note.is_read && (
                 <FaCheckCircle className="read-icon" />
               )}

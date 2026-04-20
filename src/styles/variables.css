@@ -1,11 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
-/* ================= FONTS ================= */
 
 :root {
-
-  /* ================= COLORS ================= */
-
   --primary: #AD343E;
 
   --neutral-01: #FFFFFF;
@@ -21,55 +17,37 @@
   --neutral-11: #f2f3f0;
   --text-strong: #182226;
 
-  /* ================= FONTS ================= */
-
   --font-heading: "Playfair Display", serif;
   --font-body: "DM Sans", sans-serif;
 
-  /* ================= HEADINGS (RESPONSIVE) ================= */
-
-  /* H1: 100 → scales down */
   --h1-size: clamp(32px, 8vw, 100px);
   --h1-line: clamp(44px, 7vw, 96px);
 
-  /* H2: 55 → scales */
   --h2-size: clamp(26px, 5vw, 55px);
   --h2-line: clamp(30px, 5.5vw, 60.5px);
 
-  /* H3: 24 → scales */
   --h3-size: clamp(18px, 3vw, 24px);
   --h3-line: clamp(22px, 3.5vw, 30px);
 
-  /* ================= BODY (RESPONSIVE) ================= */
-
-  /* 14 → 16 */
   --body-sm-size: clamp(13px, 2vw, 14px);
   --body-sm-line: clamp(18px, 2.5vw, 20px);
 
-  /* 16 → 18 */
   --body-md-size: clamp(14px, 2.2vw, 16px);
   --body-md-line: clamp(20px, 2.8vw, 24px);
 
-  /* 18 → 20 */
   --body-lg-size: clamp(16px, 2.5vw, 18px);
   --body-lg-line: clamp(22px, 3vw, 28px);
 
-  /* 20 → 22 */
   --body-xl-size: clamp(18px, 3vw, 20px);
   --body-xl-line: clamp(24px, 3.2vw, 32px);
-
-  /* ================= WEIGHTS ================= */
 
   --fw-regular: 400;
   --fw-medium: 500;
   --fw-bold: 700;
 
-  /* ================= COMMON ================= */
-
   --transition: all 0.3s ease;
   --radius-sm: 8px;
   --radius-md: 16px;
 
---shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
-

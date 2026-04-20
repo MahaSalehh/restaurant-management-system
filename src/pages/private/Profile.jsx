@@ -28,64 +28,57 @@ function Profile() {
   const { loading: updateLoading, execute: updateProfile } =
     useAsync(settingsAPI.updateProfile, [], false);
 
-  // sync form
   useEffect(() => {
-  setFormData({
-    name: user?.name || "",
-    phone: user?.phone || "",
-  });
-}, [user]);
+    setFormData({
+      name: user?.name || "",
+      phone: user?.phone || "",
+    });
+  }, [user]);
 
-  // ================= UPDATE =================
   const handleUpdate = async () => {
-  if (formData.name.length < 3) {
-    showToast("error", "Name must be at least 3 characters");
-    return;
-  }
-
-  if (formData.phone.length !== 11) {
-    showToast("error", "Phone must be 11 digits");
-    return;
-  }
-
-  try {
-    const res = await updateProfile(formData);
-
-    // أهم سطر هنا 👇
-    const updatedUser =
-      res?.data?.user ||
-      res?.data?.data?.user ||
-      res?.data;
-
-    if (!updatedUser) {
-      throw new Error("Invalid response from server");
+    if (formData.name.length < 3) {
+      showToast("error", "Name must be at least 3 characters");
+      return;
     }
 
-    // ✅ خلي الـ user هو المصدر الحقيقي فقط
-    updateUser(updatedUser);
-    await refreshUser();
-    setShowEdit(false);
-    showToast("success", "Profile updated successfully");
+    if (formData.phone.length !== 11) {
+      showToast("error", "Phone must be 11 digits");
+      return;
+    }
 
-    setShowEdit(false);
-  } catch (err) {
-    showToast(
-      "error",
-      err?.response?.data?.message || err.message || "Update failed"
-    );
-  }
-};
+    try {
+      const res = await updateProfile(formData);
+
+      const updatedUser =
+        res?.data?.user ||
+        res?.data?.data?.user ||
+        res?.data;
+
+      if (!updatedUser) {
+        throw new Error("Invalid response from server");
+      }
+
+      updateUser(updatedUser);
+      await refreshUser();
+
+      setShowEdit(false);
+      showToast("success", "Profile updated successfully");
+    } catch (err) {
+      showToast(
+        "error",
+        err?.response?.data?.message || err.message || "Update failed"
+      );
+    }
+  };
 
   const avatar = `https://ui-avatars.com/api/?name=${user?.name}&background=random&size=128`;
 
-  if (!user) return <Loader />
+  if (!user) return <Loader />;
 
   return (
     <div className="profile-page">
-
       <div className="profile-container">
 
-        {/* ================= CARD ================= */}
         <div className="profile-card">
 
           <div className="profile-info">
@@ -112,7 +105,6 @@ function Profile() {
 
         </div>
 
-        {/* ================= TABS ================= */}
         <div className="profile-tabs">
 
           <button
@@ -138,7 +130,6 @@ function Profile() {
 
         </div>
 
-        {/* ================= CONTENT ================= */}
         <div className="profile-content">
 
           {activeTab === "profile" && (
@@ -156,7 +147,6 @@ function Profile() {
 
         </div>
 
-        {/* ================= MODAL ================= */}
         <Modal
           show={showEdit}
           onHide={() => setShowEdit(false)}

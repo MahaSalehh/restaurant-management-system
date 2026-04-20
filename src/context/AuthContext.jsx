@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect, useContext } from "react";
 import { authAPI, settingsAPI } from "../service/api";
+
 const AuthContext = createContext(null);
 
 export function useAuth() {
@@ -18,16 +19,16 @@ export function AuthProvider({ children }) {
     localStorage.getItem("ACCESS_TOKEN")
   );
 
-  // ================= INIT =================
   useEffect(() => {
     const fetchUser = async () => {
       if (!token) {
         setLoading(false);
         return;
       }
+
       try {
         const res = await settingsAPI.getProfile();
-        setUser(res.data.data); // لازم يكون فيه role
+        setUser(res.data.data);
       } catch (err) {
         localStorage.removeItem("ACCESS_TOKEN");
         setToken(null);
@@ -40,7 +41,6 @@ export function AuthProvider({ children }) {
     fetchUser();
   }, [token]);
 
-  // ================= REGISTER =================
   const register = async (data) => {
     try {
       const res = await authAPI.register(data);
@@ -57,57 +57,56 @@ export function AuthProvider({ children }) {
     }
   };
 
-  // ================= LOGIN =================
   const login = async (credentials) => {
-  try {
-    const res = await authAPI.login(credentials);
+    try {
+      const res = await authAPI.login(credentials);
 
-    const accessToken = res.data.data.access_token;
-    const user = res.data.data.user;
+      const accessToken = res.data.data.access_token;
+      const user = res.data.data.user;
 
-    if (!accessToken || !user) {
+      if (!accessToken || !user) {
+        return {
+          success: false,
+          error: res.data.message || "Invalid login response",
+        };
+      }
+
+      localStorage.setItem("ACCESS_TOKEN", accessToken);
+      setToken(accessToken);
+      setUser(user);
+
+      return {
+        success: true,
+        user,
+        message: res.data.message,
+      };
+    } catch (error) {
       return {
         success: false,
-        error: res.data.message || "Invalid login response",
+        error:
+          error.response?.data?.message ||
+          "Something went wrong",
+        errors: error.response?.data?.errors || null,
       };
     }
-
-    localStorage.setItem("ACCESS_TOKEN", accessToken);
-    setToken(accessToken);
-    setUser(user);
-
-    return {
-      success: true,
-      user,
-      message: res.data.message,
-    };
-  } catch (error) {
-  return {
-    success: false,
-    error:
-      error.response?.data?.message || // ✅ your backend uses this
-      "Something went wrong",
-    errors: error.response?.data?.errors || null, // ✅ for validation
   };
-}
-};
 
-  // ================= LOGOUT =================
-const logout = async (navigate) => {
-  try {
-    await authAPI.logout();
-  } catch (e) {}
+  const logout = async (navigate) => {
+    try {
+      await authAPI.logout();
+    } catch (e) {}
 
-  localStorage.removeItem("ACCESS_TOKEN");
-  setToken(null);
-  setUser(null);
+    localStorage.removeItem("ACCESS_TOKEN");
+    setToken(null);
+    setUser(null);
 
-  if (navigate) {
-    navigate("/");
-  } else {
-  window.location.href = "/";
-}
-};
+    if (navigate) {
+      navigate("/");
+    } else {
+      window.location.href = "/";
+    }
+  };
+
   const updateUser = (data) => {
     setUser((prev) => {
       if (!prev) return data;
@@ -118,10 +117,12 @@ const logout = async (navigate) => {
       };
     });
   };
+
   const refreshUser = async () => {
-  const res = await settingsAPI.getProfile();
-  setUser(res.data.data);
-};
+    const res = await settingsAPI.getProfile();
+    setUser(res.data.data);
+  };
+
   return (
     <AuthContext.Provider
       value={{

@@ -8,8 +8,8 @@ const Booking = () => {
   const [form, setForm] = useState({
     name: "",
     phone: "",
-    date: "",
-    time: "",
+    date: null,
+    time: null,
     guests: 1,
   });
 
@@ -31,11 +31,9 @@ const Booking = () => {
     setForm((prev) => ({ ...prev, time }));
   };
 
-  // ================= SUBMIT =================
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // ❌ validation BEFORE API
     if (!form.name || !form.phone || !form.date || !form.time) {
       showToast("error", "Please fill all required fields");
       return;
@@ -61,12 +59,11 @@ const Booking = () => {
 
       showToast("success", "Table booked successfully 🎉");
 
-      // reset form
       setForm({
         name: "",
         phone: "",
-        date: "",
-        time: "",
+        date: null,
+        time: null,
         guests: 1,
       });
 
@@ -84,7 +81,7 @@ const Booking = () => {
   return (
     <section className="booking-page">
 
-      {/* HERO */}
+
       <div className="booking-hero">
         <h1 className="h1">Book A Table</h1>
         <p className="body-md">
@@ -92,12 +89,10 @@ const Booking = () => {
         </p>
       </div>
 
-      {/* FORM */}
       <div className="booking-card-wrapper">
 
         <form className="booking-card" onSubmit={handleSubmit}>
 
-          {/* DATE + TIME */}
           <div className="field-row">
 
             <div className="contact-field date-picker">
@@ -107,6 +102,7 @@ const Booking = () => {
                   dateFormat: "Y-m-d",
                   minDate: "today",
                 }}
+                type="date"
                 value={form.date}
                 onChange={handleDateChange}
                 placeholder="Select date"
@@ -122,6 +118,7 @@ const Booking = () => {
                   dateFormat: "H:i",
                   time_24hr: true,
                 }}
+                type="time"
                 value={form.time}
                 onChange={handleTimeChange}
                 placeholder="Select time"
@@ -130,7 +127,7 @@ const Booking = () => {
 
           </div>
 <div className="field-row">
-          {/* NAME */}
+
           <div className="contact-field">
             <label>Name</label>
             <input
@@ -141,7 +138,6 @@ const Booking = () => {
             />
           </div>
 
-          {/* PHONE */}
           <div className="contact-field">
             <label>Phone</label>
             <input
@@ -152,7 +148,6 @@ const Booking = () => {
             />
           </div>
 </div>
-          {/* GUESTS */}
           <div className="contact-field">
             <label>Guests</label>
             <select
@@ -168,7 +163,6 @@ const Booking = () => {
             </select>
           </div>
 
-          {/* BUTTON */}
           <button className="booking-btn" disabled={loading}>
             {loading ? "Booking..." : "Book A Table"}
           </button>

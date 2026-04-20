@@ -24,7 +24,7 @@ import { useEffect, useState } from "react";
 import { cartAPI } from "../service/api";
 
 function PublicLayout() {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, token } = useAuth();
   const location = useLocation();
 
   const notifContext = useNotifications();
@@ -44,28 +44,10 @@ function PublicLayout() {
     setShowSidebar(false);
   }, [location.pathname]);
 
-  // fetch cart count
   useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        const res = await cartAPI.getCart();
-        const items = res.data?.data?.cart_items || [];
-
-        const total = items.reduce(
-          (sum, item) => sum + (item.quantity || 0),
-          0
-        );
-
-        setCartCount(total);
-      } catch {
-        setCartCount(0);
-      }
-    };
-
-    fetchCart();
-    const interval = setInterval(fetchCart, 3000);
-    return () => clearInterval(interval);
-  }, []);
+    if (!token) return;
+    let isMounted = true; const fetchCart = async () => { try { const res = await cartAPI.getCart(); const items = res.data?.data?.cart_items || []; const total = items.reduce((sum, item) => sum + (item.quantity || 0), 0); if (isMounted) { setCartCount(total); } } catch { if (isMounted) { setCartCount(0); } } }; fetchCart(); const interval = setInterval(fetchCart, 3000); return () => { isMounted = false; clearInterval(interval); };
+  }, [token]);
 
   if (loading) return <Loader />;
 
@@ -95,10 +77,10 @@ function PublicLayout() {
           {/* LEFT */}
           <div className="d-flex align-items-center gap-2">
             <Navbar.Toggle
-  aria-controls="offcanvasNavbar"
-  className="custom-toggler d-lg-none"
-  onClick={() => setShowSidebar(true)}
-/>
+              aria-controls="offcanvasNavbar"
+              className="custom-toggler d-lg-none"
+              onClick={() => setShowSidebar(true)}
+            />
             <Navbar.Brand as={Link} to="/" className="navbar-center-brand">
               <img src={logo} alt="Logo" className="logo" />
               <span>Bistro Bliss</span>

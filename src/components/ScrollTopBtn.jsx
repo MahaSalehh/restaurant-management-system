@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { FaArrowUp } from "react-icons/fa";
+
 const ScrollTopBtn = () => {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setShow(window.scrollY > 300); // يظهر بعد ما تنزل شوية
+      setShow(window.scrollY > 300);
     };
 
     window.addEventListener("scroll", handleScroll);

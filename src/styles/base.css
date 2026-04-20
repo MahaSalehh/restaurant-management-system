@@ -1,4 +1,3 @@
-/* ================= HEADINGS ================= */
 .h1 {
   font-family: var(--font-heading);
   font-size: var(--h1-size);
@@ -19,11 +18,10 @@
   color: var(--neutral-07);
 }
 
-/* ================= COLORS ================= */
-
-.primary{
+.primary {
   color: var(--primary);
 }
+
 .neutral1 {
   color: var(--neutral-01);
 }
@@ -55,23 +53,26 @@
 .neutral8 {
   color: var(--neutral-08);
 }
-.neutral9{
+
+.neutral9 {
   background: var(--neutral-09);
 }
-.neutral10{
+
+.neutral10 {
   color: var(--neutral-10);
 }
 
 .bg-white {
   background: var(--neutral-01);
 }
+
 .bg-light-section {
   background-color: var(--neutral-02);
 }
-.bg-dark-section{
+
+.bg-dark-section {
   background: var(--neutral-09);
 }
-/* ================= BODY ================= */
 
 .body-sm {
   font-size: var(--body-sm-size);
@@ -117,46 +118,38 @@
   font-weight: var(--fw-bold);
 }
 
-/* ================= BUTTON BASE ================= */
 .btn-custom {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-
   text-decoration: none;
   border-radius: 999px;
   cursor: pointer;
-
   font-size: var(--body-md-size);
   font-weight: var(--fw-bold);
-
   transition: var(--transition);
-
-  width: fit-content; /* 👈 مهم */
+  width: fit-content;
   max-width: 100%;
-  white-space: nowrap; /* يمنع الكسر */
+  white-space: nowrap;
 }
 
-/* PRIMARY */
 .btn-primary-custom {
   border: 2px solid var(--primary);
   background: var(--primary);
   color: var(--neutral-01);
 }
 
-.btn-primary-custom:hover{
+.btn-primary-custom:hover {
   border: 2px solid #922d35;
   background: #922d35;
   transform: translateY(-2px);
 }
 
-/* OUTLINE */
 .btn-outline-custom {
   background: transparent;
   border: 2px solid var(--neutral-07);
   color: var(--neutral-07);
-
 }
 
 .btn-outline-custom:hover {
@@ -165,9 +158,6 @@
   color: var(--neutral-01);
 }
 
-
-
-/* SIZES */
 .btn-sm {
   padding: 8px 16px;
   font-size: var(--body-sm-size);
@@ -177,18 +167,20 @@
   padding: 16px 24px;
   font-size: var(--body-lg-size);
 }
+
 .icon-btn {
   color: var(--neutral-07);
   font-size: var(--h3-size);
   transition: var(--transition);
 }
-.icon-btn svg{
+
+.icon-btn svg {
   transition: var(--transition);
 }
-.icon-btn :hover {
+
+.icon-btn:hover {
   transform: translateY(-2px);
 }
-/* ================= RESPONSIVE BUTTON ================= */
 
 @media (max-width: 768px) {
   .btn-lg {
@@ -196,9 +188,7 @@
     font-size: var(--body-md-size);
   }
 }
-/* ================= CARD ================= */
 
-/* الكارد */
 .card-custom {
   background: var(--neutral-01);
   border-radius: var(--radius-sm);
@@ -211,9 +201,6 @@
   box-shadow: var(--shadow-hover);
 }
 
-
-
-/* ================= SECTION ================= */
 .section {
   padding: 100px 0;
 }
@@ -224,7 +211,6 @@
   }
 }
 
-/* ================= TEXT ================= */
 .text-container {
   max-width: 600px;
   width: 100%;
@@ -234,12 +220,12 @@
   max-width: 550px;
   width: 100%;
 }
+
 .text-container-sm {
   max-width: 600px;
   width: 100%;
 }
 
-/* مهم */
 .text-left {
   margin-right: auto;
 }
@@ -257,7 +243,6 @@
   }
 }
 
-/* ================= CARDS ================= */
 .card-base {
   border: 1px solid var(--neutral-03);
   border-radius: var(--radius-md);
@@ -284,7 +269,6 @@
   box-shadow: var(--shadow-hover);
 }
 
-/* ================= IMAGES ================= */
 .img-cover {
   width: 100%;
   object-fit: cover;
@@ -304,7 +288,6 @@
   }
 }
 
-/* ================= FLEX ================= */
 .flex-center {
   display: flex;
   justify-content: center;
@@ -317,7 +300,6 @@
   gap: 20px;
 }
 
-/* ================= BACKGROUND ================= */
 .bg-cover {
   background-position: center;
   background-repeat: no-repeat;
@@ -327,5 +309,3 @@
 .full-height {
   min-height: 100vh;
 }
-
-
