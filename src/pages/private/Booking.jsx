@@ -79,7 +79,7 @@ const Booking = () => {
     }
   };
   useEffect(() => {
-  flatpickr(".date-picker input", {
+  flatpickr(".date-picker input", ".time-picker input", {
     position: "auto right",
     disableMobile: true,
   });
