@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { publicAPI, STORAGE_URL } from "../../service/api";
+import { publicAPI} from "../../service/api";
 import { useNavigate } from "react-router-dom";
 import { useAsync } from "../../hooks/useAsync";
 import { useToast } from "../../context/ToastContext";
@@ -42,7 +42,7 @@ function Articles() {
       onClick={() => navigate(`/articles/${item.id}`)}
     >
       <img
-        src={STORAGE_URL + item.image_url}
+        src={item.image_url}
         alt={item.title}
       />
 

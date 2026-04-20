@@ -189,7 +189,7 @@ const showError = () => {
           <div className="d-flex justify-content-between align-items-center">
             <h2 className="h2">Our Blog & Articles</h2>
 
-            <Link as={Link} to="/articles" className="btn-custom btn-primary-custom btn-sm">
+            <Link as={Link} to="/articles" className="btn-custom btn-primary-custom btn-lg">
               Read All Articles
             </Link>
           </div>

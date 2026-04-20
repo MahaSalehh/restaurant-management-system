@@ -1,6 +1,6 @@
 import { useEffect, useCallback } from "react";
 import { useNavigate,  useParams } from "react-router-dom";
-import { publicAPI, STORAGE_URL } from "../../service/api";
+import { publicAPI } from "../../service/api";
 import { useToast } from "../../context/ToastContext";
 import { useAsync } from "../../hooks/useAsync";
 import Loader from "../../components/Loader";
@@ -62,7 +62,7 @@ function ArticleDetails() {
         <h2 className="h2 text-center">{article.title}</h2>
 
         <img
-          src={STORAGE_URL + article.image_url}
+          src={article.image_url}
           alt={article.title}
           className="article-image"
         />

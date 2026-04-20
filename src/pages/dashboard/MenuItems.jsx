@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { adminAPI, publicAPI, STORAGE_URL } from "../../service/api";
+import { adminAPI, publicAPI } from "../../service/api";
 
 import PageLayout from "./components/PageLayout";
 import DataTable from "./components/DataTable";
@@ -176,7 +176,7 @@ function MenuItems() {
             <td>
               {item.image_url && (
                 <img
-                  src={STORAGE_URL + item.image_url}
+                  src={item.image_url}
                   width="50"
                   alt=""
                 />
