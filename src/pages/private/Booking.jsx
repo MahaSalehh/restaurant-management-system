@@ -95,14 +95,13 @@ const Booking = () => {
 
           <div className="field-row">
 
-            <div className="contact-field">
+            <div className="contact-field date-picker">
               <label>Date</label>
               <Flatpickr
                 options={{
                   dateFormat: "Y-m-d",
                   minDate: "today",
                 }}
-                className="date-picker"
                 type="date"
                 value={form.date}
                 onChange={handleDateChange}
@@ -110,7 +109,7 @@ const Booking = () => {
               />
             </div>
 
-            <div className="contact-field">
+            <div className="contact-field time-picker">
               <label>Time</label>
               <Flatpickr
                 options={{
@@ -119,7 +118,6 @@ const Booking = () => {
                   dateFormat: "H:i",
                   time_24hr: true,
                 }}
-                className="time-picker"
                 type="time"
                 value={form.time}
                 onChange={handleTimeChange}
