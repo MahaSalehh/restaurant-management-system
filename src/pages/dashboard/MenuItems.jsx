@@ -56,7 +56,7 @@ function MenuItems() {
       const formData = new FormData();
 
       Object.keys(form).forEach((key) => {
-        if (form[key] !== null) {
+        if (form[key] !== null && form[key] !== "") {
           formData.append(key, form[key]);
         }
       });
@@ -80,7 +80,7 @@ function MenuItems() {
       name: item.name,
       description: item.description,
       price: item.price,
-      category_id: item.category_id,
+      category_id: item.category?.id || "",
       image_url: null,
     });
 
@@ -194,17 +194,14 @@ function MenuItems() {
                   {
                     label: "delete",
                     variant: "danger",
-                    onClick: () => {
-                      handleDelete(item.id);
-                    }},
-                    {
+                    onClick: () => handleDelete(item.id),
+                  },
+                  {
                     label: "edit",
-                    varient: "light",
-                    onClick: () => {
-                      handleEdit(item)
-                    }
-                    }
-                  ]}
+                    variant: "light",
+                    onClick: () => handleEdit(item),
+                  },
+                ]}
               />
             </td>
           </tr>

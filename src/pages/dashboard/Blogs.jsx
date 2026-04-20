@@ -50,7 +50,7 @@ function Blogs() {
       const formData = new FormData();
 
       Object.keys(form).forEach((key) => {
-        if (form[key] !== null) {
+        if (form[key] !== null && form[key] !== "") {
           formData.append(key, form[key]);
         }
       });
@@ -153,7 +153,6 @@ function Blogs() {
 
             <td>{item.title}</td>
 
-            {/* ✅ SLICED CONTENT */}
             <td>
               {item.content?.length > 80
                 ? item.content.slice(0, 80) + "..."
@@ -166,17 +165,14 @@ function Blogs() {
                   {
                     label: "delete",
                     variant: "danger",
-                    onClick: () => {
-                      handleDelete(item.id);
-                    }},
-                    {
+                    onClick: () => handleDelete(item.id),
+                  },
+                  {
                     label: "edit",
-                    varient: "light",
-                    onClick: () => {
-                      handleEdit(item)
-                    }
-                    }
-                  ]}
+                    variant: "light",
+                    onClick: () => handleEdit(item),
+                  },
+                ]}
               />
             </td>
           </tr>
