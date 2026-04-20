@@ -772,26 +772,14 @@
 .field-row .contact-field {
   flex: 2;
 }
-
-
-.contact-field .flatpickr-input {
+.contact-field,
+.date-picker,
+.time-picker {
   width: 100%;
-  padding: 12px 14px;
-  border: 1px solid var(--neutral-03);
-  border-radius: 72px;
-  font-family: inherit;
-  font-size: 14px;
-  background-color: var(--neutral-01);
-  transition: 0.2s;
-  box-sizing: border-box;
 }
-.contact-field .flatpickr-input:focus {
-  border-color: var(--primary);
-  box-shadow: none;
-  outline: none;
-}
-.date-picker .flatpickr-input,
-.time-picker .flatpickr-input {
+
+
+.flatpickr-input {
   padding-right: 44px;
   background-repeat: no-repeat;
   background-position: right 14px center;
@@ -824,8 +812,7 @@
 }
 @media (max-width: 768px) {
   .booking-card select,
-  .booling-card input,
-  .contact-field .flatpickr-input {
+  .booling-card input{
     background-position: right 10px center;
     padding-right: 28px;
     background-size: 14px;
