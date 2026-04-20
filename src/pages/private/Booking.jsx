@@ -102,6 +102,7 @@ const Booking = () => {
                   dateFormat: "Y-m-d",
                   minDate: "today",
                 }}
+                className="flatpicker-input"
                 type="date"
                 value={form.date}
                 onChange={handleDateChange}
@@ -118,6 +119,7 @@ const Booking = () => {
                   dateFormat: "H:i",
                   time_24hr: true,
                 }}
+                className="flatpicker-input"
                 type="time"
                 value={form.time}
                 onChange={handleTimeChange}
