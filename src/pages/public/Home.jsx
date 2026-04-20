@@ -1,6 +1,6 @@
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { publicAPI } from "../../service/api";
+import { publicAPI, STORAGE_URL } from "../../service/api";
 import { useAsync } from "../../hooks/useAsync";
 import { useToast } from "../../context/ToastContext";
 
@@ -204,7 +204,7 @@ const showError = () => {
                   onClick={() => navigate(`/articles/${featured.id}`)}
                   style={{ cursor: "pointer" }}
                 >
-                  <Card.Img src={featured.image_url} />
+                  <Card.Img src={STORAGE_URL + featured.image_url} />
 
                   <Card.Body>
                     <span className="body-md neutral5">
@@ -230,7 +230,7 @@ const showError = () => {
                       onClick={() => navigate(`/articles/${item.id}`)}
                       style={{ cursor: "pointer" }}
                     >
-                      <Card.Img src={item.image_url} />
+                      <Card.Img src={STORAGE_URL + item.image_url} />
 
                       <Card.Body>
                           <span className="body-sm neutral5">
