@@ -79,10 +79,18 @@ const Booking = () => {
     }
   };
   useEffect(() => {
-  flatpickr(".date-picker input", ".time-picker input", {
-    position: "auto right",
-    disableMobile: true,
-  });
+  flatpickr(".date-picker input", {
+  enableTime: false,
+  dateFormat: "Y-m-d",
+  position: "auto right",
+});
+
+flatpickr(".time-picker input", {
+  enableTime: true,
+  noCalendar: true,
+  dateFormat: "H:i",
+  position: "auto right",
+});
 }, []);
 
   return (
