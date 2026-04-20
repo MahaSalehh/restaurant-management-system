@@ -749,7 +749,7 @@
 
 
 .flatpickr-input {
-  /* padding-right: 44px; */
+  padding-right: 44px;
   background-repeat: no-repeat;
   background-position: right 14px center;
   background-size: 18px;
