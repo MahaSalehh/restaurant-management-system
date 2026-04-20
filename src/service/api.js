@@ -12,23 +12,15 @@ export const api = axios.create({
 // ==========================
 // Request Interceptor (Token + Headers handling)
 // ==========================
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("ACCESS_TOKEN");
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("ACCESS_TOKEN");
 
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
 
-    // ✅ Important: don't force JSON when sending FormData
-    if (!(config.data instanceof FormData)) {
-      config.headers["Content-Type"] = "application/json";
-    }
-
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+  return config;
+});
 
 // ==========================
 // Response Interceptor (401)
@@ -91,7 +83,7 @@ export const publicAPI = {
 // ==========================
 export const cartAPI = {
   getCart: () => api.get("/cart"),
-  getCartCount: () => axios.get("/cart/count"),
+  getCartCount: () => api.get("/cart/count"),
   addItem: (data) => api.post("/cart/items", data),
   updateItem: (id, data) => api.patch(`/cart/items/${id}`, data),
   removeItem: (id) => api.delete(`/cart/items/${id}`),
