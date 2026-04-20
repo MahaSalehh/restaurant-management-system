@@ -714,7 +714,6 @@
     position: static;
   }
 }
-
 .booking-page {
   background: var(--neutral-02);
 }
@@ -746,23 +745,56 @@
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
+/* =======================
+   INPUTS + SELECT + FLATPICKR
+======================= */
 
-/* 
-.flatpickr-input {
-  padding-right: 44px;
+.booking-card input,
+.booking-card select,
+.booking-card .flatpickr-input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 72px;
+  border: 1px solid var(--neutral-03);
+  outline: none;
+  transition: 0.2s;
+  font-family: inherit;
+  background-color: var(--neutral-01);
+  box-sizing: border-box;
+}
+
+.booking-card input:focus,
+.booking-card select:focus,
+.booking-card .flatpickr-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+}
+
+/* icons */
+.date-picker .flatpickr-input {
+  background-image: url("data:image/svg+xml,%3Csvg fill='%23666' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10h5v5H7z'/%3E%3Cpath d='M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 14px center;
   background-size: 18px;
-} */
-
-.date-picker .flatpickr-input {
-  background-image: url("data:image/svg+xml,%3Csvg fill='%23666' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10h5v5H7z'/%3E%3Cpath d='M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z'/%3E%3C/svg%3E");
-
 }
 
 .time-picker .flatpickr-input {
   background-image: url("data:image/svg+xml;utf8,<svg fill='%23666' height='20' viewBox='0 0 20 20' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M5 7l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 18px;
 }
+
+/* select arrow */
+.booking-card select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23666' height='20' viewBox='0 0 20 20' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M5 7l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
+}
+
+/* field row */
 .field-row {
   display: flex;
   gap: 16px;
@@ -772,55 +804,14 @@
 .field-row .contact-field {
   flex: 2;
 }
+
 .contact-field,
 .date-picker,
 .time-picker {
   width: 100%;
 }
 
-
-.flatpickr-input {
-  padding-right: 44px;
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  background-size: 18px;
-}
-
-.booking-card input,
-.booking-card select {
-  width: 100%;
-  padding: 12px;
-  border-radius: 72px;
-  border: 1px solid var(--neutral-03);
-  outline: none;
-  transition: 0.2s;
-  font-family: inherit;
-}
-
-.booking-card select:focus{
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
-}
-
-
-.booking-card select {
-  appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg fill='%23666' height='20' viewBox='0 0 20 20' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M5 7l5 5 5-5z'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 16px center;
-  padding-right: 40px;
-}
-@media (max-width: 768px) {
-  .booking-card select,
-  .booling-card input,
-  .flatpickr-input{
-    background-position: right 10px center;
-    padding-right: 28px;
-    background-size: 14px;
-  }
-}
-
-
+/* button */
 .booking-btn {
   width: 100%;
   padding: 14px;
@@ -840,6 +831,7 @@
   opacity: 0.6;
 }
 
+/* map */
 .booking-map {
   height: 700px;
   background-image: url("../../assets/Book/map.svg");
@@ -847,6 +839,10 @@
   background-position: center;
   margin-top: -200px;
 }
+
+/* =======================
+   RESPONSIVE
+======================= */
 
 @media (max-width: 768px) {
   .field-row {
@@ -856,6 +852,25 @@
   .booking-map {
     height: 400px;
     margin-top: -100px;
+  }
+
+  .booking-card select,
+  .booking-card input,
+  .flatpickr-input {
+    background-position: right 10px center;
+    padding-right: 28px;
+    background-size: 14px;
+  }
+}
+
+@media (max-width: 576px) {
+  .booking-header {
+    gap: 10px;
+  }
+
+  .back-button {
+    font-size: 12px;
+    padding: 5px 12px;
   }
 }
 
