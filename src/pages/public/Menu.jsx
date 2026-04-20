@@ -189,9 +189,9 @@ function Menu() {
             ))}
           </div>
 
-          <div className="menu-grid row g-4">
+          <div className="menu-grid ">
             {filteredItems.map((item) => (
-              <div key={item.id} className="col-lg-3 col-md-4 col-sm-6">
+              <div key={item.id} className="">
                 <div className="menu-card">
                   <img src={STORAGE_URL + item.image_url} alt={item.name} />
 
