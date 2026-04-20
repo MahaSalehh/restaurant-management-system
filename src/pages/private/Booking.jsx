@@ -8,8 +8,8 @@ const Booking = () => {
   const [form, setForm] = useState({
     name: "",
     phone: "",
-    date: null,
-    time: null,
+    date: "",
+    time: "",
     guests: 1,
   });
 
@@ -62,8 +62,8 @@ const Booking = () => {
       setForm({
         name: "",
         phone: "",
-        date: null,
-        time: null,
+        date: "",
+        time: "",
         guests: 1,
       });
 
