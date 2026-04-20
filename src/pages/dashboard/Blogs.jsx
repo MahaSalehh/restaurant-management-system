@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { adminAPI, publicAPI } from "../../service/api";
+import { adminAPI, publicAPI, STORAGE_URL } from "../../service/api";
 
 import PageLayout from "./components/PageLayout";
 import DataTable from "./components/DataTable";
@@ -50,7 +50,7 @@ function Blogs() {
       const formData = new FormData();
 
       Object.keys(form).forEach((key) => {
-        if (form[key] !== null && form[key] !== "") {
+        if (form[key] !== null) {
           formData.append(key, form[key]);
         }
       });
@@ -144,7 +144,7 @@ function Blogs() {
             <td>
               {item.image_url && (
                 <img
-                  src={item.image_url}
+                  src={STORAGE_URL + item.image_url}
                   width="60"
                   alt=""
                 />
@@ -153,6 +153,7 @@ function Blogs() {
 
             <td>{item.title}</td>
 
+            {/* ✅ SLICED CONTENT */}
             <td>
               {item.content?.length > 80
                 ? item.content.slice(0, 80) + "..."
@@ -165,14 +166,17 @@ function Blogs() {
                   {
                     label: "delete",
                     variant: "danger",
-                    onClick: () => handleDelete(item.id),
-                  },
-                  {
+                    onClick: () => {
+                      handleDelete(item.id);
+                    }},
+                    {
                     label: "edit",
-                    variant: "light",
-                    onClick: () => handleEdit(item),
-                  },
-                ]}
+                    varient: "light",
+                    onClick: () => {
+                      handleEdit(item)
+                    }
+                    }
+                  ]}
               />
             </td>
           </tr>

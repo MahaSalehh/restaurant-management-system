@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { publicAPI,  cartAPI } from "../../service/api";
+import { publicAPI, STORAGE_URL, cartAPI } from "../../service/api";
 import { useAuth } from "../../context/AuthContext";
 import { useAsync } from "../../hooks/useAsync";
 import { useToast } from "../../context/ToastContext";
@@ -193,7 +193,7 @@ function Menu() {
             {filteredItems.map((item) => (
               <div key={item.id} className="col-lg-3 col-md-4 col-sm-6">
                 <div className="menu-card">
-                  <img src={ item.image_url} alt={item.name} />
+                  <img src={STORAGE_URL + item.image_url} alt={item.name} />
 
                   <div className="menu-content text-center p-3">
                     <h3 className="h3 body-xl-bold">$ {item.price}</h3>

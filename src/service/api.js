@@ -7,20 +7,28 @@ export const api = axios.create({
   baseURL: API_BASE_URL,
 });
 
-// export const STORAGE_URL = "https://restaurant-api-production-b087.up.railway.app/storage/";
+export const STORAGE_URL = "https://restaurant-api-production-b087.up.railway.app/storage/";
 
 // ==========================
 // Request Interceptor (Token + Headers handling)
 // ==========================
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("ACCESS_TOKEN");
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("ACCESS_TOKEN");
 
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
 
-  return config;
-});
+    // ✅ Important: don't force JSON when sending FormData
+    if (!(config.data instanceof FormData)) {
+      config.headers["Content-Type"] = "application/json";
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 // ==========================
 // Response Interceptor (401)

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { adminAPI, publicAPI } from "../../service/api";
+import { adminAPI, publicAPI, STORAGE_URL } from "../../service/api";
 
 import PageLayout from "./components/PageLayout";
 import DataTable from "./components/DataTable";
@@ -56,7 +56,7 @@ function MenuItems() {
       const formData = new FormData();
 
       Object.keys(form).forEach((key) => {
-        if (form[key] !== null && form[key] !== "") {
+        if (form[key] !== null) {
           formData.append(key, form[key]);
         }
       });
@@ -80,7 +80,7 @@ function MenuItems() {
       name: item.name,
       description: item.description,
       price: item.price,
-      category_id: item.category?.id || "",
+      category_id: item.category_id,
       image_url: null,
     });
 
@@ -176,7 +176,7 @@ function MenuItems() {
             <td>
               {item.image_url && (
                 <img
-                  src={item.image_url}
+                  src={STORAGE_URL + item.image_url}
                   width="50"
                   alt=""
                 />
@@ -194,14 +194,17 @@ function MenuItems() {
                   {
                     label: "delete",
                     variant: "danger",
-                    onClick: () => handleDelete(item.id),
-                  },
-                  {
+                    onClick: () => {
+                      handleDelete(item.id);
+                    }},
+                    {
                     label: "edit",
-                    variant: "light",
-                    onClick: () => handleEdit(item),
-                  },
-                ]}
+                    varient: "light",
+                    onClick: () => {
+                      handleEdit(item)
+                    }
+                    }
+                  ]}
               />
             </td>
           </tr>

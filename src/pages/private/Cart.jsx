@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { cartAPI } from "../../service/api";
+import { cartAPI, STORAGE_URL } from "../../service/api";
 import { useAsync } from "../../hooks/useAsync";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../context/ToastContext";
@@ -11,8 +11,14 @@ const Cart = () => {
 
   const [actionLoading, setActionLoading] = useState(false);
 
-  const { data, loading, execute: fetchCart } = useAsync(cartAPI.getCart);
+  // ================= FETCH CART =================
+  const {
+    data,
+    loading,
+    execute: fetchCart,
+  } = useAsync(cartAPI.getCart);
 
+  // ✅ LOCAL STATE (IMPORTANT)
   const [cartState, setCartState] = useState([]);
 
   useEffect(() => {
@@ -25,63 +31,61 @@ const Cart = () => {
 
   // ================= UPDATE QTY =================
   const updateQty = async (id, qty) => {
-    if (qty < 1) return;
+  if (qty < 1) return;
 
-    setActionLoading(true);
+  // optimistic update
+  setCartState((prev) =>
+    prev.map((item) =>
+      item.id === id ? { ...item, quantity: qty } : item
+    )
+  );
 
-    setCartState((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, quantity: qty } : item
-      )
-    );
+  try {
+    await cartAPI.updateItem(id, { quantity: qty });
 
-    try {
-      await cartAPI.updateItem(id, { quantity: qty });
-      showToast("success", "Quantity updated");
-    } catch {
-      showToast("error", "Failed to update item");
-      fetchCart();
-    } finally {
-      setActionLoading(false);
-    }
-  };
+    showToast("success", "Quantity updated");
+  } catch {
+    showToast("error", "Failed to update item");
+
+    fetchCart(); // rollback
+  }
+};
 
   // ================= REMOVE ITEM =================
   const removeItem = async (id) => {
-    const old = cartState;
+  const old = cartState;
 
-    setActionLoading(true);
+  setCartState((prev) =>
+    prev.filter((item) => item.id !== id)
+  );
 
-    setCartState((prev) => prev.filter((item) => item.id !== id));
+  try {
+    await cartAPI.removeItem(id);
 
-    try {
-      await cartAPI.removeItem(id);
-      showToast("success", "Item removed");
-    } catch {
-      showToast("error", "Failed to remove item");
-      setCartState(old);
-    } finally {
-      setActionLoading(false);
-    }
-  };
+    showToast("success", "Item removed");
+  } catch {
+    showToast("error", "Failed to remove item");
+
+    setCartState(old);
+  }
+};
 
   // ================= CLEAR CART =================
   const clearCart = async () => {
-    const old = cartState;
+  const old = cartState;
 
-    setActionLoading(true);
-    setCartState([]);
+  setCartState([]);
 
-    try {
-      await cartAPI.clearCart();
-      showToast("success", "Cart cleared");
-    } catch {
-      showToast("error", "Failed to clear cart");
-      setCartState(old);
-    } finally {
-      setActionLoading(false);
-    }
-  };
+  try {
+    await cartAPI.clearCart();
+
+    showToast("success", "Cart cleared");
+  } catch {
+    showToast("error", "Failed to clear cart");
+
+    setCartState(old);
+  }
+};
 
   // ================= CALCULATIONS =================
   const subtotal = cartItems.reduce(
@@ -93,7 +97,9 @@ const Cart = () => {
   const deliveryFee = subtotal > 0 ? 25 : 0;
   const total = subtotal + deliveryFee;
 
-  if (loading) return <Loader />;
+  // ================= LOADING =================
+  if (loading)
+    return <Loader />
 
   return (
     <section className="cart-page">
@@ -141,8 +147,9 @@ const Cart = () => {
 
                     <img
                       src={
-                        item.menu_item?.image_url ||
-                        "/placeholder.png"
+                        item.menu_item?.image_url?.startsWith("http")
+                          ? item.menu_item.image_url
+                          : STORAGE_URL + item.menu_item?.image_url
                       }
                       alt={item.menu_item?.name}
                     />
@@ -156,7 +163,6 @@ const Cart = () => {
 
                       <div className="qty-box">
                         <button
-                          disabled={actionLoading}
                           onClick={() => updateQty(item.id, qty - 1)}
                         >
                           -
@@ -165,7 +171,6 @@ const Cart = () => {
                         <span>{qty}</span>
 
                         <button
-                          disabled={actionLoading}
                           onClick={() => updateQty(item.id, qty + 1)}
                         >
                           +
@@ -178,7 +183,6 @@ const Cart = () => {
 
                       <button
                         className="remove"
-                        disabled={actionLoading}
                         onClick={() => removeItem(item.id)}
                       >
                         ✕
