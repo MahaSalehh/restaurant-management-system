@@ -63,14 +63,14 @@ function Bookings() {
           className={tab === "current" ? "active" : ""}
           onClick={() => setTab("current")}
         >
-          Current
+          <span>Current</span>
         </button>
 
         <button
           className={tab === "previous" ? "active" : ""}
           onClick={() => setTab("previous")}
         >
-          Previous
+          <span>Previous</span>
         </button>
       </div>
 
@@ -102,7 +102,7 @@ function Bookings() {
 
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Booking Details</Modal.Title>
+          <Modal.Title>Booking #{selectedBooking?.id}</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
@@ -110,16 +110,17 @@ function Bookings() {
             <div>Loading...</div>
           ) : (
             <>
+              <p>
+                <b>Status:</b>{" "}
+                <span className={`status ${selectedBooking.status}`}>
+                  {selectedBooking.status}
+                </span>
+              </p>
               <p><b>Date:</b> {selectedBooking.booking_date}</p>
               <p><b>Time:</b> {selectedBooking.booking_time}</p>
               <p><b>Guests:</b> {selectedBooking.guests}</p>
 
-              <p>
-                <b>Status:</b>{" "}
-                <Badge bg={getBadge(selectedBooking.status)}>
-                  {selectedBooking.status}
-                </Badge>
-              </p>
+              
             </>
           )}
         </Modal.Body>

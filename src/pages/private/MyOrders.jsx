@@ -68,14 +68,14 @@ function Orders() {
           className={tab === "current" ? "active" : ""}
           onClick={() => setTab("current")}
         >
-          Current
+          <span>Current</span>
         </button>
 
         <button
           className={tab === "previous" ? "active" : ""}
           onClick={() => setTab("previous")}
         >
-          Previous
+          <span>Previous</span>
         </button>
       </div>
 
@@ -117,9 +117,9 @@ function Orders() {
             <>
               <p>
                 <b>Status:</b>{" "}
-                <Badge bg={getBadge(selectedOrder.status)}>
+                <span className={`status ${selectedOrder.status}`}>
                   {selectedOrder.status}
-                </Badge>
+                </span>
               </p>
 
               <hr />
