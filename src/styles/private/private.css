@@ -188,7 +188,7 @@
 .filter-bar button {
   border: none;
   background: var(--neutral-03);
-  color: var(--neutral-01);
+  color: var(--neutral-07);
   padding: 6px 14px;
   border-radius: 999px;
   font-size: var(--body-sm-size);
