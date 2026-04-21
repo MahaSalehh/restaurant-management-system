@@ -74,6 +74,8 @@
     align-items: center;
     margin-top: 8px;
     gap: 10px;
+  text-decoration: none;
+
 }
 
 .qty-box button {

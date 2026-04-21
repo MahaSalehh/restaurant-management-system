@@ -80,7 +80,7 @@
   display: flex;
   justify-content: flex-start;
   gap: 12px;
-
+  text-decoration: none;
   padding-left: 4px;
 }
 

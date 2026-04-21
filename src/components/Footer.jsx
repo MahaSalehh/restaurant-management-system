@@ -22,10 +22,10 @@ const Footer = () => {
         <div className="footer-main">
 
           <div className="footer-col">
-            <div className="footer-logo">
+            <Link to="/" className="footer-logo">
               <img src={logo} alt="logo" className="logo" />
               <h4>Bistro Bliss</h4>
-            </div>
+            </Link>
 
             <p className="footer-desc neutral4">
               In the new era of technology we look a in the future with certainty and pride to for our company and.

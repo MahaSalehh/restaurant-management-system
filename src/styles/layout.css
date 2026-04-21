@@ -212,7 +212,9 @@
   align-items: center;
   gap: 10px;
   padding-bottom: 20px;
+  text-decoration: none;
 }
+
 
 .footer-logo h4 {
   font-family: var(--font-heading);
@@ -245,7 +247,14 @@
   color: var(--neutral-03);
   font-size: clamp(14px, 1vw, 16px);
 }
+.footer-social a{
+  color: var(--neutral-01);
+  transition: var(--transition);
 
+}
+.footer-social a:hover svg {
+  transform: translateY(-2px);
+}
 .footer-social svg {
   background: var(--primary);
   padding: 5px;

@@ -229,6 +229,7 @@
   border: 1px solid var(--neutral-03);
   background: transparent;
   transition: var(--transition);
+  text-decoration: none;
 }
 
 .category-btn.active {
@@ -295,6 +296,8 @@
   font-weight: 500;
   border: none;
   transition: all 0.25s ease;
+  text-decoration: none;
+
 }
 
 .quantity-box {
@@ -322,6 +325,7 @@
   font-weight: var(--fw-bold);
   min-width: 18px;
   text-align: center;
+  
 }
 
 .delivery-section {

@@ -310,12 +310,3 @@
   min-height: 100vh;
 }
 
-
-button a,
-button a:hover,
-button a.active,
-button a::after{
-  text-decoration: none;
-  color: inherit;
-}
-
