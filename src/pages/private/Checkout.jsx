@@ -95,7 +95,7 @@ const Checkout = () => {
             ← Back
           </Button>
 
-          <h2 className="checkout-title">Checkout</h2>
+          <h2 className="h2 checkout-title">Checkout</h2>
         </div>
 
         <div className="row g-4">

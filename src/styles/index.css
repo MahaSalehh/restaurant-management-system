@@ -5,6 +5,9 @@
 @import "./auth.css";
 @import "./layout.css";
 @import "./base.css";
+@import "./private/notif.css";
+@import "./private/book.css";
+@import "./private/cart.css";
 
 body {
   margin: 0;

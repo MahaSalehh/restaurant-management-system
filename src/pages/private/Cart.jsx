@@ -11,14 +11,13 @@ const Cart = () => {
 
   const [actionLoading, setActionLoading] = useState(false);
 
-  // ================= FETCH CART =================
   const {
     data,
     loading,
     execute: fetchCart,
   } = useAsync(cartAPI.getCart);
 
-  // ✅ LOCAL STATE (IMPORTANT)
+
   const [cartState, setCartState] = useState([]);
 
   useEffect(() => {
@@ -28,12 +27,9 @@ const Cart = () => {
   }, [data]);
 
   const cartItems = cartState;
-
-  // ================= UPDATE QTY =================
-  const updateQty = async (id, qty) => {
+const updateQty = async (id, qty) => {
   if (qty < 1) return;
 
-  // optimistic update
   setCartState((prev) =>
     prev.map((item) =>
       item.id === id ? { ...item, quantity: qty } : item
@@ -47,11 +43,10 @@ const Cart = () => {
   } catch {
     showToast("error", "Failed to update item");
 
-    fetchCart(); // rollback
+    fetchCart();
   }
 };
 
-  // ================= REMOVE ITEM =================
   const removeItem = async (id) => {
   const old = cartState;
 
@@ -70,7 +65,6 @@ const Cart = () => {
   }
 };
 
-  // ================= CLEAR CART =================
   const clearCart = async () => {
   const old = cartState;
 
@@ -87,7 +81,6 @@ const Cart = () => {
   }
 };
 
-  // ================= CALCULATIONS =================
   const subtotal = cartItems.reduce(
     (sum, item) =>
       sum + (item.menu_item?.price || 0) * item.quantity,
@@ -97,15 +90,12 @@ const Cart = () => {
   const deliveryFee = subtotal > 0 ? 25 : 0;
   const total = subtotal + deliveryFee;
 
-  // ================= LOADING =================
   if (loading)
     return <Loader />
 
   return (
     <section className="cart-page">
       <div className="cart-container">
-
-        {/* HEADER */}
         <div className="cart-header">
           <div>
             <h2 className="h2">Your Cart</h2>
@@ -123,7 +113,6 @@ const Cart = () => {
           )}
         </div>
 
-        {/* EMPTY */}
         {cartItems.length === 0 ? (
           <div className="cart-empty">
             <h3 className="h3">Your cart is empty</h3>
@@ -135,7 +124,6 @@ const Cart = () => {
         ) : (
           <div className="cart-layout">
 
-            {/* ITEMS */}
             <div className="cart-items">
               {cartItems.map((item) => {
                 const price = item.menu_item?.price || 0;
@@ -194,7 +182,6 @@ const Cart = () => {
               })}
             </div>
 
-            {/* SUMMARY */}
             <div className="cart-summary">
               <div className="summary-card">
 

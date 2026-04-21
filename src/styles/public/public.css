@@ -608,16 +608,10 @@
   }
 
   .articles-grid {
-    gap: 16px;
+    grid-template-columns: repeat(3, 1fr);
+
   }
 
-  .articles-card img {
-    height: 140px;
-  }
-
-  .articles-content p {
-    font-size: 14px;
-  }
 
   .delivery-text,
   .delivery-logos {
@@ -697,16 +691,9 @@
     max-width: 160px;
   }
 
-  .article-container {
-    padding: 16px;
-  }
+  .articles-grid{
+    grid-template-columns: repeat(3, 1fr);
 
-  .article-image {
-    height: 250px;
-  }
-
-  .article-content {
-    font-size: 16px;
   }
 
   .contact-header {
@@ -790,10 +777,11 @@
 
   .articles-grid {
     gap: 10px;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .articles-card img {
-    height: 100px;
+    height: 140px;
   }
 
   .article-image {
@@ -818,6 +806,11 @@
 
   .center-row .logo-box {
     max-width: 120px;
+  }
+  .articles-grid{
+    gap: 12px;
+    max-width: 350px;
+    margin: 0 auto;
   }
 }
 

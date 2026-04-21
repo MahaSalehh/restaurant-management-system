@@ -66,7 +66,7 @@ function ArticleDetails() {
         </div>
       </section>
 
-      <div className="container">
+      <div className="container mb-5">
         <div className="read-more text-center text-container-sm mt-5">
           <h2 className="h2">Read More Articles</h2>
 
