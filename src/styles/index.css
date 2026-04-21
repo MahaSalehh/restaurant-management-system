@@ -45,7 +45,8 @@ ul{
 }
 
 button,
-button span {
+button span,
+button p{
   -webkit-text-fill-color: inherit !important;
 }
 

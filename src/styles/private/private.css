@@ -90,6 +90,8 @@
   border: none;
   background: var(--neutral-03);
   font-size: 13px;
+  text-decoration: none;
+  color: var(--neutral-07);
 }
 
 .profile-tabs button.active {
