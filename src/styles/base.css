@@ -310,11 +310,6 @@
   min-height: 100vh;
 }
 
-button{
-  border: none;
-  background: none;
-  cursor: pointer;
-}
 
 button a,
 button a:hover,
