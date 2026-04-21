@@ -3,6 +3,7 @@ import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/light.css";
 import { bookingAPI } from "../../service/api";
 import { useToast } from "../../context/ToastContext";
+import { Card, Col, Container, Form, Row } from "react-bootstrap";
 
 const Booking = () => {
   const [form, setForm] = useState({
@@ -79,25 +80,29 @@ const Booking = () => {
   };
 
   return (
-    <section className="booking-page">
+    <section className="contact-section">
+        
 
-
-      <div className="booking-hero">
-        <h1 className="h1">Book A Table</h1>
+      <div className="booking-hero text-center">
+        <h1 className="h1 mb-4">Book A Table</h1>
         <p className="body-md">
           We consider all the drivers of change gives you the components you need to change to create a truly happens.
         </p>
       </div>
+<div className="booking-card-wrapper">
+<Container>
+      <Row className="justify-content-center">
+  <Col lg={8} md={10}>
+    <Card className="booking-card">
 
-      <div className="booking-card-wrapper">
+      <Form onSubmit={handleSubmit}>
 
-        <form className="booking-card" onSubmit={handleSubmit}>
-
-          <div className="field-row">
-
-            <div className="contact-field date-picker">
-              <label>Date</label>
+        <Row>
+          <Col md={6}>
+            <Form.Group className="contact-field date-picker">
+              <Form.Label>Date</Form.Label>
               <Flatpickr
+                className="form-control"
                 options={{
                   dateFormat: "Y-m-d",
                   minDate: "today",
@@ -106,11 +111,14 @@ const Booking = () => {
                 onChange={handleDateChange}
                 placeholder="Select date"
               />
-            </div>
+            </Form.Group>
+          </Col>
 
-            <div className="contact-field time-picker">
-              <label>Time</label>
+          <Col md={6}>
+            <Form.Group className="contact-field time-picker">
+              <Form.Label>Time</Form.Label>
               <Flatpickr
+                className="form-control"
                 options={{
                   enableTime: true,
                   noCalendar: true,
@@ -121,56 +129,77 @@ const Booking = () => {
                 onChange={handleTimeChange}
                 placeholder="Select time"
               />
-            </div>
+            </Form.Group>
+          </Col>
+        </Row>
 
-          </div>
-<div className="field-row">
+        <Row>
+          <Col md={6}>
+            <Form.Group className="contact-field">
+              <Form.Label>Name</Form.Label>
+              <Form.Control
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                placeholder="Enter your name"
+                required
+              />
+            </Form.Group>
+          </Col>
 
-          <div className="contact-field">
-            <label>Name</label>
-            <input
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              placeholder="Enter your name"
-            />
-          </div>
+          <Col md={6}>
+            <Form.Group className="contact-field">
+              <Form.Label>Phone</Form.Label>
+              <Form.Control
+                name="phone"
+                value={form.phone}
+                onChange={handleChange}
+                placeholder="x-xxx-xxx-xxxx"
+                required
+              />
+            </Form.Group>
+          </Col>
+        </Row>
 
-          <div className="contact-field">
-            <label>Phone</label>
-            <input
-              name="phone"
-              value={form.phone}
-              onChange={handleChange}
-              placeholder="x-xxx-xxx-xxxx"
-            />
-          </div>
+        <Form.Group className="contact-field">
+          <Form.Label>Guests</Form.Label>
+          <Form.Select
+            name="guests"
+            value={form.guests}
+            onChange={handleChange}
+          >
+            {[1,2,3,4,5,6,7,8,9,10].map((n) => (
+              <option key={n} value={n}>
+                {n} Person
+              </option>
+            ))}
+          </Form.Select>
+        </Form.Group>
+
+        <button
+          type="submit"
+          className="contact-btn btn-primary-custom"
+          disabled={loading}
+        >
+          {loading ? (
+            <>
+              <Spinner size="sm" className="me-2" />
+              Booking...
+            </>
+          ) : (
+            "Book A Table"
+          )}
+        </button>
+
+      </Form>
+
+    </Card>
+  </Col>
+</Row>
+</Container>
 </div>
-          <div className="contact-field">
-            <label>Guests</label>
-            <select
-              name="guests"
-              value={form.guests}
-              onChange={handleChange}
-            >
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-                <option key={n} value={n}>
-                  {n} Person
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <button className="booking-btn" disabled={loading}>
-            {loading ? "Booking..." : "Book A Table"}
-          </button>
-
-        </form>
-
-      </div>
-
       <div className="booking-map"></div>
-
+      
     </section>
   );
 };

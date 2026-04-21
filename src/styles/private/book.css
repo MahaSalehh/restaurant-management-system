@@ -1,11 +1,8 @@
 .booking-page {
     background: var(--neutral-02);
+    justify-content: center;
 }
 
-.booking-hero {
-    text-align: center;
-    padding: 80px 20px 160px;
-}
 
 .booking-hero p {
     max-width: 500px;
@@ -14,10 +11,10 @@
 }
 
 .booking-card-wrapper {
-    margin-top: -100px;
-    display: flex;
+    display: block;
+    align-items: center;
     justify-content: center;
-    padding: 0 20px;
+    padding: 40px 0;
 }
 
 .booking-card {
@@ -25,8 +22,9 @@
     padding: 32px;
     border-radius: 20px;
     width: 100%;
+    margin: 0 auto;
     max-width: 720px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: none;
 }
 
 .flatpickr-input {
@@ -44,60 +42,20 @@
     background-image: url("data:image/svg+xml;utf8,<svg fill='%23666' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M12 1a11 11 0 1011 11A11 11 0 0012 1zm1 11h5v2h-7V6h2z'/></svg>");
 }
 
-.field-row {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 16px;
-}
 
-.field-row .contact-field {
-    flex: 2;
-}
 
 .booking-card input,
-.booking-card select,
-.input-icon input {
+.booking-card select {
     width: 100%;
-    padding: 12px;
-    border-radius: 72px;
-    border: 1px solid var(--neutral-03);
-    outline: none;
-    transition: 0.2s;
-    font-family: inherit;
+
+}
+.booking-card .contact-field input:focus,
+.booking-card .contact-field select:focus {
+  border-color: var(--primary);
+  box-shadow: none;
 }
 
-.booking-card input:focus,
-.booking-card select:focus,
-.input-icon input:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
-}
 
-.input-icon {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 0 14px;
-    border-radius: 72px;
-    border: 1px solid var(--neutral-03);
-    background: white;
-    transition: 0.2s;
-}
-
-.input-icon:focus-within {
-    border-color: var(--primary);
-}
-
-.input-icon span,
-.input-icon {
-    font-size: 16px;
-}
-
-.input-icon input {
-    border: none !important;
-    padding: 12px 0;
-    background: transparent;
-}
 
 .booking-card select {
     appearance: none;

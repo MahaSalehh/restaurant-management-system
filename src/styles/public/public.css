@@ -480,7 +480,8 @@
 }
 
 .contact-header p {
-  margin-bottom: 40px;
+  margin: auto;
+  max-width: 500px;
 }
 
 .contact-cards {
@@ -502,13 +503,15 @@
 }
 
 .contact-field input,
-.contact-field textarea {
+.contact-field textarea,
+.contact-field select {
   padding: 12px;
   border: 1px solid var(--neutral-03);
   transition: 0.2s;
 }
 
-.contact-field input {
+.contact-field input,
+.contact-field select {
   border-radius: 72px;
 }
 
@@ -517,7 +520,8 @@
 }
 
 .contact-field input:focus,
-.contact-field textarea:focus {
+.contact-field textarea:focus,
+.contact-field select:focus {
   border-color: var(--primary);
   box-shadow: none;
 }

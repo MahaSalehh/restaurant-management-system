@@ -50,9 +50,9 @@ function Contact() {
     <section className="contact-section">
       <Container>
 
-        <div className="contact-header text-container text-center">
+        <div className="contact-header text-center">
           <h1 className="h1 mb-4">Contact Us</h1>
-          <p className="body-lg neutral5">
+          <p className="body-lg neutral5 mb-4">
             We consider all the drivers of change gives you the components you need to change to create a truly happens.
           </p>
         </div>
@@ -116,7 +116,7 @@ function Contact() {
                   />
                 </Form.Group>
 
-                <Button
+                <button
                   type="submit"
                   className="contact-btn btn-primary-custom"
                   disabled={loading}
@@ -129,7 +129,7 @@ function Contact() {
                   ) : (
                     "Send Message"
                   )}
-                </Button>
+                </button>
 
               </Form>
             </Card>
