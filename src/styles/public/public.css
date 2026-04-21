@@ -1,6 +1,5 @@
 .upper_sec {
   background-image: url("../../assets/bg.svg");
-  color: var(--neutral-01);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -11,6 +10,7 @@
 }
 
 .hero h1 {
+  max-width: 600px;
   letter-spacing: -0.4px;
   margin-bottom: 20px;
 }
@@ -715,6 +715,11 @@
 }
 
 @media (max-width: 576px) {
+    .upper_sec {
+    background: var(--neutral-02);
+    background-size: contain;
+    background-position: top center;
+  }
   .icon-wrapper {
     width: 70px;
     height: 70px;
