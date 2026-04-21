@@ -122,7 +122,7 @@ const updateQty = async (id, qty) => {
             </button>
           </div>
         ) : (
-          <div className="cart-layout">
+          <div className="cart-layout justify-content-center">
 
             <div className="cart-items">
               {cartItems.map((item) => {

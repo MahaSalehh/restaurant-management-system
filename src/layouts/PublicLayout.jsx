@@ -83,7 +83,7 @@ function PublicLayout() {
             </Navbar.Brand>
           </div>
 
-          <Nav className="nav-center d-none d-lg-flex gap-3 body-md body-md-medium mx-auto">
+          <Nav className="nav-center d-none d-lg-flex gap-3 body-md body-md-medium mx-auto ">
             <Link to="/" className={`nav-link ${isActive("/") ? "active" : ""}`}>Home</Link>
             <Link to="/about" className={`nav-link ${isActive("/about") ? "active" : ""}`}>About</Link>
             <Link to="/menu" className={`nav-link ${isActive("/menu") ? "active" : ""}`}>Menu</Link>

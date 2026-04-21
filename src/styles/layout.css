@@ -114,7 +114,9 @@
   box-shadow: none;
   padding: 0;
   display: inline-flex;
+  margin-inline-end: 4px;
 }
+
 .icon-btn,
 .icon-btn:focus,
 .icon-btn:active,
