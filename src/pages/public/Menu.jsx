@@ -14,7 +14,6 @@ import instacort from "../../assets/Menu/apps/instacort.svg";
 import justEat from "../../assets/Menu/apps/just-eat.svg";
 import didiFood from "../../assets/Menu/apps/didi-food.svg";
 import Loader from "../../components/Loader";
-import { Link } from "lucide-react";
 
 function Menu() {
   const { isAuthenticated } = useAuth();
