@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaArrowUp } from "react-icons/fa";
+import {  FaAnglesUp } from "react-icons/fa6";
 
 const ScrollTopBtn = () => {
   const [show, setShow] = useState(false);
@@ -24,7 +24,8 @@ const ScrollTopBtn = () => {
 
   return (
     <button className="scroll-top-btn" onClick={scrollToTop}>
-      <FaArrowUp />
+      <FaAnglesUp />
+      
     </button>
   );
 };

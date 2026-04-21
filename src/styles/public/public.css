@@ -107,9 +107,12 @@
 }
 
 .stats {
-  padding: clamp(30px, 5vw, 100px);
+  padding: clamp(60px, 5vw, 100px);
 }
 
+.stats .card-custom {
+  padding: 20px !important;
+}
 .stats img {
   width: 100%;
   height: auto;
@@ -118,21 +121,13 @@
 }
 
 .stats h2 {
-  font-size: clamp(20px, 3vw, 55px);
+  font-size: clamp(28px, 3vw, 55px);
 }
 
 .stats p {
-  font-size: clamp(13px, 1.2vw, 16px);
+  font-size: clamp(12px, 1.2vw, 16px);
 }
 
-.stats ul {
-  display: grid;
-  gap: 12px;
-}
-
-.stats li {
-  font-size: clamp(12px, 1.2vw, 20px);
-}
 
 .icon-boxs {
   width: clamp(24px, 3vw, 30px);
@@ -196,6 +191,7 @@
   align-items: center;
   flex-direction: column;
   height: 100%;
+  max-width: clamp(300px, 50%, 600px);
   width: 100%;
   text-align: center;
 }
@@ -205,11 +201,11 @@
   color: var(--primary);
   border: none;
   border-radius: 50%;
-  width: 106px;
-  height: 106px;
+  width: clamp(60px, 10vw, 106px);
+  height: clamp(60px, 10vw, 106px);
   cursor: pointer;
   margin-bottom: 20px;
-  font-size: 28px;
+  font-size: clamp(18px, 2vw, 32px);
   transition: var(--transition);
 }
 

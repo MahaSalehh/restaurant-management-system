@@ -29,9 +29,9 @@
   transition: var(--transition);
   background: var(--neutral-10);
   border-radius: var(--radius-md);
-  padding: 5px;
-  width: clamp(14px, 1.5vw, 20px);
-  height: clamp(14px, 1.5vw, 20px);
+  padding: 4px;
+  width: clamp(16px, 1.5vw, 20px);
+  height: clamp(16px, 1.5vw, 20px);
 }
 
 .social-icons a:hover svg {
@@ -115,6 +115,18 @@
   padding: 0;
   display: inline-flex;
 }
+.icon-btn,
+.icon-btn:focus,
+.icon-btn:active,
+.icon-btn:focus-visible {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  transform: none !important;
+}
+
+
 
 .custom-toggler {
   border: none !important;
@@ -247,15 +259,14 @@
   color: var(--neutral-03);
   font-size: clamp(14px, 1vw, 16px);
 }
-.footer-social a{
-  color: var(--neutral-01);
-  transition: var(--transition);
 
-}
 .footer-social a:hover svg {
   transform: translateY(-2px);
 }
+
 .footer-social svg {
+  color: var(--neutral-01);
+  transition: var(--transition);
   background: var(--primary);
   padding: 5px;
   border-radius: 12px;

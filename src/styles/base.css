@@ -190,6 +190,7 @@
 }
 
 .card-custom {
+  justify-content: center;
   background: var(--neutral-01);
   border-radius: var(--radius-sm);
   padding: 35px;
@@ -211,10 +212,6 @@
   }
 }
 
-.text-container {
-  max-width: 600px;
-  width: 100%;
-}
 
 .text-container-md {
   max-width: 550px;
@@ -236,7 +233,6 @@
 }
 
 @media (max-width: 768px) {
-  .text-container,
   .text-container-sm,
   .text-container-md {
     max-width: 100%;

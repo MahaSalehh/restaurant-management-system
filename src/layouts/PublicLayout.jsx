@@ -39,7 +39,6 @@ function PublicLayout() {
 
   const isActive = (path) => location.pathname === path;
 
-  // close sidebar on route change
   useEffect(() => {
     setShowSidebar(false);
   }, [location.pathname]);
@@ -53,7 +52,6 @@ function PublicLayout() {
 
   return (
     <>
-      {/* TOP BAR */}
       <Container fluid className="top-bar">
         <Container className="d-flex justify-content-between align-items-center">
           <div className="d-flex align-items-center gap-3 body-md">
@@ -70,11 +68,9 @@ function PublicLayout() {
         </Container>
       </Container>
 
-      {/* NAVBAR */}
       <Navbar expand="lg" sticky="top" className={`main-navbar ${navbarClass}`}>
         <Container className="d-flex align-items-center">
 
-          {/* LEFT */}
           <div className="d-flex align-items-center gap-2">
             <Navbar.Toggle
               aria-controls="offcanvasNavbar"
@@ -87,7 +83,6 @@ function PublicLayout() {
             </Navbar.Brand>
           </div>
 
-          {/* CENTER (DESKTOP ONLY) */}
           <Nav className="nav-center d-none d-lg-flex gap-3 body-md body-md-medium mx-auto">
             <Link to="/" className={`nav-link ${isActive("/") ? "active" : ""}`}>Home</Link>
             <Link to="/about" className={`nav-link ${isActive("/about") ? "active" : ""}`}>About</Link>
@@ -102,7 +97,6 @@ function PublicLayout() {
             )}
           </Nav>
 
-          {/* RIGHT */}
           <div className="d-flex align-items-center gap-3 ms-auto">
             {!isAuthenticated ? (
               <Link to="/login" className="btn-custom btn-outline-custom signin">
@@ -141,7 +135,6 @@ function PublicLayout() {
 
         </Container>
 
-        {/* OFFCANVAS (MOBILE ONLY) */}
         <Navbar.Offcanvas
           id="offcanvasNavbar"
           placement="start"

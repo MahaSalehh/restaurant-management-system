@@ -87,44 +87,44 @@ const About = () => {
                 A little information for our valuable guest
               </h2>
 
-              <p className="body-md neutral6">
+              <p className="body-md neutral6 text-container-sm">
                 At place, we believe that dining is not just about food, but also about the overall experience. Our staff, renowned for their warmth and dedication, strives to make every visit an unforgettable event.
               </p>
 
               <div className="row g-3">
 
-                <div className="col-6">
+                <div className="col-6 ">
                   <div className="card-custom text-center">
                     <h2 className="h2">3</h2>
-                    <span className="body-lg body-lg-medium neutral5">Locations</span>
+                    <span className="body-lg body-lg-medium neutral6">Locations</span>
                   </div>
                 </div>
 
                 <div className="col-6">
                   <div className="card-custom text-center">
                     <h2 className="h2">1995</h2>
-                    <span className="body-lg body-lg-medium neutral5">Founded</span>
+                    <span className="body-lg body-lg-medium neutral6">Founded</span>
                   </div>
                 </div>
 
                 <div className="col-6">
                   <div className="card-custom text-center">
                     <h2 className="h2">65+</h2>
-                    <span className="body-lg body-lg-medium neutral5">Staff Members</span>
+                    <span className="body-lg body-lg-medium neutral6">Staff Members</span>
                   </div>
                 </div>
 
                 <div className="col-6">
                   <div className="card-custom text-center">
                     <h2 className="h2">100%</h2>
-                    <span className="body-lg body-lg-medium neutral5">Satisfied Customers</span>
+                    <span className="body-lg body-lg-medium neutral6">Satisfied Customers</span>
                   </div>
                 </div>
 
               </div>
             </div>
 
-            <div className="col-lg-6 col-12 text-center">
+            <div className="col-lg-6 col-12 text-center mt-4">
               <img src={image} alt="chef" className="img-fluid rounded-4" />
             </div>
 
