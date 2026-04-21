@@ -106,13 +106,13 @@ function Login() {
                   <label>Password</label>
                 </div>
 
-                <Button
+                <button
                   type="submit"
-                  className="auth-btn w-100"
+                  className="btn-primary-custom auth-btn w-100"
                   disabled={loading}
                 >
                   {loading ? "Signing in..." : "Sign In"}
-                </Button>
+                </button>
 
               </Form>
 

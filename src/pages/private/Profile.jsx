@@ -111,21 +111,21 @@ function Profile() {
             className={activeTab === "profile" ? "active" : ""}
             onClick={() => setActiveTab("profile")}
           >
-            Profile
+            <span>Profile</span>
           </button>
 
           <button
             className={activeTab === "orders" ? "active" : ""}
             onClick={() => setActiveTab("orders")}
           >
-            Orders
+            <span>Orders</span>
           </button>
 
           <button
             className={activeTab === "bookings" ? "active" : ""}
             onClick={() => setActiveTab("bookings")}
           >
-            Bookings
+            <span>Bookings</span>
           </button>
 
         </div>
@@ -189,17 +189,19 @@ function Profile() {
 
           <Modal.Footer>
 
-            <Button variant="secondary" onClick={() => setShowEdit(false)}>
+            <button
+            className="btn-custom btn-outline-custom btn-sm"
+            variant="secondary" onClick={() => setShowEdit(false)}>
               Cancel
-            </Button>
+            </button>
 
-            <Button
-              className="save-btn"
+            <button
+              className="btn-custom btn-primary-custom btn-sm save-btn"
               onClick={handleUpdate}
               disabled={updateLoading}
             >
               {updateLoading ? "Saving..." : "Save Changes"}
-            </Button>
+            </button>
 
           </Modal.Footer>
 

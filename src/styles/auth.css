@@ -4,8 +4,8 @@
 
 .back-btn {
   position: absolute;
-  top: 20px;
-  left: 20px;
+  top: 40px;
+  left: 40px;
   z-index: 10;
   border-radius: 10px;
 }
@@ -140,17 +140,18 @@
   text-decoration: underline;
 }
 
-@media (max-width: 768px) {
-  .auth-container {
-    padding: 20px;
-  }
 
+@media (max-width: 576px) {
   .image-side {
     display: none !important;
+    background-size: cover;
+    background-position: right;
   }
-
-  .back-btn {
-    top: 10px;
-    left: 10px;
+    .auth-container {
+    padding: 20px;
+  }
+    .back-btn {
+    top: 20px;
+    left: -5px;
   }
 }

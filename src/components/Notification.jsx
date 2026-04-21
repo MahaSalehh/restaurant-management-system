@@ -104,21 +104,21 @@ function NotificationsPage() {
           className={filter === "all" ? "active" : ""}
           onClick={() => setFilter("all")}
         >
-          All
+          <span>All</span>
         </button>
 
         <button
           className={filter === "unread" ? "active" : ""}
           onClick={() => setFilter("unread")}
         >
-          Unread
+          <span>Unread</span>
         </button>
 
         <button
           className={filter === "read" ? "active" : ""}
           onClick={() => setFilter("read")}
         >
-          Read
+          <span>Read</span>
         </button>
       </div>
 

@@ -189,15 +189,15 @@ const Register = () => {
                   />
                 </Form.Group>
 
-                <Button
+                <button
                   type="submit"
-                  className="w-100 auth-btn"
+                  className="btn-primary-custom w-100 auth-btn"
                   disabled={loading}
                 >
                   {loading
                     ? "Creating Account..."
                     : "Sign Up"}
-                </Button>
+                </button>
 
               </Form>
 
