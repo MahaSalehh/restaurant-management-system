@@ -10,6 +10,7 @@ import img2 from "../assets/Home/2.png";
 import img3 from "../assets/Home/3.png";
 import img4 from "../assets/Home/4.png";
 import logo from "../assets/logo1.svg";
+import { Link } from "react-router-dom";
 
 const instaImages = [img1, img2, img3, img4];
 
