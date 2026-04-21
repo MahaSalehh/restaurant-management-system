@@ -182,7 +182,7 @@ function Menu() {
               }`}
               onClick={() => setActiveCategory(null)}
             >
-              All
+              <span className="category-text">All</span>
             </button>
 
             {categories.map((cat) => (
@@ -193,7 +193,7 @@ function Menu() {
                 }`}
                 onClick={() => setActiveCategory(cat.id)}
               >
-                {cat.name}
+                <span className="category-text">{cat.name}</span>
               </button>
             ))}
           </div>

@@ -44,7 +44,8 @@ ul{
   }
 }
 
-button{
-  text-decoration: none;
+button,
+button span {
+  -webkit-text-fill-color: inherit !important;
 }
 

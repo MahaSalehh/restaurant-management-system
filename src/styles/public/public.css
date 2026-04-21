@@ -226,13 +226,15 @@
   background: transparent;
   transition: var(--transition);
   text-decoration: none;
+  color: var(--neutral-07);
 }
 
 .category-btn.active {
   background: var(--primary);
-  color: white;
+  color: var(--neutral-01);
   border-color: var(--primary);
 }
+
 
 .menu-grid {
   display: grid;
@@ -282,17 +284,18 @@
 .cart-control {
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-top: 10px;
+
 }
 
 .add-btn {
   border-radius: 999px;
   padding: 6px 16px;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 14px;
   border: none;
   transition: all 0.25s ease;
-  text-decoration: none;
+  color: var(--neutral-06);
 
 }
 
