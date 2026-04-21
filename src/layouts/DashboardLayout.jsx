@@ -3,14 +3,18 @@ import { Container, Navbar } from "react-bootstrap";
 import { Link, useLocation, Outlet, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import {
+  FaHome,
+  FaShoppingCart,
+  FaUtensils,
+  FaTags,
+  FaNewspaper,
+  FaUsers,
+  FaEnvelope,
+  FaCalendarCheck,
   FaBell,
   FaUser,
-  FaHome,
   FaShoppingBag,
-  FaShoppingCart,
-  FaUsers,
   FaBars,
-  FaEnvelope,
 } from "react-icons/fa";
 import { useNotifications } from "../context/NotificationsContext";
 import { FaAnglesRight } from "react-icons/fa6";
@@ -30,15 +34,15 @@ function DashboardLayout() {
   if (!isAuthenticated) return <Navigate to="/login" replace />;
 
   const menu = [
-    { path: "/dashboard", label: "Overview", icon: <FaHome /> },
-    { path: "/dashboard/orders", label: "Orders", icon: <FaShoppingCart /> },
-    { path: "/dashboard/bookings", label: "Bookings", icon: <FaShoppingCart /> },
-    { path: "/dashboard/menu", label: "Menu", icon: <FaShoppingBag /> },
-    { path: "/dashboard/categories", label: "Categories", icon: <FaShoppingCart /> },
-    { path: "/dashboard/blogs", label: "Articles", icon: <FaShoppingCart /> },
-    { path: "/dashboard/users", label: "Users", icon: <FaUsers /> },
-    { path: "/dashboard/messages", label: "Messages", icon: <FaEnvelope /> },
-  ];
+  { path: "/dashboard", label: "Overview", icon: <FaHome /> },
+  { path: "/dashboard/orders", label: "Orders", icon: <FaShoppingCart /> },
+  { path: "/dashboard/bookings", label: "Bookings", icon: <FaCalendarCheck /> },
+  { path: "/dashboard/menu", label: "Menu", icon: <FaUtensils /> },
+  { path: "/dashboard/categories", label: "Categories", icon: <FaTags /> },
+  { path: "/dashboard/blogs", label: "Articles", icon: <FaNewspaper /> },
+  { path: "/dashboard/users", label: "Users", icon: <FaUsers /> },
+  { path: "/dashboard/messages", label: "Messages", icon: <FaEnvelope /> },
+];
 
   return (
     <div className="dash-layout">
