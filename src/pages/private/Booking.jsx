@@ -82,7 +82,6 @@ const Booking = () => {
   return (
     <section className="contact-section">
         
-
       <div className="booking-hero text-center">
         <h1 className="h1 mb-4">Book A Table</h1>
         <p className="body-md">

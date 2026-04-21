@@ -188,10 +188,12 @@
 .filter-bar button {
   border: none;
   background: var(--neutral-03);
+  color: var(--neutral-01);
   padding: 6px 14px;
   border-radius: 999px;
   font-size: var(--body-sm-size);
   cursor: pointer;
+  text-decoration: none;
   transition: var(--transition);
 }
 
