@@ -177,17 +177,17 @@ function Menu() {
           </div>
 
           <div className="d-flex flex-wrap justify-content-center gap-3 mb-5">
-            <Link
+            <button
               className={`category-btn ${
                 activeCategory === null ? "active" : ""
               }`}
               onClick={() => setActiveCategory(null)}
             >
               All
-            </Link>
+            </button>
 
             {categories.map((cat) => (
-              <Link
+              <button
                 key={cat.id}
                 className={`category-btn ${
                   activeCategory === cat.id ? "active" : ""
@@ -195,7 +195,7 @@ function Menu() {
                 onClick={() => setActiveCategory(cat.id)}
               >
                 {cat.name}
-              </Link>
+              </button>
             ))}
           </div>
 
@@ -213,16 +213,15 @@ function Menu() {
                     {isAuthenticated && (
                       <div className="cart-control neutral7">
                         {!cartState[item.id] ? (
-                          <Link
+                          <button
                             className="add-btn"
                             onClick={() => addToCart(item)}
                           >
                             <FaShoppingCart className="me-1" />
-                          </Link>
+                          </button>
                         ) : (
                           <div className="quantity-box">
-                            <Link
-                              className="quantity-btn"
+                            <button
                               onClick={() =>
                                 updateQty(
                                   item,
@@ -235,12 +234,11 @@ function Menu() {
                               ) : (
                                 <FaMinus />
                               )}
-                            </Link>
+                            </button>
 
                             <span>{cartState[item.id].quantity}</span>
 
-                            <Link
-                              className="quantity-btn"
+                            <button
                               onClick={() =>
                                 updateQty(
                                   item,
@@ -249,7 +247,7 @@ function Menu() {
                               }
                             >
                               <FaPlus />
-                            </Link>
+                            </button>
                           </div>
                         )}
                       </div>

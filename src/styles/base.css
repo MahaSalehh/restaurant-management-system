@@ -309,3 +309,18 @@
 .full-height {
   min-height: 100vh;
 }
+
+button{
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+button a,
+button a:hover,
+button a.active,
+button a::after{
+  text-decoration: none;
+  color: inherit;
+}
+
