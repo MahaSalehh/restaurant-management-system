@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/light.css";
 import { bookingAPI } from "../../service/api";
 import { useToast } from "../../context/ToastContext";
-import flatpickr from "flatpickr";
 
 const Booking = () => {
   const [form, setForm] = useState({
@@ -78,7 +77,6 @@ const Booking = () => {
       setLoading(false);
     }
   };
-  
 
   return (
     <section className="booking-page">
@@ -104,7 +102,6 @@ const Booking = () => {
                   dateFormat: "Y-m-d",
                   minDate: "today",
                 }}
-                type="date"
                 value={form.date}
                 onChange={handleDateChange}
                 placeholder="Select date"
@@ -120,7 +117,6 @@ const Booking = () => {
                   dateFormat: "H:i",
                   time_24hr: true,
                 }}
-                type="time"
                 value={form.time}
                 onChange={handleTimeChange}
                 placeholder="Select time"
