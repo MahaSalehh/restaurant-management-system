@@ -127,6 +127,14 @@
   outline: none !important;
   transform: none !important;
 }
+button,
+button:focus,
+button:active,
+button:focus-visible {
+  box-shadow: none !important;
+  outline: none !important;
+  transform: none !important;
+}
 
 .icon-btn svg{
   font-size: clamp(22px, 1.8vw, 28px);
