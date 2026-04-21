@@ -14,6 +14,7 @@ import instacort from "../../assets/Menu/apps/instacort.svg";
 import justEat from "../../assets/Menu/apps/just-eat.svg";
 import didiFood from "../../assets/Menu/apps/didi-food.svg";
 import Loader from "../../components/Loader";
+import { Link } from "lucide-react";
 
 function Menu() {
   const { isAuthenticated } = useAuth();
@@ -176,17 +177,17 @@ function Menu() {
           </div>
 
           <div className="d-flex flex-wrap justify-content-center gap-3 mb-5">
-            <button
+            <Link
               className={`category-btn ${
                 activeCategory === null ? "active" : ""
               }`}
               onClick={() => setActiveCategory(null)}
             >
               All
-            </button>
+            </Link>
 
             {categories.map((cat) => (
-              <button
+              <Link
                 key={cat.id}
                 className={`category-btn ${
                   activeCategory === cat.id ? "active" : ""
@@ -194,7 +195,7 @@ function Menu() {
                 onClick={() => setActiveCategory(cat.id)}
               >
                 {cat.name}
-              </button>
+              </Link>
             ))}
           </div>
 
@@ -212,15 +213,16 @@ function Menu() {
                     {isAuthenticated && (
                       <div className="cart-control neutral7">
                         {!cartState[item.id] ? (
-                          <button
+                          <Link
                             className="add-btn"
                             onClick={() => addToCart(item)}
                           >
                             <FaShoppingCart className="me-1" />
-                          </button>
+                          </Link>
                         ) : (
                           <div className="quantity-box">
-                            <button
+                            <Link
+                              className="quantity-btn"
                               onClick={() =>
                                 updateQty(
                                   item,
@@ -233,11 +235,12 @@ function Menu() {
                               ) : (
                                 <FaMinus />
                               )}
-                            </button>
+                            </Link>
 
                             <span>{cartState[item.id].quantity}</span>
 
-                            <button
+                            <Link
+                              className="quantity-btn"
                               onClick={() =>
                                 updateQty(
                                   item,
@@ -246,7 +249,7 @@ function Menu() {
                               }
                             >
                               <FaPlus />
-                            </button>
+                            </Link>
                           </div>
                         )}
                       </div>
