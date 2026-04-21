@@ -31,10 +31,10 @@ const Footer = () => {
             </p>
 
             <div className="footer-social">
-              <FaTwitter />
-              <FaFacebookF />
-              <FaInstagram />
-              <FaGithub />
+              <Link to="https://twitter.com"><FaTwitter /></Link>
+              <Link to="https://facebook.com"><FaFacebookF /></Link>
+              <Link to="https://instagram.com"><FaInstagram /></Link>
+              <Link to="https://github.com"><FaGithub /></Link>
             </div>
           </div>
 
