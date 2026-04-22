@@ -1,189 +1,111 @@
-import { useEffect, useState } from "react";
 import { adminAPI, publicAPI, STORAGE_URL } from "../../service/api";
 
-import PageLayout from "./components/PageLayout";
-import DataTable from "./components/DataTable";
-import ActionButtons from "./components/ActionButtons";
-import FormField from "./components/FormField";
+import CrudCard from "./components/Card";
+import CrudModal from "./components/Modal";
+import { useCrudPage } from "./hooks/useCrudPage";
 
 function Blogs() {
-  const [articles, setArticles] = useState([]);
 
-  const [form, setForm] = useState({
-    title: "",
-    content: "",
-    image_url: null,
+  // ================= CRUD HOOK =================
+  const {
+    data: articles = [],
+    loading,
+    formData,
+    setFormData,
+    showModal,
+    setShowModal,
+    openCreate,
+    openEdit,
+    create,
+    update,
+    remove,
+  } = useCrudPage({
+    getAll: publicAPI.getArticles,
+    create: adminAPI.createArticle,
+    update: adminAPI.updateArticle,
+    delete: adminAPI.deleteArticle,
   });
-
-  const [editingId, setEditingId] = useState(null);
-
-  // ================= FETCH =================
-  const fetchData = async () => {
-    try {
-      const res = await publicAPI.getArticles();
-      setArticles(res.data.data || res.data || []);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  // ================= INPUT =================
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
-
-    if (name === "image_url") {
-      setForm({ ...form, image_url: files[0] });
-    } else {
-      setForm({ ...form, [name]: value });
-    }
-  };
 
   // ================= SUBMIT =================
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const formData = new FormData();
+    const data = new FormData();
 
-      Object.keys(form).forEach((key) => {
-        if (form[key] !== null) {
-          formData.append(key, form[key]);
-        }
-      });
-
-      if (editingId) {
-        await adminAPI.updateArticle(editingId, formData);
-      } else {
-        await adminAPI.createArticle(formData);
+    Object.keys(formData).forEach((key) => {
+      if (formData[key] !== null) {
+        data.append(key, formData[key]);
       }
-
-      resetForm();
-      fetchData();
-    } catch (err) {
-      console.error(err.response?.data || err);
-    }
-  };
-
-  // ================= EDIT =================
-  const handleEdit = (item) => {
-    setForm({
-      title: item.title,
-      content: item.content,
-      image_url: null,
     });
 
-    setEditingId(item.id);
-  };
-
-  // ================= DELETE =================
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure?")) return;
-
-    try {
-      await adminAPI.deleteArticle(id);
-      fetchData();
-    } catch (err) {
-      console.error(err);
+    if (formData.id) {
+      await update(formData.id, data);
+    } else {
+      await create(data);
     }
+
+    setShowModal(false);
   };
 
-  // ================= RESET =================
-  const resetForm = () => {
-    setForm({
-      title: "",
-      content: "",
-      image_url: null,
-    });
-    setEditingId(null);
-  };
+  // ================= FIELDS =================
+  const fields = [
+    { name: "title", label: "Title" },
+    { name: "content", label: "Content", type: "textarea" },
+    { name: "image_url", label: "Image", type: "file" },
+  ];
 
-  // ================= UI =================
   return (
-    <PageLayout title="Articles">
+    <div className="container py-3">
 
-      {/* FORM */}
-      <form onSubmit={handleSubmit} className="card p-3">
+      {/* HEADER */}
+      <div className="d-flex justify-content-between mb-3">
+        <h4>Articles</h4>
 
-        <FormField
-          label="Title"
-          name="title"
-          value={form.title}
-          onChange={handleChange}
-        />
-
-        <textarea
-          name="content"
-          placeholder="Content"
-          value={form.content}
-          onChange={handleChange}
-          className="form-control mb-2"
-          rows={4}
-        />
-
-        <input
-          type="file"
-          name="image_url"
-          onChange={handleChange}
-          className="form-control mb-2"
-        />
-
-        <button className="btn btn-dark">
-          {editingId ? "Update" : "Create"}
+        <button className="btn btn-dark" onClick={openCreate}>
+          Add Article
         </button>
+      </div>
 
-      </form>
+      {/* GRID */}
+      <div className="row g-3">
 
-      {/* TABLE */}
-      <DataTable columns={["Image", "Title", "Content", "Actions"]}>
         {(articles || []).map((item) => (
-          <tr key={item.id}>
-            <td>
-              {item.image_url && (
-                <img
-                  src={STORAGE_URL + item.image_url}
-                  width="60"
-                  alt=""
-                />
-              )}
-            </td>
+          <div className="col-md-4" key={item.id}>
 
-            <td>{item.title}</td>
+            <CrudCard
+              title={item.title}
+              subtitle={
+                item.content?.length > 80
+                  ? item.content.slice(0, 80) + "..."
+                  : item.content
+              }
+              image={
+                item.image_url
+                  ? STORAGE_URL + item.image_url
+                  : null
+              }
+              onEdit={() => openEdit(item)}
+              onDelete={() => remove(item.id)}
+            />
 
-            {/* ✅ SLICED CONTENT */}
-            <td>
-              {item.content?.length > 80
-                ? item.content.slice(0, 80) + "..."
-                : item.content}
-            </td>
-
-            <td>
-              <ActionButtons
-                actions={[
-                  {
-                    label: "delete",
-                    variant: "danger",
-                    onClick: () => {
-                      handleDelete(item.id);
-                    }},
-                    {
-                    label: "edit",
-                    varient: "light",
-                    onClick: () => {
-                      handleEdit(item)
-                    }
-                    }
-                  ]}
-              />
-            </td>
-          </tr>
+          </div>
         ))}
-      </DataTable>
 
-    </PageLayout>
+      </div>
+
+      {/* MODAL */}
+      <CrudModal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        title={formData.id ? "Edit Article" : "Create Article"}
+        formData={formData}
+        setFormData={setFormData}
+        onSubmit={handleSubmit}
+        fields={fields}
+        loading={loading}
+      />
+
+    </div>
   );
 }
 

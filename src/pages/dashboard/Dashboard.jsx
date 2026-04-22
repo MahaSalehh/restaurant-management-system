@@ -115,7 +115,7 @@ export default function Dashboard() {
           {/* BOTTOM GRID */}
           <div className="bottom-grid">
 
-            <div className="card">
+            <div className="card-app">
               <h4>Traffic by Device</h4>
               <ResponsiveContainer width="100%" height={200}>
                 <BarChart data={barData}>
@@ -127,7 +127,7 @@ export default function Dashboard() {
               </ResponsiveContainer>
             </div>
 
-            <div className="card">
+            <div className="card-app">
               <h4>Traffic by Location</h4>
               <ResponsiveContainer width="100%" height={200}>
                 <PieChart>
@@ -147,7 +147,7 @@ export default function Dashboard() {
         {/* RIGHT PANEL */}
         <div className="right">
 
-          <div className="card">
+          <div className="card-app">
             <h4>Traffic by Website</h4>
             <ul className="traffic-list">
               <li>Google <span>•••</span></li>
@@ -159,7 +159,7 @@ export default function Dashboard() {
             </ul>
           </div>
 
-          <div className="card">
+          <div className="card-app">
             <h4>Activities</h4>
             <ul className="activity-list">
               <li>Changed the style</li>

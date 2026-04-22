@@ -1,54 +1,99 @@
-function Modal({ open, title, children, onClose }) {
-  if (!open) return null;
+function CrudModal({
+  show,
+  onHide,
+  title,
+  formData,
+  setFormData,
+  onSubmit,
+  fields = [],
+  loading,
+}) {
+
+  if (!show) return null;
+
+  const handleChange = (e, field) => {
+    const { name, value, files } = e.target;
+
+    if (field?.type === "file") {
+      setFormData({
+        ...formData,
+        [name]: files[0],
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
+  };
 
   return (
-    <div
-      className="dash-modal-overlay"
-      onClick={onClose}
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        background: "rgba(0,0,0,0.5)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: 9999,
-      }}
-    >
-      <div
-        className="dash-modal-box"
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          background: "white",
-          padding: "20px",
-          borderRadius: "10px",
-          width: "420px",
-          maxWidth: "90%",
-        }}
-      >
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <h5>{title}</h5>
+    <div className="modal-backdrop">
+      <div className="modal-content p-3">
 
-          <button
-            onClick={onClose}
-            style={{
-              border: "none",
-              background: "transparent",
-              fontSize: "18px",
-              cursor: "pointer",
-            }}
-          >
-            ✕
-          </button>
-        </div>
+        <h4>{title}</h4>
 
-        {children}
+        {fields.map((f) => (
+          <div className="mb-2" key={f.name}>
+
+            <label>{f.label}</label>
+
+            {f.type === "textarea" ? (
+              <textarea
+                name={f.name}
+                value={formData[f.name] || ""}
+                onChange={(e) => handleChange(e, f)}
+                className="form-control"
+              />
+            ) : f.type === "file" ? (
+              <input
+                type="file"
+                name={f.name}
+                onChange={(e) => handleChange(e, f)}
+                className="form-control"
+              />
+            ) : f.type === "select" ? (
+              <select
+                name={f.name}
+                value={formData[f.name] || ""}
+                onChange={(e) => handleChange(e, f)}
+                className="form-control"
+              >
+                <option value="">Select</option>
+                {f.options?.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input
+                type={f.type || "text"}
+                name={f.name}
+                value={formData[f.name] || ""}
+                onChange={(e) => handleChange(e, f)}
+                className="form-control"
+              />
+            )}
+
+          </div>
+        ))}
+
+        <button
+          className="btn btn-dark w-100"
+          onClick={onSubmit}
+          disabled={loading}
+        >
+          {loading ? "Loading..." : "Save"}
+        </button>
+
+        <button className="btn btn-light w-100 mt-2" onClick={onHide}>
+          Cancel
+        </button>
+
       </div>
     </div>
   );
 }
 
-export default Modal;
+export default CrudModal;

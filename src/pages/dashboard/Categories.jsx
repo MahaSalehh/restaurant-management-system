@@ -1,131 +1,77 @@
-import { useEffect, useState } from "react";
+import CrudModal from "./components/Modal";
+import CrudCard from "./components/Card";
+import { useCrudPage } from "./hooks/useCrudPage";
 import { adminAPI, publicAPI } from "../../service/api";
 
-import PageLayout from "./components/PageLayout";
-import DataTable from "./components/DataTable";
-import ActionButtons from "./components/ActionButtons";
-import FormField from "./components/FormField";
-
 export default function Categories() {
-  const [categories, setCategories] = useState([]);
-  const [name, setName] = useState("");
-  const [editingId, setEditingId] = useState(null);
 
-  // ================= FETCH =================
-  const fetchCategories = async () => {
-    try {
-      const res = await publicAPI.getCategories();
-      setCategories(res.data.data || res.data || []);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const {
+    data: categories,
+    loading,
+    formData,
+    setFormData,
+    showModal,
+    setShowModal,
+    create,
+    update,
+    remove,
+    openCreate,
+    openEdit,
+  } = useCrudPage({
+    getAll: publicAPI.getCategories,
+    create: adminAPI.createCategory,
+    update: adminAPI.updateCategory,
+    delete: adminAPI.deleteCategory,
+  });
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
+  const fields = [
+    { name: "name", label: "Category Name" },
+  ];
 
-  // ================= SUBMIT =================
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      if (editingId) {
-        await adminAPI.updateCategory(editingId, { name });
-      } else {
-        await adminAPI.createCategory({ name });
-      }
-
-      resetForm();
-      fetchCategories();
-    } catch (err) {
-      console.error(err);
+    if (formData.id) {
+      await update(formData.id, formData);
+    } else {
+      await create(formData);
     }
+
+    setShowModal(false);
   };
 
-  // ================= EDIT =================
-  const handleEdit = (cat) => {
-    setName(cat.name);
-    setEditingId(cat.id);
-  };
-
-  // ================= DELETE =================
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure?")) return;
-
-    try {
-      await adminAPI.deleteCategory(id);
-      fetchCategories();
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  // ================= RESET =================
-  const resetForm = () => {
-    setName("");
-    setEditingId(null);
-  };
-
-  // ================= UI =================
   return (
-    <PageLayout title="Categories">
+    <div className="container py-3">
 
-      {/* FORM */}
-      <form onSubmit={handleSubmit} className="card p-3">
+      <button className="btn btn-dark mb-3" onClick={openCreate}>
+        Add Category
+      </button>
 
-        <FormField
-          label="Category Name"
-          name="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+      <div className="row g-3">
 
-        <button className="btn btn-dark">
-          {editingId ? "Update" : "Create"}
-        </button>
-
-        {editingId && (
-          <button
-            type="button"
-            className="btn btn-secondary ms-2"
-            onClick={resetForm}
-          >
-            Cancel
-          </button>
-        )}
-      </form>
-
-      {/* TABLE */}
-      <DataTable columns={["ID", "Name", "Actions"]}>
         {(categories || []).map((cat) => (
-          <tr key={cat.id}>
-            <td>{cat.id}</td>
-            <td>{cat.name}</td>
-
-            <td>
-              <ActionButtons
-  actions={[
-    {
-      label: "delete",
-      variant: "danger",
-      onClick: () => {
-        handleDelete(cat.id);
-      }},
-      {
-      label: "edit",
-      varient: "light",
-      onClick: () => {
-        handleEdit(cat)
-      }
-      }
-    ]}
-/>
-            </td>
-          </tr>
+          <div className="col-md-4" key={cat.id}>
+            <CrudCard
+              title={cat.name}
+              subtitle={`ID: ${cat.id}`}
+              onEdit={() => openEdit(cat)}
+              onDelete={() => remove(cat.id)}
+            />
+          </div>
         ))}
-      </DataTable>
 
-    </PageLayout>
+      </div>
+
+      <CrudModal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        title="Category"
+        formData={formData}
+        setFormData={setFormData}
+        onSubmit={handleSubmit}
+        fields={fields}
+      />
+
+    </div>
   );
 }

@@ -1,18 +1,21 @@
 import { Container } from "react-bootstrap";
 
-export default function PageLayout({ title, actions, children }) {
+export default function PageLayout({ title, children }) {
   return (
-    <div className="dash-page">
-      <Container fluid>
+    <Container fluid className="dash-page py-3">
 
-        <div className="dash-header">
-          <h2>{title}</h2>
-          <div>{actions}</div>
-        </div>
+      {/* HEADER */}
+      <div className="dash-header mb-3">
 
-        {children}
+        <h3 className="fw-bold" style={{ color: "var(--primary-color)" }}>
+          {title}
+        </h3>
 
-      </Container>
-    </div>
+      </div>
+
+      {/* CONTENT */}
+      {children}
+
+    </Container>
   );
 }

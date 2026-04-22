@@ -3,9 +3,11 @@ import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/light.css";
 import { bookingAPI } from "../../service/api";
 import { useToast } from "../../context/ToastContext";
-import { Card, Col, Container, Form, Row } from "react-bootstrap";
+import { Card, Col, Container, Form, Row, Spinner} from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const Booking = () => {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -58,7 +60,7 @@ const Booking = () => {
         guests: form.guests,
       });
 
-      showToast("success", "Table booked successfully 🎉");
+      showToast("success", "Table booked successfully");
 
       setForm({
         name: "",
@@ -67,6 +69,9 @@ const Booking = () => {
         time: "",
         guests: 1,
       });
+
+
+      navigate("/");
 
     } catch (err) {
       const msg =
@@ -81,124 +86,124 @@ const Booking = () => {
 
   return (
     <section className="contact-section">
-        
+
       <div className="booking-hero text-center">
         <h1 className="h1 mb-4">Book A Table</h1>
         <p className="body-md">
           We consider all the drivers of change gives you the components you need to change to create a truly happens.
         </p>
       </div>
-<div className="booking-card-wrapper">
-<Container>
-      <Row className="justify-content-center">
-  <Col lg={8} md={10}>
-    <Card className="booking-card">
+      <div className="booking-card-wrapper">
+        <Container>
+          <Row className="justify-content-center">
+            <Col lg={8} md={10}>
+              <Card className="booking-card">
 
-      <Form onSubmit={handleSubmit}>
+                <Form onSubmit={handleSubmit}>
 
-        <Row>
-          <Col md={6}>
-            <Form.Group className="contact-field date-picker">
-              <Form.Label>Date</Form.Label>
-              <Flatpickr
-                className="form-control"
-                options={{
-                  dateFormat: "Y-m-d",
-                  minDate: "today",
-                }}
-                value={form.date}
-                onChange={handleDateChange}
-                placeholder="Select date"
-              />
-            </Form.Group>
-          </Col>
+                  <Row>
+                    <Col md={6}>
+                      <Form.Group className="contact-field date-picker">
+                        <Form.Label>Date</Form.Label>
+                        <Flatpickr
+                          className="form-control"
+                          options={{
+                            dateFormat: "Y-m-d",
+                            minDate: "today",
+                          }}
+                          value={form.date}
+                          onChange={handleDateChange}
+                          placeholder="Select date"
+                        />
+                      </Form.Group>
+                    </Col>
 
-          <Col md={6}>
-            <Form.Group className="contact-field time-picker">
-              <Form.Label>Time</Form.Label>
-              <Flatpickr
-                className="form-control"
-                options={{
-                  enableTime: true,
-                  noCalendar: true,
-                  dateFormat: "H:i",
-                  time_24hr: true,
-                }}
-                value={form.time}
-                onChange={handleTimeChange}
-                placeholder="Select time"
-              />
-            </Form.Group>
-          </Col>
-        </Row>
+                    <Col md={6}>
+                      <Form.Group className="contact-field time-picker">
+                        <Form.Label>Time</Form.Label>
+                        <Flatpickr
+                          className="form-control"
+                          options={{
+                            enableTime: true,
+                            noCalendar: true,
+                            dateFormat: "H:i",
+                            time_24hr: true,
+                          }}
+                          value={form.time}
+                          onChange={handleTimeChange}
+                          placeholder="Select time"
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
 
-        <Row>
-          <Col md={6}>
-            <Form.Group className="contact-field">
-              <Form.Label>Name</Form.Label>
-              <Form.Control
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                placeholder="Enter your name"
-                required
-              />
-            </Form.Group>
-          </Col>
+                  <Row>
+                    <Col md={6}>
+                      <Form.Group className="contact-field">
+                        <Form.Label>Name</Form.Label>
+                        <Form.Control
+                          name="name"
+                          value={form.name}
+                          onChange={handleChange}
+                          placeholder="Enter your name"
+                          required
+                        />
+                      </Form.Group>
+                    </Col>
 
-          <Col md={6}>
-            <Form.Group className="contact-field">
-              <Form.Label>Phone</Form.Label>
-              <Form.Control
-                name="phone"
-                value={form.phone}
-                onChange={handleChange}
-                placeholder="x-xxx-xxx-xxxx"
-                required
-              />
-            </Form.Group>
-          </Col>
-        </Row>
+                    <Col md={6}>
+                      <Form.Group className="contact-field">
+                        <Form.Label>Phone</Form.Label>
+                        <Form.Control
+                          name="phone"
+                          value={form.phone}
+                          onChange={handleChange}
+                          placeholder="x-xxx-xxx-xxxx"
+                          required
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
 
-        <Form.Group className="contact-field">
-          <Form.Label>Guests</Form.Label>
-          <Form.Select
-            name="guests"
-            value={form.guests}
-            onChange={handleChange}
-          >
-            {[1,2,3,4,5,6,7,8,9,10].map((n) => (
-              <option key={n} value={n}>
-                {n} Person
-              </option>
-            ))}
-          </Form.Select>
-        </Form.Group>
+                  <Form.Group className="contact-field">
+                    <Form.Label>Guests</Form.Label>
+                    <Form.Select
+                      name="guests"
+                      value={form.guests}
+                      onChange={handleChange}
+                    >
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                        <option key={n} value={n}>
+                          {n} Person
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
 
-        <button
-          type="submit"
-          className="contact-btn btn-primary-custom"
-          disabled={loading}
-        >
-          {loading ? (
-            <>
-              <Spinner size="sm" className="me-2" />
-              Booking...
-            </>
-          ) : (
-            "Book A Table"
-          )}
-        </button>
+                  <button
+                    type="submit"
+                    className="contact-btn btn-primary-custom"
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <>
+                        <Spinner size="sm" className="me-2" />
+                        Booking...
+                      </>
+                    ) : (
+                      "Book A Table"
+                    )}
+                  </button>
 
-      </Form>
+                </Form>
 
-    </Card>
-  </Col>
-</Row>
-</Container>
-</div>
+              </Card>
+            </Col>
+          </Row>
+        </Container>
+      </div>
       <div className="booking-map"></div>
-      
+
     </section>
   );
 };

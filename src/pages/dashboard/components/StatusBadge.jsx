@@ -1,36 +1,29 @@
-function StatusBadge({ status = "" }) {
-  const getColor = (value) => {
-    switch (value) {
-      case "pending":
-        return "#f59e0b"; // nicer warning
+import React from "react";
+
+function StatusBadge({ status = "pending" }) {
+  const getClass = (status) => {
+    switch (status?.toLowerCase()) {
       case "accepted":
-        return "#22c55e"; // cleaner green
-      case "rejected":
-        return "#ef4444"; // red
+      case "active":
       case "delivered":
-        return "#0ea5e9"; // blue
+        return "status-badge success";
+
+      case "pending":
       case "in_progress":
-        return "#8b5cf6"; // purple
+        return "status-badge warning";
+
+      case "rejected":
+      case "deleted":
+        return "status-badge danger";
+
       default:
-        return "#9ca3af"; // gray
+        return "status-badge info";
     }
   };
 
   return (
-    <span
-      style={{
-        display: "inline-block",
-        padding: "4px 10px",
-        borderRadius: "999px",
-        backgroundColor: getColor(status),
-        color: "white",
-        fontSize: "12px",
-        fontWeight: 500,
-        textTransform: "capitalize",
-        whiteSpace: "nowrap",
-      }}
-    >
-      {status?.replaceAll("_", " ")}
+    <span className={getClass(status)}>
+      {status}
     </span>
   );
 }

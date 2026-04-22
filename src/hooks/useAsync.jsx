@@ -19,7 +19,7 @@ export function useAsync(
       try {
         const res = await asyncFunction(...args);
         const result = res?.data ?? res;
-        setData(result);
+        setData(Array.isArray(res?.data) ? res.data : res?.data?.data || []);
         return result;
       } catch (err) {
         const msg =

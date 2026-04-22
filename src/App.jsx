@@ -65,8 +65,8 @@ function App() {
             <Route path="blogs" element={<Blogs />} />
             <Route path="users" element={<Users />} />
             <Route path="messages" element={<Messages />} />
-            <Route path="admin/profile" element={<AdminProfile />} />
-            <Route path="admin/notifications" element={<NotificationsPage />} />
+            <Route path="profile" element={<AdminProfile />} />
+            <Route path="notifications" element={<NotificationsPage />} />
           </Route>
         </Routes>
     </BrowserRouter>

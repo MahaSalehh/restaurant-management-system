@@ -1,55 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { adminAPI } from "../../service/api";
 
 import PageLayout from "./components/PageLayout";
-import DataTable from "./components/DataTable";
+import { useCrudPage } from "./hooks/useCrudPage";
 import StatusBadge from "./components/StatusBadge";
 import Modal from "./components/Modal";
 
 function Orders() {
-  const [orders, setOrders] = useState([]);
-  const [activeStatus, setActiveStatus] = useState(null);
-  const [loadingId, setLoadingId] = useState(null);
-
-  const [selectedOrder, setSelectedOrder] = useState(null);
-
-  // ================= FETCH =================
-  const fetchOrders = async () => {
-    try {
-      const res = await adminAPI.getAllOrders();
-      setOrders(res.data.data || res.data || []);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
-    fetchOrders();
-  }, []);
-
-  // ================= UPDATE STATUS =================
-  const handleStatusChange = async (orderId, newStatus) => {
-    try {
-      setLoadingId(orderId);
-
-      await adminAPI.updateOrderStatus(orderId, { status: newStatus });
-
-      setOrders((prev) =>
-        prev.map((o) =>
-          o.id === orderId ? { ...o, status: newStatus } : o
-        )
-      );
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoadingId(null);
-    }
-  };
-
-  // ================= FILTER =================
-  const filteredOrders = activeStatus
-    ? orders.filter((o) => o.status === activeStatus)
-    : orders;
 
   const statuses = [
     "pending",
@@ -59,11 +16,61 @@ function Orders() {
     "rejected",
   ];
 
+  // ================= CRUD HOOK =================
+  const {
+    data: orders = [],
+    loading,
+    formData,
+    setFormData,
+  } = useCrudPage({
+    getAll: adminAPI.getAllOrders,
+    create: async () => {},
+    update: adminAPI.updateOrderStatus,
+    delete: async () => {},
+  });
+
+  // ================= LOCAL STATE =================
+  const [activeStatus, setActiveStatus] = useState(null);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [loadingId, setLoadingId] = useState(null);
+
+  // ================= FILTER =================
+  const filteredOrders = activeStatus
+    ? orders.filter((o) => o.status === activeStatus)
+    : orders;
+
+  // ================= STATUS UPDATE =================
+  const handleStatusChange = async (orderId, newStatus) => {
+    try {
+      setLoadingId(orderId);
+
+      await adminAPI.updateOrderStatus(orderId, {
+        status: newStatus,
+      });
+
+      setFormData((prev) =>
+        prev.map((o) =>
+          o.id === orderId ? { ...o, status: newStatus } : o
+        )
+      );
+
+      if (selectedOrder?.id === orderId) {
+        setSelectedOrder((prev) => ({
+          ...prev,
+          status: newStatus,
+        }));
+      }
+    } finally {
+      setLoadingId(null);
+    }
+  };
+
   return (
     <PageLayout title="Orders">
 
       {/* FILTER */}
       <div className="mb-3 d-flex gap-2 flex-wrap">
+
         <button
           className={`btn ${!activeStatus ? "btn-dark" : "btn-light"}`}
           onClick={() => setActiveStatus(null)}
@@ -80,39 +87,64 @@ function Orders() {
             {status}
           </button>
         ))}
+
       </div>
 
       {/* TABLE */}
-      <DataTable columns={["ID", "User", "Total", "Status", "Actions"]}>
-        {filteredOrders.map((order) => (
-          <tr key={order.id}>
-            <td>{order.id}</td>
-            <td>{order.user?.name}</td>
-            <td>${order.total_price}</td>
+      <div className="card p-3">
 
-            <td>
-              <StatusBadge status={order.status} />
-            </td>
+        <table className="table">
 
-            <td>
-              <button
-                className="btn btn-dark btn-sm"
-                onClick={() => setSelectedOrder(order)}
-              >
-                View
-              </button>
-            </td>
-          </tr>
-        ))}
-      </DataTable>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>User</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            {(filteredOrders || []).map((order) => (
+              <tr key={order.id}>
+
+                <td>{order.id}</td>
+                <td>{order.user?.name}</td>
+                <td>${order.total_price}</td>
+
+                <td>
+                  <StatusBadge status={order.status} />
+                </td>
+
+                <td>
+                  <button
+                    className="btn btn-dark btn-sm"
+                    onClick={() => setSelectedOrder(order)}
+                  >
+                    View
+                  </button>
+                </td>
+
+              </tr>
+            ))}
+
+          </tbody>
+
+        </table>
+
+      </div>
 
       {/* MODAL */}
       <Modal
         open={!!selectedOrder}
         onClose={() => setSelectedOrder(null)}
       >
+
         {selectedOrder && (
-          <>
+          <div>
+
             <h4>Order Details</h4>
 
             <p><b>ID:</b> {selectedOrder.id}</p>
@@ -123,6 +155,7 @@ function Orders() {
 
             {/* STATUS CONTROL */}
             <div className="d-flex align-items-center gap-2 mt-2">
+
               <StatusBadge status={selectedOrder.status} />
 
               <select
@@ -139,6 +172,7 @@ function Orders() {
                   </option>
                 ))}
               </select>
+
             </div>
 
             <button
@@ -147,9 +181,12 @@ function Orders() {
             >
               Close
             </button>
-          </>
+
+          </div>
         )}
+
       </Modal>
+
     </PageLayout>
   );
 }

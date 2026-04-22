@@ -1,65 +1,70 @@
-import { useEffect, useState } from "react";
 import { api } from "../../service/api";
 
 import PageLayout from "./components/PageLayout";
-import DataTable from "./components/DataTable";
-import ActionButtons from "./components/ActionButtons";
+import { useCrudPage } from "./hooks/useCrudPage";
 
 function Messages() {
-  const [messages, setMessages] = useState([]);
 
-  // ================= FETCH =================
-  const fetchData = async () => {
-    try {
-      const res = await api.get("/admin/contacts");
-      setMessages(res.data.data || res.data || []);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  // ================= DELETE =================
-  const handleDelete = async (id) => {
-    if (!window.confirm("Delete message?")) return;
-
-    try {
-      await api.delete(`/admin/contacts/${id}`);
-      fetchData();
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  // ================= CRUD HOOK =================
+  const {
+    data: messages = [],
+    loading,
+    remove,
+  } = useCrudPage({
+    getAll: () => api.get("/admin/contacts"),
+    create: async () => {},
+    update: async () => {},
+    delete: (id) => api.delete(`/admin/contacts/${id}`),
+  });
 
   // ================= UI =================
   return (
     <PageLayout title="Contact Messages">
 
-      <DataTable columns={["Name", "Email", "Message", "Actions"]}>
-        {(messages || []).map((msg) => (
-          <tr key={msg.id}>
-            <td>{msg.name}</td>
-            <td>{msg.email}</td>
+      <div className="card p-3">
 
-            <td style={{ maxWidth: "300px" }}>
-              <span>
-                {msg.message?.length > 80
-                  ? msg.message.slice(0, 80) + "..."
-                  : msg.message}
-              </span>
-            </td>
+        <table className="table">
 
-            <td>
-              <ActionButtons
-                onDelete={() => handleDelete(msg.id)}
-              />
-            </td>
-          </tr>
-        ))}
-      </DataTable>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Message</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            {(messages || []).map((msg) => (
+              <tr key={msg.id}>
+
+                <td>{msg.name}</td>
+                <td>{msg.email}</td>
+
+                <td style={{ maxWidth: "300px" }}>
+                  {msg.message?.length > 80
+                    ? msg.message.slice(0, 80) + "..."
+                    : msg.message}
+                </td>
+
+                <td>
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => remove(msg.id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+
+              </tr>
+            ))}
+
+          </tbody>
+
+        </table>
+
+      </div>
 
     </PageLayout>
   );

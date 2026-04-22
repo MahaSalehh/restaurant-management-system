@@ -1,165 +1,133 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { adminAPI } from "../../service/api";
 
-import DataTable from "./components/DataTable";
-import Modal from "./components/Modal";
-import ActionButtons from "./components/ActionButtons";
+import CrudCard from "./components/Card";
+import CrudModal from "./components/Modal";
+import { useCrudPage } from "./hooks/useCrudPage";
 
 function Users() {
-  const [users, setUsers] = useState([]);
+
   const [activeTab, setActiveTab] = useState("all");
   const [selectedUser, setSelectedUser] = useState(null);
-  const [showModal, setShowModal] = useState(false);
 
-  // ================= FETCH USERS =================
-  const fetchUsers = async () => {
-    try {
-      const res = await adminAPI.getUsers();
-      setUsers(res.data.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const {
+    data: users = [],
+    loading,
+    formData,
+    setFormData,
+    showModal,
+    setShowModal,
+    openEdit,
+    remove,
+  } = useCrudPage({
+    getAll: adminAPI.getUsers,
+    create: async () => {},
+    update: async () => {},
+    delete: adminAPI.deleteUser,
+  });
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  // ================= DELETE =================
-  const handleDelete = async (id) => {
-    try {
-      await adminAPI.deleteUser(id);
-      fetchUsers();
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  // ================= RESTORE =================
   const handleRestore = async (id) => {
-    try {
-      await adminAPI.restoreUser(id);
-      fetchUsers();
-    } catch (err) {
-      console.error(err);
-    }
+    await adminAPI.restoreUser(id);
   };
 
-  // ================= FILTER =================
+  // FILTER
   const filteredUsers =
     activeTab === "all"
       ? users
       : users.filter((u) => u.status === activeTab);
 
-  return (
-    <div style={{ padding: "20px" }}>
-      <h1>Users</h1>
+  const fields = [
+    { name: "name", label: "Name" },
+    { name: "email", label: "Email" },
+    { name: "role", label: "Role" },
+  ];
 
-      {/* ================= FILTER BUTTONS ================= */}
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await adminAPI.updateUser(formData.id, formData);
+    setShowModal(false);
+  };
+
+  return (
+    <div className="container py-3">
+
+      <h3 className="mb-3">Users</h3>
+
+      {/* FILTER */}
       <div className="d-flex gap-2 mb-3 flex-wrap">
 
         <button
-          className={`btn px-3 py-1 fw-medium ${
-            activeTab === "all" ? "btn-dark" : "btn-light border"
-          }`}
+          className={`btn ${activeTab === "all" ? "btn-dark" : "btn-light"}`}
           onClick={() => setActiveTab("all")}
         >
-          All Users
+          All
         </button>
 
         <button
-          className={`btn px-3 py-1 fw-medium ${
-            activeTab === "active" ? "btn-dark" : "btn-light border"
-          }`}
+          className={`btn ${activeTab === "active" ? "btn-dark" : "btn-light"}`}
           onClick={() => setActiveTab("active")}
         >
-          Active Users
+          Active
         </button>
 
         <button
-          className={`btn px-3 py-1 fw-medium ${
-            activeTab === "deleted" ? "btn-dark" : "btn-light border"
-          }`}
+          className={`btn ${activeTab === "deleted" ? "btn-dark" : "btn-light"}`}
           onClick={() => setActiveTab("deleted")}
         >
-          Deleted Users
+          Deleted
         </button>
 
       </div>
 
-      {/* ================= TABLE ================= */}
-      <DataTable columns={["ID", "Name", "Email", "Role", "Status", "Actions"]}>
-        {filteredUsers.map((user) => (
-          <tr key={user.id}>
-            <td>{user.id}</td>
-            <td>{user.name}</td>
-            <td>{user.email}</td>
+      {/* GRID */}
+      <div className="row g-3">
 
-            <td style={{ textTransform: "capitalize" }}>
-              {user.role}
-            </td>
+        {(filteredUsers || []).map((user) => (
+          <div className="col-md-4" key={user.id}>
 
-            {/* STATUS (UNCHANGED LOGIC) */}
-            <td>
-              {user.status === "deleted" ? (
-                <span style={{ color: "red" }}>Deleted</span>
-              ) : (
-                <span style={{ color: "green" }}>Active</span>
-              )}
-            </td>
+            <CrudCard
+              title={user.name}
+              subtitle={user.email}
+              extra={`Role: ${user.role}`}
+              status={user.status}
+              onView={() => setSelectedUser(user)}
+              onEdit={() => openEdit(user)}
+              onDelete={() => remove(user.id)}
+              onRestore={
+                user.status === "deleted"
+                  ? () => handleRestore(user.id)
+                  : null
+              }
+            />
 
-            {/* ACTIONS (STYLED ONLY) */}
-            <td>
-              <div className="d-flex gap-2 flex-wrap">
-
-                <ActionButtons
-  actions={[
-    {
-      label: "View",
-      variant: "primary",
-      onClick: () => {
-        setSelectedUser(user);
-        setShowModal(true);
-      },
-    },
-    user.status === "deleted"
-      ? {
-          label: "Restore",
-          variant: "success",
-          onClick: () => handleRestore(user.id),
-        }
-      : {
-          label: "Delete",
-          variant: "danger",
-          onClick: () => handleDelete(user.id),
-        },
-  ]}
-/>
-              </div>
-            </td>
-          </tr>
+          </div>
         ))}
-      </DataTable>
 
-      {/* ================= MODAL ================= */}
-      {showModal && selectedUser && (
-        <Modal
-          open={showModal}
+      </div>
+
+      {/* MODAL (view/edit) */}
+      <CrudModal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        title="Edit User"
+        formData={formData}
+        setFormData={setFormData}
+        onSubmit={handleSubmit}
+        fields={fields}
+      />
+
+      {/* VIEW MODAL */}
+      {selectedUser && (
+        <CrudModal
+          show={!!selectedUser}
+          onHide={() => setSelectedUser(null)}
           title="User Details"
-          onClose={() => setShowModal(false)}
-        >
-          <p><strong>ID:</strong> {selectedUser.id}</p>
-          <p><strong>Name:</strong> {selectedUser.name}</p>
-          <p><strong>Email:</strong> {selectedUser.email}</p>
-          <p><strong>Role:</strong> {selectedUser.role}</p>
-
-          {selectedUser.deleted_at && (
-            <p style={{ color: "red" }}>
-              Deleted At: {selectedUser.deleted_at}
-            </p>
-          )}
-        </Modal>
+          readOnly
+          formData={selectedUser}
+          fields={fields}
+        />
       )}
+
     </div>
   );
 }
