@@ -124,13 +124,13 @@ export default function Dashboard() {
 
 
 
-      {/* MAIN GRID */}
+
       <div className="charts-layout">
 
-        {/* LEFT */}
+
         <div className="left">
 
-          {/* LINE CHART */}
+  
           <div className="card big">
             <div className="card-header">
               <h4>Total Users</h4>
@@ -159,10 +159,9 @@ export default function Dashboard() {
             </ResponsiveContainer>
           </div>
 
-          {/* BOTTOM GRID */}
           <div className="bottom-grid">
 
-            <div className="card-app">
+            <div className="card-app mb-3">
               <h4>Traffic by Device</h4>
               <ResponsiveContainer width="100%" height={200}>
                 <BarChart data={barData}>

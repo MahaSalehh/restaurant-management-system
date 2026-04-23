@@ -40,12 +40,12 @@ function Messages() {
           <tbody>
             {messages.map((msg, i) => (
               <tr key={msg.id}>
-                <td>{i + 1}</td>
-                <td>{msg.name}</td>
-                <td>{msg.email}</td>
-                <td>{msg.subject || "—"}</td>
-                <td>{msg.created_at ? new Date(msg.created_at).toLocaleDateString() : "—"}</td>
-                <td>
+                <td data-label="#">{i + 1}</td>
+                <td data-label="Name">{msg.name}</td>
+                <td data-label="Email">{msg.email}</td>
+                <td data-label="Subject">{msg.subject || "—"}</td>
+                <td data-label="Date">{msg.created_at ? new Date(msg.created_at).toLocaleDateString() : "—"}</td>
+                <td data-label="Actions">
                   <Button size="sm" variant="primary"
                     onClick={() => { setSelectedMsg(msg); setShowModal(true); }}>
                     <FaEye />
@@ -69,7 +69,7 @@ function Messages() {
               {selectedMsg.phone && <p><strong>Phone:</strong> {selectedMsg.phone}</p>}
               {selectedMsg.subject && <p><strong>Subject:</strong> {selectedMsg.subject}</p>}
               <hr />
-              <p>{selectedMsg.message}</p>
+              <h5><strong>“{selectedMsg.message}”</strong></h5>
             </>
           )}
         </Modal.Body>

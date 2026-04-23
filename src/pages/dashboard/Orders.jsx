@@ -18,6 +18,7 @@ const ORDER_STATUSES = ["pending", "in_progress", "accepted", "delivered", "reje
 
 function Orders() {
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showStatusModal, setShowStatusModal] = useState(false);
@@ -28,11 +29,19 @@ function Orders() {
   const { data, loading, error, execute: refetch } = useAsync(fetchOrders);
   useToastError(error);
 
-  const orders = data?.data ?? data ?? [];
-  const filtered = orders.filter(o =>
+  const orders = (data?.data ?? data ?? [])
+  .slice()
+  .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  
+  const filtered = orders
+  .filter(o =>
     String(o.id).includes(search) ||
     (o.user?.name || "").toLowerCase().includes(search.toLowerCase())
-  );
+  )
+  .filter(order => {
+    if (statusFilter === "all") return true;
+    return order.status === statusFilter;
+  });
 
   async function handleDelete(id) {
     if (!window.confirm("Delete this order?")) return;
@@ -70,7 +79,27 @@ function Orders() {
           </InputGroup>
         </Col>
       </Row>
+<div className="d-flex flex-wrap gap-2 mb-3">
+  <Button
+    size="sm"
+    variant={statusFilter === "all" ? "primary" : "outline-secondary"}
+    onClick={() => setStatusFilter("all")}
+  >
+    All
+  </Button>
 
+  {ORDER_STATUSES.map(status => (
+    <Button
+      key={status}
+      size="sm"
+      variant={statusFilter === status ? "primary" : "outline-secondary"}
+      onClick={() => setStatusFilter(status)}
+      className="text-capitalize"
+    >
+      {status.replace("_", " ")}
+    </Button>
+  ))}
+</div>
       {loading ? (
         <div className="text-center py-5"><Spinner animation="border" /></div>
       ) : (
@@ -81,14 +110,14 @@ function Orders() {
           <tbody>
             {filtered.map(order => (
               <tr key={order.id}>
-                <td>#{order.id}</td>
-                <td>{order.user?.name || "—"}</td>
-                <td>${order.total_price || order.total || "—"}</td>
-                <td>
+                <td data-label="#">#{order.id}</td>
+                <td data-label="Customer">{order.user?.name || "—"}</td>
+                <td data-label="Total">${order.total_price || order.total || "—"}</td>
+                <td data-label="Status">
                   <Badge bg={STATUS_COLORS[order.status] || "secondary"}>{order.status}</Badge>
                 </td>
-                <td>{new Date(order.created_at).toLocaleDateString()}</td>
-                <td>
+                <td data-label="Date">{new Date(order.created_at).toLocaleDateString()}</td>
+                <td data-label="Actions">
                   <div className="d-flex gap-2">
                     <Button size="sm" variant="primary"
                       onClick={() => { setSelectedOrder(order); setShowDetailModal(true); }}><FaEye /></Button>
@@ -121,6 +150,8 @@ function Orders() {
               </p>
               <p><strong>Total:</strong> ${selectedOrder.total_price || selectedOrder.total}</p>
               <p><strong>Date:</strong> {new Date(selectedOrder.created_at).toLocaleString()}</p>
+              <p><strong>Notes:</strong> {selectedOrder.notes || selectedOrder.special_requests || "—"}</p>
+              
               <hr />
               <h6>Items</h6>
               <Table size="sm" bordered>

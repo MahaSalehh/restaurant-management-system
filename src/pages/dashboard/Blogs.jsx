@@ -4,14 +4,10 @@ import {
   Form, Spinner, Modal,
 } from "react-bootstrap";
 import { FaSearch, FaPlus, FaEdit, FaTrash, FaEye } from "react-icons/fa";
-import { adminAPI, publicAPI } from "../../service/api";
+import { adminAPI, publicAPI, STORAGE_URL } from "../../service/api";
 import { useAsync } from "../../hooks/useAsync";
 import { useToastError } from "../../hooks/useToastsError";
 import { useToast } from "../../context/ToastContext";
-
-const STORAGE_BASE = "https://restaurant-api-production-b087.up.railway.app/storage/";
-const imgSrc = (path) =>
-  !path ? null : path.startsWith("http") ? path : `${STORAGE_BASE}${path}`;
 
 function Blogs() {
   const [search, setSearch] = useState("");
@@ -98,11 +94,18 @@ function Blogs() {
         <Row className="g-4">
           {filtered.map(article => (
             <Col key={article.id} xl={4} md={6}>
-              <Card className="h-100 border-0 shadow-sm">
-                {article.image && (
-                  <Card.Img variant="top" src={imgSrc(article.image)}
-                    style={{ height: "180px", objectFit: "cover" }} />
-                )}
+              <Card className="h-100 border-0 shadow-sm"><Card.Img
+  variant="top"
+  src={STORAGE_URL + article.image_url}
+  onError={(e) => {
+    e.target.src = "/placeholder-food.jpg";
+  }}
+  style={{
+    height: "180px",
+    objectFit: "cover",
+    borderBottom: "1px solid var(--border)"
+  }}
+/>
                 <Card.Body className="d-flex flex-column">
                   <Card.Title className="h6">{article.title}</Card.Title>
                   <Card.Text className="text-muted small">
@@ -160,7 +163,7 @@ function Blogs() {
           {selectedArticle && (
             <>
               {selectedArticle.image && (
-                <img src={imgSrc(selectedArticle.image)} alt={selectedArticle.title}
+                <img src={STORAGE_URL + selectedArticle.image_url} alt={selectedArticle.title}
                   className="img-fluid rounded mb-3 w-100"
                   style={{ maxHeight: 300, objectFit: "cover" }} />
               )}

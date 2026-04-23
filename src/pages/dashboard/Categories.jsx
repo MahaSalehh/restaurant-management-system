@@ -78,10 +78,9 @@ function Categories() {
           <tbody>
             {categories.map((cat, i) => (
               <tr key={cat.id}>
-                <td>{i + 1}</td>
-                <td>{cat.name}</td>
-                <td>{cat.description || "—"}</td>
-                <td>
+                <td data-label="#">{i + 1}</td>
+                <td data-label="Name">{cat.name}</td>
+                <td data-label="Actions">
                   <div className="d-flex gap-2">
                     <Button size="sm" variant="outline-secondary" onClick={() => openEdit(cat)}><FaEdit /></Button>
                     <Button size="sm" variant="outline-danger" onClick={() => handleDelete(cat.id)}><FaTrash /></Button>

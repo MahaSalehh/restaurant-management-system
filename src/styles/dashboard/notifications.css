@@ -1,0 +1,179 @@
+
+.notif-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.35);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--mid) var(--ease);
+  z-index: 998;
+}
+
+.notif-overlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* PANEL (OFFCANVAS STYLE) */
+.notif-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 360px;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform var(--mid) var(--ease);
+  z-index: 999;
+}
+
+/* OPEN */
+.notif-panel.open {
+  transform: translateX(0);
+}
+
+/* HEADER (like bootstrap offcanvas) */
+.notif-header {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+}
+
+/* BODY */
+.notif-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ITEM (clean modern) */
+.notif-item {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  border-radius: var(--r-md);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  transition: all var(--fast) var(--ease);
+}
+
+.notif-item:hover {
+  background: var(--bg-2);
+  transform: translateX(-2px);
+}
+
+/* ICON */
+.notif-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* CONTENT */
+.notif-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.notif-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+.notif-text {
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+.notif-time {
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+/* TYPES */
+.notif-success .notif-icon { background: var(--success-bg); color: var(--success); }
+.notif-danger .notif-icon { background: var(--danger-bg); color: var(--danger); }
+.notif-warning .notif-icon { background: var(--warning-bg); color: var(--warning); }
+.notif-info .notif-icon { background: var(--info-bg); color: var(--info); }
+
+/* MOBILE */
+@media (max-width: 576px) {
+  .notif-panel {
+    width: 92vw;
+  }
+}
+
+@media (max-width: 992px) {
+  .notif-panel.open {
+    width: 280px;
+  }
+}
+
+/* ===============================
+   MOBILE → FLOATING CARD STYLE (NOT FULL SCREEN)
+   =============================== */
+@media (max-width: 768px) {
+
+  .notif-panel {
+    position: fixed;
+    top: 70px;
+    right: 12px;
+    height: calc(100vh - 90px);
+    width: 0;
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-lg);
+    z-index: 999;
+    border: 1px solid var(--border);
+  }
+
+  .notif-panel.open {
+    width: 92vw;
+    max-width: 340px;
+  }
+
+  .notif-header {
+    border-top-left-radius: var(--r-lg);
+    border-top-right-radius: var(--r-lg);
+  }
+}
+
+/* ===============================
+   SMALL MOBILE (extra polish)
+   =============================== */
+@media (max-width: 480px) {
+
+  .notif-panel.open {
+    width: 95vw;
+    max-width: none;
+    right: 8px;
+    top: 65px;
+  }
+
+  .notif-body {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .notif-item {
+    padding: 10px;
+  }
+}
+

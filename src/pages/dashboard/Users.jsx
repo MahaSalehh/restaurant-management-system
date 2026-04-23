@@ -84,24 +84,27 @@ function Users() {
           <tbody>
             {filtered.map((u, i) => (
               <tr key={u.id}>
-                <td>{i + 1}</td>
-                <td>{u.name}</td>
-                <td>{u.email}</td>
-                <td><Badge bg="info">{u.role}</Badge></td>
-                <td>
-                  <Badge bg={u.deleted_at ? "danger" : "success"}>
-                    {u.deleted_at ? "Deleted" : "Active"}
+                <td data-label="#">{i + 1}</td>
+                <td data-label="Name">{u.name}</td>
+                <td data-label="Email">{u.email}</td>
+                <td data-label="Role">
+                  <Badge bg={u.role === "admin" ? "dark" : "primary"}>
+                  {u.role === "admin" ? "Admin" : "User"}
+                </Badge></td>
+                <td data-label="Status">
+                  <Badge bg={u.status  === "deleted"? "danger" : "success"}>
+                    {u.status === "deleted" ? "Deleted" : "Active"}
                   </Badge>
                 </td>
-                <td>
+                <td data-label="Actions">
                   <div className="d-flex gap-2">
                     <Button size="sm" variant="outline-primary"
                       onClick={() => { setSelectedUser(u); setNewRole(u.role); setShowRoleModal(true); }}>
-                      <FaEdit /> Role
+                      <FaEdit />
                     </Button>
-                    {u.deleted_at ? (
+                    {u.status === "deleted" ? (
                       <Button size="sm" variant="outline-success" onClick={() => handleRestore(u.id)}>
-                        <FaUndo /> Restore
+                        <FaUndo /> 
                       </Button>
                     ) : (
                       <Button size="sm" variant="outline-danger" onClick={() => handleDelete(u.id)}>

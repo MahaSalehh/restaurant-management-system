@@ -1,7 +1,9 @@
 @import "./variables.css";
 @import "./public/public.css";
 @import "./private/private.css";
+@import "./dashboard/dashboardLayout.css";
 @import "./dashboard/dashboard.css";
+@import "./dashboard/notifications.css";
 @import "./auth.css";
 @import "./layout.css";
 @import "./base.css";
@@ -10,8 +12,6 @@
 @import "./private/cart.css";
 
 body {
-  margin: 0;
-  padding: 0;
   font-family: "DM Sans", sans-serif;
 }
 

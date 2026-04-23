@@ -16,6 +16,7 @@ const STATUS_COLORS = {
 const BOOKING_STATUSES = ["pending", "accepted", "rejected"];
 
 function Bookings() {
+  const [statusFilter, setStatusFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
@@ -27,11 +28,19 @@ function Bookings() {
   const { data, loading, error, execute: refetch } = useAsync(fetchBookings);
   useToastError(error);
 
-  const bookings = data?.data ?? data ?? [];
-  const filtered = bookings.filter(b =>
+  const bookings = (data?.data ?? data ?? [])
+  .slice()
+  .sort((a, b) => new Date(b.created_at || b.date) - new Date(a.created_at || a.date));
+  
+  const filtered = bookings
+  .filter(b =>
     String(b.id).includes(search) ||
     (b.user?.name || b.name || "").toLowerCase().includes(search.toLowerCase())
-  );
+  )
+  .filter(b => {
+    if (statusFilter === "all") return true;
+    return b.status === statusFilter;
+  });
 
   async function handleDelete(id) {
     if (!window.confirm("Delete this booking?")) return;
@@ -70,6 +79,28 @@ function Bookings() {
         </Col>
       </Row>
 
+<div className="d-flex flex-wrap gap-2 mb-3">
+  <Button
+    size="sm"
+    variant={statusFilter === "all" ? "primary" : "outline-secondary"}
+    onClick={() => setStatusFilter("all")}
+  >
+    All
+  </Button>
+
+  {BOOKING_STATUSES.map(status => (
+    <Button
+      key={status}
+      size="sm"
+      variant={statusFilter === status ? "primary" : "outline-secondary"}
+      onClick={() => setStatusFilter(status)}
+      className="text-capitalize"
+    >
+      {status}
+    </Button>
+  ))}
+</div>
+
       {loading ? (
         <div className="text-center py-5"><Spinner animation="border" /></div>
       ) : (
@@ -83,15 +114,15 @@ function Bookings() {
           <tbody>
             {filtered.map(booking => (
               <tr key={booking.id}>
-                <td>#{booking.id}</td>
-                <td>{booking.user?.name || booking.name || "—"}</td>
-                <td>{booking.date || booking.booking_date || "—"}</td>
-                <td>{booking.time || booking.booking_time || "—"}</td>
-                <td>{booking.guests || booking.number_of_guests || "—"}</td>
-                <td>
+                <td data-label="#">#{booking.id}</td>
+                <td data-label="Customer">{booking.user?.name || booking.name || "—"}</td>
+                <td data-label="Date">{booking.date || booking.booking_date || "—"}</td>
+                <td data-label="Time">{booking.time || booking.booking_time || "—"}</td>
+                <td data-label="Guests">{booking.guests || booking.number_of_guests || "—"}</td>
+                <td data-label="Status">
                   <Badge bg={STATUS_COLORS[booking.status] || "secondary"}>{booking.status}</Badge>
                 </td>
-                <td>
+                <td data-label="Actions">
                   <div className="d-flex gap-2">
                     <Button size="sm" variant="primary"
                       onClick={() => { setSelectedBooking(booking); setShowDetailModal(true); }}><FaEye /></Button>
@@ -123,7 +154,6 @@ function Bookings() {
               <p><strong>Date:</strong> {selectedBooking.date || selectedBooking.booking_date}</p>
               <p><strong>Time:</strong> {selectedBooking.time || selectedBooking.booking_time}</p>
               <p><strong>Guests:</strong> {selectedBooking.guests || selectedBooking.number_of_guests}</p>
-              <p><strong>Notes:</strong> {selectedBooking.notes || selectedBooking.special_requests || "—"}</p>
               <p>
                 <strong>Status:</strong>{" "}
                 <Badge bg={STATUS_COLORS[selectedBooking.status]}>{selectedBooking.status}</Badge>
