@@ -8,21 +8,18 @@ import { adminAPI } from "../../service/api";
 import { useAsync } from "../../hooks/useAsync";
 import { useToastError } from "../../hooks/useToastsError";
 
-// If your API has an admin contacts endpoint, swap here:
-// e.g. const fetchMessages = useCallback(() => adminAPI.getContacts(), []);
-// For now we assume it lives under adminAPI or a similar endpoint.
 
 function Messages() {
   const [selectedMsg, setSelectedMsg] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-  // Adjust the API call to match your actual contacts endpoint
   const fetchMessages = useCallback(() => adminAPI.getContacts?.() ?? Promise.resolve({ data: [] }), []);
   const { data, loading, error } = useAsync(fetchMessages);
   useToastError(error);
 
-  const messages = data?.data ?? data ?? [];
-
+  const messages = (data?.data ?? data ?? [])
+  .slice()
+  .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   return (
     <Container fluid className="py-3">
       <h2 className="fw-bold mb-1" style={{ color: "var(--primary-color)" }}>Messages</h2>
@@ -38,9 +35,9 @@ function Messages() {
             <tr><th>#</th><th>Name</th><th>Email</th><th>Subject</th><th>Date</th><th>Actions</th></tr>
           </thead>
           <tbody>
-            {messages.map((msg, i) => (
+            {messages.map((msg) => (
               <tr key={msg.id}>
-                <td data-label="#">{i + 1}</td>
+                <td data-label="#">{msg.id}</td>
                 <td data-label="Name">{msg.name}</td>
                 <td data-label="Email">{msg.email}</td>
                 <td data-label="Subject">{msg.subject || "—"}</td>

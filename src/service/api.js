@@ -123,11 +123,11 @@ export const adminAPI = {
 
   // ---------- CATEGORIES ----------
   createCategory: (data) =>
-    api.post("/admin/categories", data),
+    api.post("/admin/admin/categories", data),
   updateCategory: (id, data) =>
-    api.put(`/admin/categories/${id}`, data),
+    api.put(`/admin/admin/categories/${id}`, data),
   deleteCategory: (id) =>
-    api.delete(`/admin/categories/${id}`),
+    api.delete(`/admin/admin/categories/${id}`),
 
   // ---------- MENU ITEMS----------
   createMenuItem: (data) =>

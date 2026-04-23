@@ -12,7 +12,7 @@ function Categories() {
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState("add");
   const [selectedCat, setSelectedCat] = useState(null);
-  const [formData, setFormData] = useState({ name: "", description: "" });
+  const [formData, setFormData] = useState({ name: ""});
   const { showToast } = useToast();
 
   const fetchCategories = useCallback(() => publicAPI.getCategories(), []);
@@ -23,14 +23,14 @@ function Categories() {
 
   function openAdd() {
     setModalMode("add");
-    setFormData({ name: "", description: "" });
+    setFormData({ name: "" });
     setShowModal(true);
   }
 
   function openEdit(cat) {
     setModalMode("edit");
     setSelectedCat(cat);
-    setFormData({ name: cat.name, description: cat.description || "" });
+    setFormData({ name: cat.name });
     setShowModal(true);
   }
 
@@ -73,7 +73,7 @@ function Categories() {
       ) : (
         <Table responsive hover bordered className="align-middle">
           <thead className="table-dark">
-            <tr><th>#</th><th>Name</th><th>Description</th><th>Actions</th></tr>
+            <tr><th>#</th><th>Name</th><th>Actions</th></tr>
           </thead>
           <tbody>
             {categories.map((cat, i) => (
@@ -102,11 +102,6 @@ function Categories() {
               <Form.Label>Name</Form.Label>
               <Form.Control required value={formData.name}
                 onChange={e => setFormData({ ...formData, name: e.target.value })} />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Description</Form.Label>
-              <Form.Control as="textarea" rows={3} value={formData.description}
-                onChange={e => setFormData({ ...formData, description: e.target.value })} />
             </Form.Group>
             <div className="d-flex justify-content-end gap-2">
               <Button variant="secondary" onClick={() => setShowModal(false)}>Cancel</Button>
