@@ -23,7 +23,7 @@ import {
   FaBars,
   FaRegBell,
 } from "react-icons/fa";
-import { FaX } from "react-icons/fa6";
+import { FaX, FaXmark } from "react-icons/fa6";
 
 function DashboardLayout() {
   const { isAuthenticated } = useAuth();
@@ -210,7 +210,7 @@ const sortedNotifications = [...notifications].sort(
                 className="icon-btn icon-button"
                 onClick={() => setNotifOpen(false)}
               >
-                <FaX />
+                <FaXmark />
               </button>
             </div>
 
@@ -225,12 +225,10 @@ const sortedNotifications = [...notifications].sort(
         onClick={() => markAsRead(n.id)}
       >
 
-        {/* ICON */}
         <div className="notif-icon">
           <FaRegBell />
         </div>
 
-        {/* CONTENT */}
         <div className="notif-content">
 
           <div className="notif-top">
@@ -245,7 +243,7 @@ const sortedNotifications = [...notifications].sort(
                 deleteNotification(n.id);
               }}
             >
-              ✕
+              <FaX />
             </button>
           </div>
 
