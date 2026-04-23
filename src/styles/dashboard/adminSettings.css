@@ -378,6 +378,9 @@
 
 /* MOBILE */
 @media (max-width: 576px) {
+  .admin-modal{
+    overflow-y: hidden;
+  }
   .admin-modal .modal-content {
     border-radius: 14px;
   }
