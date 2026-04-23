@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
-export function useCrudPage({ getAll, create, update, delete: deleteApi }) {
-
+export function useCrudPage({ getAll, create, update, remove }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -34,16 +33,18 @@ export function useCrudPage({ getAll, create, update, delete: deleteApi }) {
 
   const createItem = async (payload) => {
     await create(payload);
+    setShowModal(false);
     fetchData();
   };
 
   const updateItem = async (id, payload) => {
     await update(id, payload);
+    setShowModal(false);
     fetchData();
   };
 
-  const remove = async (id) => {
-    await deleteApi(id);
+  const removeItem = async (id) => {
+    await remove(id);
     fetchData();
   };
 
@@ -56,8 +57,8 @@ export function useCrudPage({ getAll, create, update, delete: deleteApi }) {
     setShowModal,
     openCreate,
     openEdit,
-    create: createItem,
-    update: updateItem,
-    remove,
+    createItem,
+    updateItem,
+    removeItem,
   };
 }

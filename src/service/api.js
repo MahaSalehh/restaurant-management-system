@@ -110,6 +110,7 @@ export const contactAPI = {
 
 // ADMIN
 export const adminAPI = {
+  getContacts: () => api.get("/admin/contacts"),
 
   // ---------- USERS ----------
   getUsers: () => api.get("/admin/users"),

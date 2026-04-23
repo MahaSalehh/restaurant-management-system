@@ -1,32 +1,29 @@
-function CrudCard({ title, subtitle, image, onEdit, onDelete }) {
+import ActionButtons from "./ActionButtons";
+
+export default function CrudCard({
+  title,
+  subtitle,
+  image,
+  actions = [],
+}) {
   return (
-    <div className="card p-3 h-100">
+    <div className="card p-3 h-100 shadow-sm">
 
       {image && (
         <img
           src={image}
-          alt=""
-          style={{ width: "100%", height: 160, objectFit: "cover" }}
+          className="rounded mb-2"
+          style={{ height: "150px", objectFit: "cover" }}
         />
       )}
 
-      <h5 className="mt-2">{title}</h5>
-      <p className="text-muted">{subtitle}</p>
+      <h6>{title}</h6>
+      <small className="text-muted">{subtitle}</small>
 
-      <div className="d-flex gap-2 mt-auto">
-
-        <button className="btn btn-light btn-sm" onClick={onEdit}>
-          Edit
-        </button>
-
-        <button className="btn btn-danger btn-sm" onClick={onDelete}>
-          Delete
-        </button>
-
+      <div className="mt-3">
+        <ActionButtons actions={actions} />
       </div>
 
     </div>
   );
 }
-
-export default CrudCard;

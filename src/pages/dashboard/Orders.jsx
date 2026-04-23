@@ -1,193 +1,159 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import {
+  Container, Row, Col, Table, Badge, Button,
+  InputGroup, Form, Spinner, Modal,
+} from "react-bootstrap";
+import { FaSearch, FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import { adminAPI } from "../../service/api";
+import { useAsync } from "../../hooks/useAsync";
+import { useToastError } from "../../hooks/useToastsError";
+import { useToast } from "../../context/ToastContext";
 
-import PageLayout from "./components/PageLayout";
-import { useCrudPage } from "./hooks/useCrudPage";
-import StatusBadge from "./components/StatusBadge";
-import Modal from "./components/Modal";
+const STATUS_COLORS = {
+  pending: "", in_progress: "warning", accepted: "primary",
+  delivered: "success", rejected: "danger",
+};
+
+const ORDER_STATUSES = ["pending", "in_progress", "accepted", "delivered", "rejected"];
 
 function Orders() {
-
-  const statuses = [
-    "pending",
-    "accepted",
-    "in_progress",
-    "delivered",
-    "rejected",
-  ];
-
-  // ================= CRUD HOOK =================
-  const {
-    data: orders = [],
-    loading,
-    formData,
-    setFormData,
-  } = useCrudPage({
-    getAll: adminAPI.getAllOrders,
-    create: async () => {},
-    update: adminAPI.updateOrderStatus,
-    delete: async () => {},
-  });
-
-  // ================= LOCAL STATE =================
-  const [activeStatus, setActiveStatus] = useState(null);
+  const [search, setSearch] = useState("");
+  const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const [loadingId, setLoadingId] = useState(null);
+  const [showStatusModal, setShowStatusModal] = useState(false);
+  const [newStatus, setNewStatus] = useState("");
+  const { showToast } = useToast();
 
-  // ================= FILTER =================
-  const filteredOrders = activeStatus
-    ? orders.filter((o) => o.status === activeStatus)
-    : orders;
+  const fetchOrders = useCallback(() => adminAPI.getAllOrders(), []);
+  const { data, loading, error, execute: refetch } = useAsync(fetchOrders);
+  useToastError(error);
 
-  // ================= STATUS UPDATE =================
-  const handleStatusChange = async (orderId, newStatus) => {
+  const orders = data?.data ?? data ?? [];
+  const filtered = orders.filter(o =>
+    String(o.id).includes(search) ||
+    (o.user?.name || "").toLowerCase().includes(search.toLowerCase())
+  );
+
+  async function handleDelete(id) {
+    if (!window.confirm("Delete this order?")) return;
     try {
-      setLoadingId(orderId);
-
-      await adminAPI.updateOrderStatus(orderId, {
-        status: newStatus,
-      });
-
-      setFormData((prev) =>
-        prev.map((o) =>
-          o.id === orderId ? { ...o, status: newStatus } : o
-        )
-      );
-
-      if (selectedOrder?.id === orderId) {
-        setSelectedOrder((prev) => ({
-          ...prev,
-          status: newStatus,
-        }));
-      }
-    } finally {
-      setLoadingId(null);
+      await adminAPI.deleteOrder(id);
+      showToast("success", "Order deleted");
+      refetch();
+    } catch (err) {
+      showToast("error", err.response?.data?.message || "Failed to delete order");
     }
-  };
+  }
+
+  async function handleStatusUpdate() {
+    try {
+      await adminAPI.updateOrderStatus(selectedOrder.id, { status: newStatus });
+      showToast("success", "Status updated");
+      setShowStatusModal(false);
+      refetch();
+    } catch (err) {
+      showToast("error", err.response?.data?.message || "Failed to update status");
+    }
+  }
 
   return (
-    <PageLayout title="Orders">
+    <Container fluid className="py-3">
+      <h2 className="fw-bold mb-1" style={{ color: "var(--primary-color)" }}>Orders</h2>
+      <p className="text-muted mb-4">Track and manage customer orders</p>
 
-      {/* FILTER */}
-      <div className="mb-3 d-flex gap-2 flex-wrap">
+      <Row className="mb-3">
+        <Col md={4}>
+          <InputGroup>
+            <Form.Control placeholder="Search by order ID or customer..." value={search}
+              onChange={e => setSearch(e.target.value)} />
+            <InputGroup.Text><FaSearch /></InputGroup.Text>
+          </InputGroup>
+        </Col>
+      </Row>
 
-        <button
-          className={`btn ${!activeStatus ? "btn-dark" : "btn-light"}`}
-          onClick={() => setActiveStatus(null)}
-        >
-          All
-        </button>
-
-        {statuses.map((status) => (
-          <button
-            key={status}
-            className={`btn ${activeStatus === status ? "btn-dark" : "btn-light"}`}
-            onClick={() => setActiveStatus(status)}
-          >
-            {status}
-          </button>
-        ))}
-
-      </div>
-
-      {/* TABLE */}
-      <div className="card p-3">
-
-        <table className="table">
-
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>User</th>
-              <th>Total</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
+      {loading ? (
+        <div className="text-center py-5"><Spinner animation="border" /></div>
+      ) : (
+        <Table responsive hover bordered className="align-middle">
+          <thead className="table-dark">
+            <tr><th>#</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th><th>Actions</th></tr>
           </thead>
-
           <tbody>
-
-            {(filteredOrders || []).map((order) => (
+            {filtered.map(order => (
               <tr key={order.id}>
-
-                <td>{order.id}</td>
-                <td>{order.user?.name}</td>
-                <td>${order.total_price}</td>
-
+                <td>#{order.id}</td>
+                <td>{order.user?.name || "—"}</td>
+                <td>${order.total_price || order.total || "—"}</td>
                 <td>
-                  <StatusBadge status={order.status} />
+                  <Badge bg={STATUS_COLORS[order.status] || "secondary"}>{order.status}</Badge>
                 </td>
-
+                <td>{new Date(order.created_at).toLocaleDateString()}</td>
                 <td>
-                  <button
-                    className="btn btn-dark btn-sm"
-                    onClick={() => setSelectedOrder(order)}
-                  >
-                    View
-                  </button>
+                  <div className="d-flex gap-2">
+                    <Button size="sm" variant="primary"
+                      onClick={() => { setSelectedOrder(order); setShowDetailModal(true); }}><FaEye /></Button>
+                    <Button size="sm" variant="outline-secondary"
+                      onClick={() => { setSelectedOrder(order); setNewStatus(order.status); setShowStatusModal(true); }}>
+                      <FaEdit /> Status
+                    </Button>
+                    <Button size="sm" variant="outline-danger"
+                      onClick={() => handleDelete(order.id)}><FaTrash /></Button>
+                  </div>
                 </td>
-
               </tr>
             ))}
-
           </tbody>
+        </Table>
+      )}
 
-        </table>
-
-      </div>
-
-      {/* MODAL */}
-      <Modal
-        open={!!selectedOrder}
-        onClose={() => setSelectedOrder(null)}
-      >
-
-        {selectedOrder && (
-          <div>
-
-            <h4>Order Details</h4>
-
-            <p><b>ID:</b> {selectedOrder.id}</p>
-            <p><b>User:</b> {selectedOrder.user?.name}</p>
-            <p><b>Total:</b> ${selectedOrder.total_price}</p>
-            <p><b>Address:</b> {selectedOrder.address}</p>
-            <p><b>Phone:</b> {selectedOrder.phone}</p>
-
-            {/* STATUS CONTROL */}
-            <div className="d-flex align-items-center gap-2 mt-2">
-
-              <StatusBadge status={selectedOrder.status} />
-
-              <select
-                className="form-select"
-                value={selectedOrder.status}
-                onChange={(e) =>
-                  handleStatusChange(selectedOrder.id, e.target.value)
-                }
-                disabled={loadingId === selectedOrder.id}
-              >
-                {statuses.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
-              </select>
-
-            </div>
-
-            <button
-              className="btn btn-danger mt-3"
-              onClick={() => setSelectedOrder(null)}
-            >
-              Close
-            </button>
-
-          </div>
-        )}
-
+      {/* Detail Modal */}
+      <Modal show={showDetailModal} onHide={() => setShowDetailModal(false)} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Order #{selectedOrder?.id} Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedOrder && (
+            <>
+              <p><strong>Customer:</strong> {selectedOrder.user?.name} ({selectedOrder.user?.email})</p>
+              <p>
+                <strong>Status:</strong>{" "}
+                <Badge bg={STATUS_COLORS[selectedOrder.status]}>{selectedOrder.status}</Badge>
+              </p>
+              <p><strong>Total:</strong> ${selectedOrder.total_price || selectedOrder.total}</p>
+              <p><strong>Date:</strong> {new Date(selectedOrder.created_at).toLocaleString()}</p>
+              <hr />
+              <h6>Items</h6>
+              <Table size="sm" bordered>
+                <thead><tr><th>Item</th><th>Qty</th><th>Price</th></tr></thead>
+                <tbody>
+                  {(selectedOrder.items || selectedOrder.order_items || []).map((item, i) => (
+                    <tr key={i}>
+                      <td>{item.menu_item?.name || item.name}</td>
+                      <td>{item.quantity}</td>
+                      <td>${item.price}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </>
+          )}
+        </Modal.Body>
       </Modal>
 
-    </PageLayout>
+      {/* Status Modal */}
+      <Modal show={showStatusModal} onHide={() => setShowStatusModal(false)}>
+        <Modal.Header closeButton><Modal.Title>Update Order Status</Modal.Title></Modal.Header>
+        <Modal.Body>
+          <Form.Select value={newStatus} onChange={e => setNewStatus(e.target.value)}>
+            {ORDER_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+          </Form.Select>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowStatusModal(false)}>Cancel</Button>
+          <Button variant="primary" onClick={handleStatusUpdate}>Update</Button>
+        </Modal.Footer>
+      </Modal>
+    </Container>
   );
 }
 

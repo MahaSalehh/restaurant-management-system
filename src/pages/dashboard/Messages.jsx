@@ -1,72 +1,83 @@
-import { api } from "../../service/api";
+import { useCallback } from "react";
+import {
+  Container, Table, Badge, Spinner, Modal, Button,
+} from "react-bootstrap";
+import { FaEye } from "react-icons/fa";
+import { useState } from "react";
+import { adminAPI } from "../../service/api";
+import { useAsync } from "../../hooks/useAsync";
+import { useToastError } from "../../hooks/useToastsError";
 
-import PageLayout from "./components/PageLayout";
-import { useCrudPage } from "./hooks/useCrudPage";
+// If your API has an admin contacts endpoint, swap here:
+// e.g. const fetchMessages = useCallback(() => adminAPI.getContacts(), []);
+// For now we assume it lives under adminAPI or a similar endpoint.
 
 function Messages() {
+  const [selectedMsg, setSelectedMsg] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
-  // ================= CRUD HOOK =================
-  const {
-    data: messages = [],
-    loading,
-    remove,
-  } = useCrudPage({
-    getAll: () => api.get("/admin/contacts"),
-    create: async () => {},
-    update: async () => {},
-    delete: (id) => api.delete(`/admin/contacts/${id}`),
-  });
+  // Adjust the API call to match your actual contacts endpoint
+  const fetchMessages = useCallback(() => adminAPI.getContacts?.() ?? Promise.resolve({ data: [] }), []);
+  const { data, loading, error } = useAsync(fetchMessages);
+  useToastError(error);
 
-  // ================= UI =================
+  const messages = data?.data ?? data ?? [];
+
   return (
-    <PageLayout title="Contact Messages">
+    <Container fluid className="py-3">
+      <h2 className="fw-bold mb-1" style={{ color: "var(--primary-color)" }}>Messages</h2>
+      <p className="text-muted mb-4">Customer contact form submissions</p>
 
-      <div className="card p-3">
-
-        <table className="table">
-
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Message</th>
-              <th>Actions</th>
-            </tr>
+      {loading ? (
+        <div className="text-center py-5"><Spinner animation="border" /></div>
+      ) : messages.length === 0 ? (
+        <p className="text-muted">No messages yet.</p>
+      ) : (
+        <Table responsive hover bordered className="align-middle">
+          <thead className="table-dark">
+            <tr><th>#</th><th>Name</th><th>Email</th><th>Subject</th><th>Date</th><th>Actions</th></tr>
           </thead>
-
           <tbody>
-
-            {(messages || []).map((msg) => (
+            {messages.map((msg, i) => (
               <tr key={msg.id}>
-
+                <td>{i + 1}</td>
                 <td>{msg.name}</td>
                 <td>{msg.email}</td>
-
-                <td style={{ maxWidth: "300px" }}>
-                  {msg.message?.length > 80
-                    ? msg.message.slice(0, 80) + "..."
-                    : msg.message}
-                </td>
-
+                <td>{msg.subject || "—"}</td>
+                <td>{msg.created_at ? new Date(msg.created_at).toLocaleDateString() : "—"}</td>
                 <td>
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => remove(msg.id)}
-                  >
-                    Delete
-                  </button>
+                  <Button size="sm" variant="primary"
+                    onClick={() => { setSelectedMsg(msg); setShowModal(true); }}>
+                    <FaEye />
+                  </Button>
                 </td>
-
               </tr>
             ))}
-
           </tbody>
+        </Table>
+      )}
 
-        </table>
-
-      </div>
-
-    </PageLayout>
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Message from {selectedMsg?.name}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedMsg && (
+            <>
+              <p><strong>Name:</strong> {selectedMsg.name}</p>
+              <p><strong>Email:</strong> {selectedMsg.email}</p>
+              {selectedMsg.phone && <p><strong>Phone:</strong> {selectedMsg.phone}</p>}
+              {selectedMsg.subject && <p><strong>Subject:</strong> {selectedMsg.subject}</p>}
+              <hr />
+              <p>{selectedMsg.message}</p>
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+    </Container>
   );
 }
 

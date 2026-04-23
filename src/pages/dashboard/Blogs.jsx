@@ -1,111 +1,175 @@
-import { adminAPI, publicAPI, STORAGE_URL } from "../../service/api";
+import { useState, useCallback } from "react";
+import {
+  Container, Row, Col, Card, Button, InputGroup,
+  Form, Spinner, Modal,
+} from "react-bootstrap";
+import { FaSearch, FaPlus, FaEdit, FaTrash, FaEye } from "react-icons/fa";
+import { adminAPI, publicAPI } from "../../service/api";
+import { useAsync } from "../../hooks/useAsync";
+import { useToastError } from "../../hooks/useToastsError";
+import { useToast } from "../../context/ToastContext";
 
-import CrudCard from "./components/Card";
-import CrudModal from "./components/Modal";
-import { useCrudPage } from "./hooks/useCrudPage";
+const STORAGE_BASE = "https://restaurant-api-production-b087.up.railway.app/storage/";
+const imgSrc = (path) =>
+  !path ? null : path.startsWith("http") ? path : `${STORAGE_BASE}${path}`;
 
 function Blogs() {
+  const [search, setSearch] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [modalMode, setModalMode] = useState("add");
+  const [selectedArticle, setSelectedArticle] = useState(null);
+  const [formData, setFormData] = useState({ title: "", content: "", image: null });
+  const { showToast } = useToast();
 
-  // ================= CRUD HOOK =================
-  const {
-    data: articles = [],
-    loading,
-    formData,
-    setFormData,
-    showModal,
-    setShowModal,
-    openCreate,
-    openEdit,
-    create,
-    update,
-    remove,
-  } = useCrudPage({
-    getAll: publicAPI.getArticles,
-    create: adminAPI.createArticle,
-    update: adminAPI.updateArticle,
-    delete: adminAPI.deleteArticle,
-  });
+  const fetchArticles = useCallback(() => publicAPI.getArticles(), []);
+  const { data, loading, error, execute: refetch } = useAsync(fetchArticles);
+  useToastError(error);
 
-  // ================= SUBMIT =================
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const articles = data?.data ?? data ?? [];
+  const filtered = articles.filter(a =>
+    (a.title || "").toLowerCase().includes(search.toLowerCase())
+  );
 
-    const data = new FormData();
+  function openAdd() {
+    setModalMode("add");
+    setFormData({ title: "", content: "", image: null });
+    setShowModal(true);
+  }
 
-    Object.keys(formData).forEach((key) => {
-      if (formData[key] !== null) {
-        data.append(key, formData[key]);
-      }
-    });
+  function openEdit(article) {
+    setModalMode("edit");
+    setSelectedArticle(article);
+    setFormData({ title: article.title, content: article.content || "", image: null });
+    setShowModal(true);
+  }
 
-    if (formData.id) {
-      await update(formData.id, data);
-    } else {
-      await create(data);
+  async function handleDelete(id) {
+    if (!window.confirm("Delete this article?")) return;
+    try {
+      await adminAPI.deleteArticle(id);
+      showToast("success", "Article deleted");
+      refetch();
+    } catch (err) {
+      showToast("error", err.response?.data?.message || "Failed to delete");
     }
+  }
 
-    setShowModal(false);
-  };
-
-  // ================= FIELDS =================
-  const fields = [
-    { name: "title", label: "Title" },
-    { name: "content", label: "Content", type: "textarea" },
-    { name: "image_url", label: "Image", type: "file" },
-  ];
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const fd = new FormData();
+    fd.append("title", formData.title);
+    fd.append("content", formData.content);
+    if (formData.image) fd.append("image", formData.image);
+    try {
+      if (modalMode === "add") await adminAPI.createArticle(fd);
+      else await adminAPI.updateArticle(selectedArticle.id, fd);
+      showToast("success", modalMode === "add" ? "Article created" : "Article updated");
+      setShowModal(false);
+      refetch();
+    } catch (err) {
+      showToast("error", err.response?.data?.message || "Failed to save article");
+    }
+  }
 
   return (
-    <div className="container py-3">
-
-      {/* HEADER */}
-      <div className="d-flex justify-content-between mb-3">
-        <h4>Articles</h4>
-
-        <button className="btn btn-dark" onClick={openCreate}>
-          Add Article
-        </button>
+    <Container fluid className="py-3">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h2 className="fw-bold mb-1" style={{ color: "var(--primary-color)" }}>Articles</h2>
+          <p className="text-muted mb-0">Manage your blog posts and news articles</p>
+        </div>
+        <Button variant="primary" onClick={openAdd}><FaPlus className="me-2" />Add Article</Button>
       </div>
 
-      {/* GRID */}
-      <div className="row g-3">
+      <Row className="mb-4">
+        <Col md={5}>
+          <InputGroup>
+            <Form.Control placeholder="Search articles..." value={search}
+              onChange={e => setSearch(e.target.value)} />
+            <InputGroup.Text><FaSearch /></InputGroup.Text>
+          </InputGroup>
+        </Col>
+      </Row>
 
-        {(articles || []).map((item) => (
-          <div className="col-md-4" key={item.id}>
+      {loading ? (
+        <div className="text-center py-5"><Spinner animation="border" /></div>
+      ) : (
+        <Row className="g-4">
+          {filtered.map(article => (
+            <Col key={article.id} xl={4} md={6}>
+              <Card className="h-100 border-0 shadow-sm">
+                {article.image && (
+                  <Card.Img variant="top" src={imgSrc(article.image)}
+                    style={{ height: "180px", objectFit: "cover" }} />
+                )}
+                <Card.Body className="d-flex flex-column">
+                  <Card.Title className="h6">{article.title}</Card.Title>
+                  <Card.Text className="text-muted small">
+                    {article.content?.replace(/<[^>]+>/g, "").substring(0, 80)}...
+                  </Card.Text>
+                  <div className="mt-auto d-flex gap-2">
+                    <Button size="sm" variant="primary" className="flex-fill"
+                      onClick={() => { setSelectedArticle(article); setShowDetailModal(true); }}><FaEye /></Button>
+                    <Button size="sm" variant="outline-secondary" className="flex-fill"
+                      onClick={() => openEdit(article)}><FaEdit /></Button>
+                    <Button size="sm" variant="outline-danger" className="flex-fill"
+                      onClick={() => handleDelete(article.id)}><FaTrash /></Button>
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      )}
 
-            <CrudCard
-              title={item.title}
-              subtitle={
-                item.content?.length > 80
-                  ? item.content.slice(0, 80) + "..."
-                  : item.content
-              }
-              image={
-                item.image_url
-                  ? STORAGE_URL + item.image_url
-                  : null
-              }
-              onEdit={() => openEdit(item)}
-              onDelete={() => remove(item.id)}
-            />
+      {/* Add / Edit Modal */}
+      <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>{modalMode === "add" ? "Add Article" : "Edit Article"}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3">
+              <Form.Label>Title</Form.Label>
+              <Form.Control required value={formData.title}
+                onChange={e => setFormData({ ...formData, title: e.target.value })} />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Image</Form.Label>
+              <Form.Control type="file" accept="image/*"
+                onChange={e => setFormData({ ...formData, image: e.target.files[0] })} />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Content</Form.Label>
+              <Form.Control required as="textarea" rows={6} value={formData.content}
+                onChange={e => setFormData({ ...formData, content: e.target.value })} />
+            </Form.Group>
+            <div className="d-flex justify-content-end gap-2">
+              <Button variant="secondary" onClick={() => setShowModal(false)}>Cancel</Button>
+              <Button variant="primary" type="submit">{modalMode === "add" ? "Publish" : "Update"}</Button>
+            </div>
+          </Form>
+        </Modal.Body>
+      </Modal>
 
-          </div>
-        ))}
-
-      </div>
-
-      {/* MODAL */}
-      <CrudModal
-        show={showModal}
-        onHide={() => setShowModal(false)}
-        title={formData.id ? "Edit Article" : "Create Article"}
-        formData={formData}
-        setFormData={setFormData}
-        onSubmit={handleSubmit}
-        fields={fields}
-        loading={loading}
-      />
-
-    </div>
+      {/* Detail Modal */}
+      <Modal show={showDetailModal} onHide={() => setShowDetailModal(false)} size="lg">
+        <Modal.Header closeButton><Modal.Title>{selectedArticle?.title}</Modal.Title></Modal.Header>
+        <Modal.Body>
+          {selectedArticle && (
+            <>
+              {selectedArticle.image && (
+                <img src={imgSrc(selectedArticle.image)} alt={selectedArticle.title}
+                  className="img-fluid rounded mb-3 w-100"
+                  style={{ maxHeight: 300, objectFit: "cover" }} />
+              )}
+              <div dangerouslySetInnerHTML={{ __html: selectedArticle.content }} />
+            </>
+          )}
+        </Modal.Body>
+      </Modal>
+    </Container>
   );
 }
 

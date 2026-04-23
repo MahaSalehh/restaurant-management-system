@@ -13,13 +13,40 @@ import {
   Line,
 } from "recharts";
 
-/* DATA */
-const stats = [
-  { title: "Views", value: "7,265", change: "+11%" },
-  { title: "Visits", value: "3,671", change: "-0.03%" },
-  { title: "New Users", value: "156", change: "+15%" },
-  { title: "Active Users", value: "2,318", change: "+6%" },
-];
+
+import { useCallback } from "react";
+import { Container, Row, Col, Card, Spinner } from "react-bootstrap";
+import {
+  FaUsers, FaShoppingCart, FaCalendarAlt, FaUtensils,
+} from "react-icons/fa";
+import { adminAPI, publicAPI } from "../../service/api";
+import { useAsync } from "../../hooks/useAsync";
+import { useToastError } from "../../hooks/useToastsError";
+
+function StatsCard({ icon, label, value, color, loading }) {
+  return (
+    <Card className="border-0 shadow-sm h-100">
+      <Card.Body className="d-flex align-items-center gap-3">
+        <div
+          className="rounded-circle d-flex align-items-center justify-content-center"
+          style={{ width: 56, height: 56, backgroundColor: `${color}20`, color, fontSize: 22 }}
+        >
+          {icon}
+        </div>
+        <div>
+          <p className="text-muted mb-0 small">{label}</p>
+          {loading ? (
+            <Spinner animation="border" size="sm" />
+          ) : (
+            <h4 className="fw-bold mb-0">{value ?? "—"}</h4>
+          )}
+        </div>
+      </Card.Body>
+    </Card>
+  );
+}
+
+
 
 const lineData = [
   { name: "Jan", thisYear: 12000, lastYear: 5000 },
@@ -49,33 +76,53 @@ const pieData = [
 
 const COLORS = ["#6366f1", "#22c55e", "#94a3b8", "#e5e7eb"];
 
-/* STAT CARD */
-function StatCard({ item }) {
-  return (
-    <div className="stat modern">
-      <p>{item.title}</p>
-      <h2>{item.value}</h2>
-      <span className="change">{item.change}</span>
-    </div>
-  );
-}
+
 
 export default function Dashboard() {
+  const fetchUsers    = useCallback(() => adminAPI.getUsers(), []);
+  const fetchOrders   = useCallback(() => adminAPI.getAllOrders(), []);
+  const fetchBookings = useCallback(() => adminAPI.getAllBookings(), []);
+  const fetchItems    = useCallback(() => publicAPI.getMenuItems(), []);
+
+  const { data: usersData,    loading: ul, error: ue } = useAsync(fetchUsers);
+  const { data: ordersData,   loading: ol, error: oe } = useAsync(fetchOrders);
+  const { data: bookingsData, loading: bl, error: be } = useAsync(fetchBookings);
+  const { data: itemsData,    loading: il, error: ie } = useAsync(fetchItems);
+
+  useToastError(ue);
+  useToastError(oe);
+  useToastError(be);
+  useToastError(ie);
+
+  const count = (data) => {
+    const list = data?.data ?? data ?? [];
+    return Array.isArray(list) ? list.length : (data?.total ?? "—");
+  };
+
+  const stats = [
+    { icon: <FaUsers />,       label: "Total Users",    value: count(usersData),    loading: ul, color: "#0d6efd" },
+    { icon: <FaShoppingCart />, label: "Total Orders",  value: count(ordersData),   loading: ol, color: "#198754" },
+    { icon: <FaCalendarAlt />, label: "Total Bookings", value: count(bookingsData), loading: bl, color: "#ffc107" },
+    { icon: <FaUtensils />,    label: "Menu Items",     value: count(itemsData),    loading: il, color: "#dc3545" },
+  ];
+
+  
   return (
     <div className="dash-page modern">
+    <Container fluid className="py-3">
+      <h2 className="fw-bold mb-1" style={{ color: "var(--primary-color)" }}>Overview</h2>
+      <p className="text-muted mb-4">Welcome back! Here's what's happening today.</p>
 
-      {/* HEADER */}
-      <div className="dash-header modern">
-        <h2>Overview</h2>
-        <span>Today</span>
-      </div>
-
-      {/* STATS */}
-      <div className="stats-grid modern">
-        {stats.map((s, i) => (
-          <StatCard key={i} item={s} />
+      <Row className="g-4">
+        {stats.map((s) => (
+          <Col key={s.label} xl={3} md={6}>
+            <StatsCard {...s} />
+          </Col>
         ))}
-      </div>
+      </Row>
+    </Container>
+
+
 
       {/* MAIN GRID */}
       <div className="charts-layout">

@@ -1,134 +1,138 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import {
+  Container, Row, Col, Table, Badge, Button, InputGroup, Form, Spinner, Modal,
+} from "react-bootstrap";
+import { FaSearch, FaEdit, FaTrash, FaUndo } from "react-icons/fa";
 import { adminAPI } from "../../service/api";
-
-import CrudCard from "./components/Card";
-import CrudModal from "./components/Modal";
-import { useCrudPage } from "./hooks/useCrudPage";
+import { useAsync } from "../../hooks/useAsync";
+import { useToastError } from "../../hooks/useToastsError";
+import { useToast } from "../../context/ToastContext";
 
 function Users() {
-
-  const [activeTab, setActiveTab] = useState("all");
+  const [search, setSearch] = useState("");
+  const [showRoleModal, setShowRoleModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [newRole, setNewRole] = useState("");
+  const { showToast } = useToast();
 
-  const {
-    data: users = [],
-    loading,
-    formData,
-    setFormData,
-    showModal,
-    setShowModal,
-    openEdit,
-    remove,
-  } = useCrudPage({
-    getAll: adminAPI.getUsers,
-    create: async () => {},
-    update: async () => {},
-    delete: adminAPI.deleteUser,
-  });
+  const fetchUsers = useCallback(() => adminAPI.getUsers(), []);
+  const { data, loading, error, execute: refetch } = useAsync(fetchUsers);
+  useToastError(error);
 
-  const handleRestore = async (id) => {
-    await adminAPI.restoreUser(id);
-  };
+  const users = data?.data ?? data ?? [];
+  const filtered = users.filter(u =>
+    `${u.name} ${u.email}`.toLowerCase().includes(search.toLowerCase())
+  );
 
-  // FILTER
-  const filteredUsers =
-    activeTab === "all"
-      ? users
-      : users.filter((u) => u.status === activeTab);
+  async function handleDelete(id) {
+    if (!window.confirm("Delete this user?")) return;
+    try {
+      await adminAPI.deleteUser(id);
+      showToast("success", "User deleted");
+      refetch();
+    } catch (err) {
+      showToast("error", err.response?.data?.message || "Failed to delete user");
+    }
+  }
 
-  const fields = [
-    { name: "name", label: "Name" },
-    { name: "email", label: "Email" },
-    { name: "role", label: "Role" },
-  ];
+  async function handleRestore(id) {
+    try {
+      await adminAPI.restoreUser(id);
+      showToast("success", "User restored");
+      refetch();
+    } catch (err) {
+      showToast("error", err.response?.data?.message || "Failed to restore user");
+    }
+  }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await adminAPI.updateUser(formData.id, formData);
-    setShowModal(false);
-  };
+  async function handleRoleSubmit() {
+    try {
+      await adminAPI.updateUserRole(selectedUser.id, { role: newRole });
+      showToast("success", "Role updated");
+      setShowRoleModal(false);
+      refetch();
+    } catch (err) {
+      showToast("error", err.response?.data?.message || "Failed to update role");
+    }
+  }
 
   return (
-    <div className="container py-3">
+    <Container fluid className="py-3">
+      <h2 className="fw-bold mb-1" style={{ color: "var(--primary-color)" }}>Users</h2>
+      <p className="text-muted mb-4">Manage user accounts and roles</p>
 
-      <h3 className="mb-3">Users</h3>
-
-      {/* FILTER */}
-      <div className="d-flex gap-2 mb-3 flex-wrap">
-
-        <button
-          className={`btn ${activeTab === "all" ? "btn-dark" : "btn-light"}`}
-          onClick={() => setActiveTab("all")}
-        >
-          All
-        </button>
-
-        <button
-          className={`btn ${activeTab === "active" ? "btn-dark" : "btn-light"}`}
-          onClick={() => setActiveTab("active")}
-        >
-          Active
-        </button>
-
-        <button
-          className={`btn ${activeTab === "deleted" ? "btn-dark" : "btn-light"}`}
-          onClick={() => setActiveTab("deleted")}
-        >
-          Deleted
-        </button>
-
-      </div>
-
-      {/* GRID */}
-      <div className="row g-3">
-
-        {(filteredUsers || []).map((user) => (
-          <div className="col-md-4" key={user.id}>
-
-            <CrudCard
-              title={user.name}
-              subtitle={user.email}
-              extra={`Role: ${user.role}`}
-              status={user.status}
-              onView={() => setSelectedUser(user)}
-              onEdit={() => openEdit(user)}
-              onDelete={() => remove(user.id)}
-              onRestore={
-                user.status === "deleted"
-                  ? () => handleRestore(user.id)
-                  : null
-              }
+      <Row className="mb-3">
+        <Col md={4}>
+          <InputGroup>
+            <Form.Control
+              placeholder="Search users..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
             />
+            <InputGroup.Text><FaSearch /></InputGroup.Text>
+          </InputGroup>
+        </Col>
+      </Row>
 
-          </div>
-        ))}
-
-      </div>
-
-      {/* MODAL (view/edit) */}
-      <CrudModal
-        show={showModal}
-        onHide={() => setShowModal(false)}
-        title="Edit User"
-        formData={formData}
-        setFormData={setFormData}
-        onSubmit={handleSubmit}
-        fields={fields}
-      />
-
-      {/* VIEW MODAL */}
-      {selectedUser && (
-        <CrudModal
-          show={!!selectedUser}
-          onHide={() => setSelectedUser(null)}
-          title="User Details"
-          readOnly
-          formData={selectedUser}
-          fields={fields}
-        />
+      {loading ? (
+        <div className="text-center py-5"><Spinner animation="border" /><p>Loading users...</p></div>
+      ) : (
+        <Table responsive hover bordered className="align-middle">
+          <thead className="table-dark">
+            <tr><th>#</th><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            {filtered.map((u, i) => (
+              <tr key={u.id}>
+                <td>{i + 1}</td>
+                <td>{u.name}</td>
+                <td>{u.email}</td>
+                <td><Badge bg="info">{u.role}</Badge></td>
+                <td>
+                  <Badge bg={u.deleted_at ? "danger" : "success"}>
+                    {u.deleted_at ? "Deleted" : "Active"}
+                  </Badge>
+                </td>
+                <td>
+                  <div className="d-flex gap-2">
+                    <Button size="sm" variant="outline-primary"
+                      onClick={() => { setSelectedUser(u); setNewRole(u.role); setShowRoleModal(true); }}>
+                      <FaEdit /> Role
+                    </Button>
+                    {u.deleted_at ? (
+                      <Button size="sm" variant="outline-success" onClick={() => handleRestore(u.id)}>
+                        <FaUndo /> Restore
+                      </Button>
+                    ) : (
+                      <Button size="sm" variant="outline-danger" onClick={() => handleDelete(u.id)}>
+                        <FaTrash />
+                      </Button>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
       )}
 
-    </div>
+      <Modal show={showRoleModal} onHide={() => setShowRoleModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Update Role — {selectedUser?.name}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Select value={newRole} onChange={e => setNewRole(e.target.value)}>
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+            <option value="staff">Staff</option>
+          </Form.Select>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowRoleModal(false)}>Cancel</Button>
+          <Button variant="primary" onClick={handleRoleSubmit}>Update</Button>
+        </Modal.Footer>
+      </Modal>
+    </Container>
   );
 }
 
