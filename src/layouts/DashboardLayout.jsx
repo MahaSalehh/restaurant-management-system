@@ -41,8 +41,6 @@ function DashboardLayout() {
   const [notifOpen, setNotifOpen] = useState(false);
 
   const notifRef = useRef(null);
-
-  // 🔹 close on outside click
   useEffect(() => {
     function handleClickOutside(e) {
       if (
@@ -59,7 +57,6 @@ function DashboardLayout() {
       document.removeEventListener("mousedown", handleClickOutside);
   }, [notifOpen]);
 
-  // 🔹 refresh when panel opens
   useEffect(() => {
     if (notifOpen) fetchNotifications?.();
   }, [notifOpen]);
@@ -103,10 +100,7 @@ const sortedNotifications = [...notifications].sort(
 
   return (
     <div className="dash-layout">
-
-      {/* TOPBAR */}
       <Navbar className="dash-topbar">
-
         <Button
           className="menu-btn d-lg-none"
           onClick={() => setShowMenu(true)}
@@ -133,14 +127,12 @@ const sortedNotifications = [...notifications].sort(
 
         <div className="top-actions">
 
-          {/* NOTIFICATION BUTTON */}
           <button
             className="icon-btn icon-button"
             onClick={() => setNotifOpen((p) => !p)}
           >
             <div className="icon-badge-wrapper">
               <FaBell />
-
               {unreadCount > 0 && (
                 <span className="notif-badge">
                   {unreadCount > 99 ? "99+" : unreadCount}
@@ -148,7 +140,6 @@ const sortedNotifications = [...notifications].sort(
               )}
             </div>
           </button>
-
           <Link
             to="/dashboard/profile"
             className="icon-btn icon-button profile"
@@ -186,8 +177,6 @@ const sortedNotifications = [...notifications].sort(
           </Nav>
         </Offcanvas.Body>
       </Offcanvas>
-
-      {/* CONTENT */}
       <div className="dash-body">
         <main className="dash-content">
           <Container>
@@ -195,14 +184,12 @@ const sortedNotifications = [...notifications].sort(
           </Container>
         </main>
 
-        {/* NOTIFICATION PANEL */}
         <div className={`notif-overlay ${notifOpen ? "show" : ""}`}>
           <div
             ref={notifRef}
             className={`notif-panel ${notifOpen ? "open" : ""}`}
           >
 
-            {/* HEADER */}
             <div className="notif-header">
               <h5>Notifications</h5>
 
@@ -243,7 +230,7 @@ const sortedNotifications = [...notifications].sort(
                 deleteNotification(n.id);
               }}
             >
-              <FaX />
+              <FaXmark />
             </button>
           </div>
 
