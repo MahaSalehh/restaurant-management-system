@@ -21,33 +21,70 @@ import {
   FaBell,
   FaUser,
   FaBars,
-  FaMoon,
-  FaSun,
+  FaRegBell,
 } from "react-icons/fa";
 import { FaX } from "react-icons/fa6";
 
 function DashboardLayout() {
-
   const { isAuthenticated } = useAuth();
   const location = useLocation();
-  const notifContext = useNotifications();
+
+  const {
+    notifications,
+    unreadCount,
+    markAsRead,
+    deleteNotification,
+    fetchNotifications,
+  } = useNotifications();
 
   const [showMenu, setShowMenu] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
 
-  const unreadCount = notifContext?.unreadCount || 0;
   const notifRef = useRef(null);
 
+  // 🔹 close on outside click
   useEffect(() => {
     function handleClickOutside(e) {
-      if (notifOpen && notifRef.current && !notifRef.current.contains(e.target)) {
+      if (
+        notifOpen &&
+        notifRef.current &&
+        !notifRef.current.contains(e.target)
+      ) {
         setNotifOpen(false);
       }
     }
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
   }, [notifOpen]);
+
+  // 🔹 refresh when panel opens
+  useEffect(() => {
+    if (notifOpen) fetchNotifications?.();
+  }, [notifOpen]);
+
+  const formatTime = (dateString) => {
+  const date = new Date(dateString);
+  const now = new Date();
+
+  const diffMs = now - date;
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffMins < 1) return "Just now";
+  if (diffMins < 60)
+    return `${diffMins} min${diffMins > 1 ? "s" : ""} ago`;
+  if (diffHours < 24)
+    return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
+  if (diffDays === 1) return "Yesterday";
+
+  return date.toLocaleDateString();
+};
+const sortedNotifications = [...notifications].sort(
+  (a, b) => new Date(b.created_at) - new Date(a.created_at)
+);
 
   if (!isAuthenticated) return <Navigate to="/login" replace />;
 
@@ -66,59 +103,63 @@ function DashboardLayout() {
 
   return (
     <div className="dash-layout">
-      
-        <Navbar className="dash-topbar">
 
-          <Button
-            className="menu-btn d-lg-none"
-            onClick={() => setShowMenu(true)}
-          >
-            <FaBars />
-          </Button>
+      {/* TOPBAR */}
+      <Navbar className="dash-topbar">
 
-          <Navbar.Brand as={Link} to="/dashboard" className="dash-brand">
-            Dashboard
-          </Navbar.Brand>
+        <Button
+          className="menu-btn d-lg-none"
+          onClick={() => setShowMenu(true)}
+        >
+          <FaBars />
+        </Button>
 
-          <Nav className="tabs-nav d-none d-lg-flex">
-            {menu.map((item) => (
-              <Nav.Link
-                as={Link}
-                to={item.path}
-                key={item.path}
-                className={isActive(item.path) ? "active-tab" : ""} 
-              >
-                {item.label}
-              </Nav.Link>
-            ))}
-          </Nav>
+        <Navbar.Brand as={Link} to="/dashboard" className="dash-brand">
+          Dashboard
+        </Navbar.Brand>
 
-          <div className="top-actions">
-
-            <button
-              className="icon-btn icon-button"
-              onClick={() => setNotifOpen((prev) => !prev)}
+        <Nav className="tabs-nav d-none d-lg-flex">
+          {menu.map((item) => (
+            <Nav.Link
+              as={Link}
+              to={item.path}
+              key={item.path}
+              className={isActive(item.path) ? "active-tab" : ""}
             >
-              <div className="icon-badge-wrapper">
-                <FaBell />
+              {item.label}
+            </Nav.Link>
+          ))}
+        </Nav>
 
-                {unreadCount > 0 && (
-                  <span className="notif-badge">
-                    {unreadCount > 99 ? "99+" : unreadCount}
-                  </span>
-                )}
-              </div>
-            </button>
-            <Link to="/dashboard/profile" className="icon-btn icon-button profile">
-              <FaUser />
-            </Link>
+        <div className="top-actions">
 
+          {/* NOTIFICATION BUTTON */}
+          <button
+            className="icon-btn icon-button"
+            onClick={() => setNotifOpen((p) => !p)}
+          >
+            <div className="icon-badge-wrapper">
+              <FaBell />
 
+              {unreadCount > 0 && (
+                <span className="notif-badge">
+                  {unreadCount > 99 ? "99+" : unreadCount}
+                </span>
+              )}
+            </div>
+          </button>
 
-          </div>
+          <Link
+            to="/dashboard/profile"
+            className="icon-btn icon-button profile"
+          >
+            <FaUser />
+          </Link>
 
-        </Navbar>
-      
+        </div>
+      </Navbar>
+
+      {/* MOBILE MENU */}
       <Offcanvas
         show={showMenu}
         onHide={() => setShowMenu(false)}
@@ -134,7 +175,9 @@ function DashboardLayout() {
                 to={item.path}
                 key={item.path}
                 onClick={() => setShowMenu(false)}
-                className={`nav-links ${isActive(item.path) ? "active-tab" : ""}`}
+                className={`nav-links ${
+                  isActive(item.path) ? "active-tab" : ""
+                }`}
               >
                 {item.icon}
                 <span className="ms-2">{item.label}</span>
@@ -144,16 +187,22 @@ function DashboardLayout() {
         </Offcanvas.Body>
       </Offcanvas>
 
+      {/* CONTENT */}
       <div className="dash-body">
-
         <main className="dash-content">
           <Container>
             <Outlet />
           </Container>
         </main>
 
+        {/* NOTIFICATION PANEL */}
         <div className={`notif-overlay ${notifOpen ? "show" : ""}`}>
-          <div ref={notifRef} className={`notif-panel ${notifOpen ? "open" : ""}`}>
+          <div
+            ref={notifRef}
+            className={`notif-panel ${notifOpen ? "open" : ""}`}
+          >
+
+            {/* HEADER */}
             <div className="notif-header">
               <h5>Notifications</h5>
 
@@ -166,38 +215,62 @@ function DashboardLayout() {
             </div>
 
             <div className="notif-body">
-              {notifContext?.notifications?.length ? (
-                notifContext.notifications.map((n, i) => (
-                  <div
-                    key={i}
-                    className={`notif-item ${n.type || "notif-system"}`}
-                  >
-                    <div className="notif-icon">🔔</div>
+  {sortedNotifications.length ? (
+    sortedNotifications.map((n) => (
+      <div
+        key={n.id}
+        className={`notif-item ${
+          n.is_read ? "read" : "unread"
+        }`}
+        onClick={() => markAsRead(n.id)}
+      >
 
-                    <div className="notif-content">
-                      <div className="notif-title">
-                        {n.title || "Notification"}
-                      </div>
+        {/* ICON */}
+        <div className="notif-icon">
+          <FaRegBell />
+        </div>
 
-                      <div className="notif-text">
-                        {n.message}
-                      </div>
+        {/* CONTENT */}
+        <div className="notif-content">
 
-                      <div className="notif-time">
-                        {n.time}
-                      </div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="text-muted p-2">
-                  No notifications
-                </div>
-              )}
+          <div className="notif-top">
+            <div className="notif-title">
+              {n.title || "Notification"}
             </div>
+
+            <button
+              className="notif-delete"
+              onClick={(e) => {
+                e.stopPropagation();
+                deleteNotification(n.id);
+              }}
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="notif-text">
+            {n.message}
+          </div>
+
+          <div className="notif-time">
+            {formatTime(n.created_at || n.updated_at)}
+          </div>
+
+        </div>
+
+      </div>
+    ))
+  ) : (
+    <div className="text-muted p-2">
+      No notifications
+    </div>
+  )}
+</div>
 
           </div>
         </div>
+
       </div>
     </div>
   );

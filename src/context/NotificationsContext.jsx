@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { settingsAPI } from "../service/api";
 import { useAuth } from "./AuthContext";
 
@@ -10,53 +10,82 @@ export const NotificationProvider = ({ children }) => {
   const { token } = useAuth();
   const [notifications, setNotifications] = useState([]);
 
-  const fetchNotifications = async () => {
+  // 🔹 Normalize data (important for consistency)
+  const normalize = (n) => ({
+    ...n,
+    is_read:
+      n.is_read === true ||
+      n.is_read === 1 ||
+      n.is_read === "true",
+  });
+
+  // 🔹 Fetch notifications
+  const fetchNotifications = useCallback(async () => {
     try {
       const res = await settingsAPI.getNotifications();
-      setNotifications(res.data.data || []);
+
+      const data = Array.isArray(res.data?.data)
+        ? res.data.data
+        : [];
+
+      setNotifications(data.map(normalize));
     } catch (err) {
-      console.error(err);
+      console.error("Fetch notifications error:", err);
+    }
+  }, []);
+
+  // 🔹 Mark as read (optimistic update)
+  const markAsRead = async (id) => {
+    const prev = notifications;
+
+    setNotifications((old) =>
+      old.map((n) =>
+        n.id === id ? { ...n, is_read: true } : n
+      )
+    );
+
+    try {
+      await settingsAPI.markAsRead(id);
+    } catch (err) {
+      console.error("Mark as read error:", err);
+      setNotifications(prev); // rollback
     }
   };
 
+  // 🔹 Delete notification (optimistic update)
+  const deleteNotification = async (id) => {
+    const prev = notifications;
+
+    setNotifications((old) =>
+      old.filter((n) => n.id !== id)
+    );
+
+    try {
+      await settingsAPI.deleteNotification(id);
+    } catch (err) {
+      console.error("Delete notification error:", err);
+      setNotifications(prev); // rollback
+    }
+  };
+
+  // 🔹 Unread count (auto derived)
+  const unreadCount = notifications.reduce(
+    (acc, n) => acc + (!n.is_read ? 1 : 0),
+    0
+  );
+
+  // 🔹 Initial fetch + polling
   useEffect(() => {
     if (!token) return;
 
     fetchNotifications();
 
-    const interval = setInterval(fetchNotifications, 5000);
+    const interval = setInterval(() => {
+      fetchNotifications();
+    }, 5000);
+
     return () => clearInterval(interval);
-  }, [token]);
-
-  const markAsRead = async (id) => {
-    try {
-      await settingsAPI.markAsRead(id);
-
-      setNotifications((prev) =>
-        prev.map((n) =>
-          n.id === id ? { ...n, is_read: true } : n
-        )
-      );
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const deleteNotification = async (id) => {
-    try {
-      await settingsAPI.deleteNotification(id);
-
-      setNotifications((prev) =>
-        prev.filter((n) => n.id !== id)
-      );
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const unreadCount = notifications.filter(
-    (n) => !n.is_read
-  ).length;
+  }, [token, fetchNotifications]);
 
   return (
     <NotificationContext.Provider
@@ -65,7 +94,7 @@ export const NotificationProvider = ({ children }) => {
         unreadCount,
         markAsRead,
         deleteNotification,
-        refresh: fetchNotifications,
+        fetchNotifications,
       }}
     >
       {children}
