@@ -182,7 +182,7 @@
 
 
 
-.icon-btn:hover {
+.icon-button:hover {
   background: var(--bg-2);
   color: var(--accent);
   border-color: var(--accent);
@@ -190,13 +190,13 @@
 }
 
 /* PROFILE ICON (slightly different look) */
-.icon-btn.profile {
+.icon-button.profile {
   border-radius: 50%;
   background: var(--accent-light);
   border: 1px solid var(--accent);
 }
 
-.icon-btn.profile:hover {
+.icon-button.profile:hover {
   box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
@@ -208,7 +208,7 @@
     gap: 8px;
   }
 
-  .icon-btn {
+  .icon-button {
     width: 36px;
     height: 36px;
   }
@@ -219,7 +219,7 @@
     gap: 6px;
   }
 
-  .icon-btn {
+  .icon-button {
     width: 34px;
     height: 34px;
   }

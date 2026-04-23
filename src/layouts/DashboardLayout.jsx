@@ -96,7 +96,7 @@ function DashboardLayout() {
           <div className="top-actions">
 
             <button
-              className="icon-btn"
+              className="icon-button"
               onClick={() => setNotifOpen((prev) => !prev)}
             >
               <div className="icon-badge-wrapper">
@@ -109,7 +109,7 @@ function DashboardLayout() {
                 )}
               </div>
             </button>
-            <Link to="/dashboard/profile" className="icon-btn profile">
+            <Link to="/dashboard/profile" className="icon-button profile">
               <FaUser />
             </Link>
 
