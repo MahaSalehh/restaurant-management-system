@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Container,
   Card,
@@ -18,37 +18,64 @@ import { useToast } from "../../context/ToastContext";
 import { useAsync } from "../../hooks/useAsync";
 
 function AdminProfile() {
-  const { user, setUser, logout } = useAuth();
+  const { user, updateUser, refreshUser, logout } = useAuth();
   const navigate = useNavigate();
   const { showToast } = useToast();
 
   const [show, setShow] = useState(false);
 
   const [formData, setFormData] = useState({
-    name: user?.name || "",
-    phone: user?.phone || "",
+    name: "",
+    phone: "",
   });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  useEffect(() => {
+    setFormData({
+      name: user?.name || "",
+      phone: user?.phone || "",
+    });
+  }, [user]);
 
-  const {
-  execute: updateProfile,
-  loading: updating,
-} = useAsync(settingsAPI.updateProfile, [], {
-  onSuccess: (data) => {
-    setUser(data);
-    showToast("success", "Profile updated successfully");
-    setShow(false);
-  },
-  onError: () => {
-    showToast("error", "Failed to update profile");
-  },
-});
+  const { loading: updateLoading, execute: updateProfile } =
+    useAsync(settingsAPI.updateProfile, [], false);
 
-  const handleUpdate = () => {
-    updateProfile(formData);
+  const handleUpdate = async () => {
+    if (formData.name.length < 3) {
+      showToast("error", "Name must be at least 3 characters");
+      return;
+    }
+
+    if (formData.phone.length !== 11) {
+      showToast("error", "Phone must be 11 digits");
+      return;
+    }
+
+    try {
+      const res = await updateProfile(formData);
+
+      const updatedUser =
+        res?.data?.user ||
+        res?.data?.data?.user ||
+        res?.data;
+
+      if (!updatedUser) {
+        throw new Error("Invalid response from server");
+      }
+
+      updateUser(updatedUser);
+      await refreshUser();
+
+      setShow(false); // ✅ close modal
+      showToast("success", "Profile updated successfully");
+
+    } catch (err) {
+      showToast(
+        "error",
+        err?.response?.data?.message ||
+          err.message ||
+          "Update failed"
+      );
+    }
   };
 
   return (
@@ -79,13 +106,14 @@ function AdminProfile() {
 
                   <div className="d-flex gap-2">
 
-                    {/* Edit */}
                     <Button variant="primary" onClick={() => setShow(true)}>
                       <FaEdit className="me-1" /> Edit Profile
                     </Button>
 
-                    {/* Logout */}
-                    <Button variant="danger" onClick={() => logout(navigate)}>
+                    <Button
+                      variant="danger"
+                      onClick={() => logout(navigate)}
+                    >
                       <FaSignOutAlt className="me-1" /> Logout
                     </Button>
 
@@ -99,7 +127,9 @@ function AdminProfile() {
       </Row>
 
       {/* MODAL */}
-      <Modal show={show} onHide={() => setShow(false)} centered>
+      <Modal show={show} onHide={() => setShow(false)} centered
+          dialogClassName="admin-modal"
+  backdropClassName="admin-modal-backdrop">
         <Modal.Header closeButton>
           <Modal.Title>Edit Profile</Modal.Title>
         </Modal.Header>
@@ -112,7 +142,9 @@ function AdminProfile() {
               <Form.Control
                 name="name"
                 value={formData.name}
-                onChange={handleChange}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
               />
             </Form.Group>
 
@@ -121,7 +153,9 @@ function AdminProfile() {
               <Form.Control
                 name="phone"
                 value={formData.phone}
-                onChange={handleChange}
+                onChange={(e) =>
+                  setFormData({ ...formData, phone: e.target.value })
+                }
               />
             </Form.Group>
 
@@ -130,28 +164,21 @@ function AdminProfile() {
 
         <Modal.Footer>
 
-          <Button
-            variant="secondary"
+          <button
+            className="btn-custom btn-outline-custom btn-sm"
             onClick={() => setShow(false)}
-            disabled={updating}
+            disabled={updateLoading}
           >
             Cancel
-          </Button>
+          </button>
 
-          <Button
-            variant="primary"
+          <button
+            className="btn-custom btn-primary-custom btn-sm"
             onClick={handleUpdate}
-            disabled={updating}
+            disabled={updateLoading}
           >
-            {updating ? (
-              <>
-                <Spinner size="sm" className="me-2" />
-                Saving...
-              </>
-            ) : (
-              "Save Changes"
-            )}
-          </Button>
+            {updateLoading ? "Saving..." : "Save Changes"}
+          </button>
 
         </Modal.Footer>
       </Modal>
