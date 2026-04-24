@@ -4,11 +4,14 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useToast } from "../../context/ToastContext";
 import bg from "../../assets/auth.png";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    emailTouched: false,
+    passwordTouched: false,
   });
 
   const [loading, setLoading] = useState(false);
@@ -16,6 +19,17 @@ function Login() {
   const { login } = useAuth();
   const { showToast } = useToast();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+
+
+  const handleBlur = (e) => {
+    const { name } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [`${name}Touched`]: true,
+    }));
+  };
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -87,23 +101,41 @@ function Login() {
                     placeholder=" "
                     value={formData.email}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     required
                   />
                   <label>Email</label>
+                  {formData.emailTouched &&
+                    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) && (
+                      <small className="auth-error">Invalid email format</small>
+                    )}
                 </div>
 
-                <div className="input-group-custom mb-4">
+                <div className="input-group-custom mb-4 password-groupe">
                   <Form.Control
                     className="auth-input"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     name="password"
                     placeholder=" "
                     minLength={8}
                     value={formData.password}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     required
                   />
                   <label>Password</label>
+                  <span
+                    className="password-eye"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </span>
+                  {formData.passwordTouched &&
+                    formData.password.length < 8 && (
+                      <small className="auth-error">
+                        Password must be at least 8 characters
+                      </small>
+                    )}
                 </div>
 
                 <button

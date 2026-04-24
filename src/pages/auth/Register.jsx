@@ -10,6 +10,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useToast } from "../../context/ToastContext";
 import bg from "../../assets/auth.png";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -18,6 +19,12 @@ const Register = () => {
     phone: "",
     password: "",
     confirmPassword: "",
+
+    nameTouched: false,
+    emailTouched: false,
+    phoneTouched: false,
+    passwordTouched: false,
+    confirmPasswordTouched: false,
   });
 
   const [loading, setLoading] = useState(false);
@@ -25,9 +32,20 @@ const Register = () => {
   const { register } = useAuth();
   const { showToast } = useToast();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const isMatch =
     formData.password === formData.confirmPassword;
+
+  const handleBlur = (e) => {
+    const { name } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [`${name}Touched`]: true,
+    }));
+  };
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -35,6 +53,13 @@ const Register = () => {
       [e.target.name]: e.target.value,
     }));
   };
+  const handlePhoneChange = (e) => {
+    const value = e.target.value.replace(/\D/g, "");
+    setFormData((prev) => ({
+      ...prev,
+      phone: value,
+    }));
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -115,9 +140,17 @@ const Register = () => {
                     minLength={3}
                     value={formData.name}
                     onChange={handleChange}
+                    onBlur={handleBlur}
+                    pattern="^[A-Za-z\u0600-\u06FF\s]{3,}$"
                     required
                   />
                   <label>Name</label>
+                  {formData.nameTouched &&
+                    !/^[A-Za-z\u0600-\u06FF\s]{3,}$/.test(formData.name) && (
+                      <small className="auth-error">
+                        Name must be at least 3 letters and no special characters
+                      </small>
+                    )}
                 </div>
 
                 <div className="input-group-custom mb-2">
@@ -128,9 +161,14 @@ const Register = () => {
                     placeholder=" "
                     value={formData.email}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     required
                   />
                   <label>Email</label>
+                  {formData.emailTouched &&
+                    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) && (
+                      <small className="auth-error">Invalid email format</small>
+                    )}
                 </div>
 
                 <div className="input-group-custom mb-2">
@@ -139,46 +177,78 @@ const Register = () => {
                     name="phone"
                     className="auth-input"
                     placeholder=" "
-                    pattern="[0-9]{11}"
+                    maxLength={11}
+                    pattern="^01[0-9]{9}"
                     value={formData.phone}
-                    onChange={handleChange}
+                    onChange={handlePhoneChange}
+                    onBlur={handleBlur}
                     required
                   />
                   <label>Phone</label>
+                  {formData.phoneTouched &&
+                    !/^01[0-9]{9}$/.test(formData.phone) && (
+                      <small className="auth-error">
+                        Phone must start with 01 and be 11 digits
+                      </small>
+                    )}
                 </div>
 
-                <div className="input-group-custom mb-2">
+                <div className="input-group-custom mb-2 password-group">
                   <Form.Control
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     name="password"
                     className="auth-input"
                     placeholder=" "
                     minLength={8}
                     value={formData.password}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     required
                   />
                   <label>Password</label>
+                  <span
+                    className="password-eye"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </span>
+                  {formData.passwordTouched &&
+                    formData.password.length < 8 && (
+                      <small className="auth-error">
+                        Password must be at least 8 characters
+                      </small>
+                    )}
                 </div>
 
-                <div className="input-group-custom mb-3">
+                <div className="input-group-custom mb-3 password-group">
                   <Form.Control
-                    type="password"
+                    type={showConfirmPassword ? "text" : "password"}
                     name="confirmPassword"
-                    className={`auth-input ${
-                      formData.confirmPassword
-                        ? isMatch
-                          ? "match"
-                          : "no-match"
-                        : ""
-                    }`}
+                    className={`auth-input ${formData.confirmPassword
+                      ? isMatch
+                        ? "match"
+                        : "no-match"
+                      : ""
+                      }`}
                     placeholder=" "
                     minLength={8}
                     value={formData.confirmPassword}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     required
                   />
                   <label>Confirm Password</label>
+                  <span
+                    className="password-eye"
+                    onClick={() => setShowConfirmPassword((prev) => !prev)}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </span>
+                  {formData.confirmPasswordTouched && !isMatch && (
+                    <small className="auth-error">
+                      Passwords do not match
+                    </small>
+                  )}
                 </div>
 
                 <Form.Group className="mb-3">
