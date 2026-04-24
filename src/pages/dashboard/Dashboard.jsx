@@ -12,8 +12,6 @@ import {
   LineChart,
   Line,
 } from "recharts";
-
-
 import { useCallback } from "react";
 import { Container, Row, Col, Card, Spinner } from "react-bootstrap";
 import {
@@ -46,8 +44,6 @@ function StatsCard({ icon, label, value, color, loading }) {
   );
 }
 
-
-
 const lineData = [
   { name: "Jan", thisYear: 12000, lastYear: 5000 },
   { name: "Feb", thisYear: 8000, lastYear: 14000 },
@@ -76,18 +72,16 @@ const pieData = [
 
 const COLORS = ["#6366f1", "#22c55e", "#94a3b8", "#e5e7eb"];
 
-
-
 export default function Dashboard() {
-  const fetchUsers    = useCallback(() => adminAPI.getUsers(), []);
-  const fetchOrders   = useCallback(() => adminAPI.getAllOrders(), []);
+  const fetchUsers = useCallback(() => adminAPI.getUsers(), []);
+  const fetchOrders = useCallback(() => adminAPI.getAllOrders(), []);
   const fetchBookings = useCallback(() => adminAPI.getAllBookings(), []);
-  const fetchItems    = useCallback(() => publicAPI.getMenuItems(), []);
+  const fetchItems = useCallback(() => publicAPI.getMenuItems(), []);
 
-  const { data: usersData,    loading: ul, error: ue } = useAsync(fetchUsers);
-  const { data: ordersData,   loading: ol, error: oe } = useAsync(fetchOrders);
+  const { data: usersData, loading: ul, error: ue } = useAsync(fetchUsers);
+  const { data: ordersData, loading: ol, error: oe } = useAsync(fetchOrders);
   const { data: bookingsData, loading: bl, error: be } = useAsync(fetchBookings);
-  const { data: itemsData,    loading: il, error: ie } = useAsync(fetchItems);
+  const { data: itemsData, loading: il, error: ie } = useAsync(fetchItems);
 
   useToastError(ue);
   useToastError(oe);
@@ -100,37 +94,30 @@ export default function Dashboard() {
   };
 
   const stats = [
-    { icon: <FaUsers />,       label: "Total Users",    value: count(usersData),    loading: ul, color: "#0d6efd" },
-    { icon: <FaShoppingCart />, label: "Total Orders",  value: count(ordersData),   loading: ol, color: "#198754" },
+    { icon: <FaUsers />, label: "Total Users", value: count(usersData), loading: ul, color: "#0d6efd" },
+    { icon: <FaShoppingCart />, label: "Total Orders", value: count(ordersData), loading: ol, color: "#198754" },
     { icon: <FaCalendarAlt />, label: "Total Bookings", value: count(bookingsData), loading: bl, color: "#ffc107" },
-    { icon: <FaUtensils />,    label: "Menu Items",     value: count(itemsData),    loading: il, color: "#dc3545" },
+    { icon: <FaUtensils />, label: "Menu Items", value: count(itemsData), loading: il, color: "#dc3545" },
   ];
 
-  
+
   return (
     <div className="dash-page modern">
-    <Container fluid className="py-3">
-      <h2 className="fw-bold mb-1" style={{ color: "var(--primary-color)" }}>Overview</h2>
-      <p className="text-muted mb-4">Welcome back! Here's what's happening today.</p>
+      <Container fluid className="py-3">
+        <h2 className="fw-bold mb-1" style={{ color: "var(--primary-color)" }}>Overview</h2>
+        <p className="text-muted mb-4">Welcome back! Here's what's happening today.</p>
 
-      <Row className="g-4">
-        {stats.map((s) => (
-          <Col key={s.label} xl={3} md={6}>
-            <StatsCard {...s} />
-          </Col>
-        ))}
-      </Row>
-    </Container>
-
-
-
+        <Row className="g-4">
+          {stats.map((s) => (
+            <Col key={s.label} xl={3} md={6}>
+              <StatsCard {...s} />
+            </Col>
+          ))}
+        </Row>
+      </Container>
 
       <div className="charts-layout">
-
-
         <div className="left">
-
-  
           <div className="card big">
             <div className="card-header">
               <h4>Total Users</h4>
@@ -168,7 +155,7 @@ export default function Dashboard() {
                   <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip />
-                  <Bar dataKey="value" fill="#6366f1" radius={[6,6,0,0]} />
+                  <Bar dataKey="value" fill="#6366f1" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -190,7 +177,6 @@ export default function Dashboard() {
 
         </div>
 
-        {/* RIGHT PANEL */}
         <div className="right">
 
           <div className="card-app">

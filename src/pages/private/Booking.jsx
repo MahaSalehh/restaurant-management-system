@@ -69,8 +69,6 @@ const Booking = () => {
         time: "",
         guests: 1,
       });
-
-
       navigate("/");
 
     } catch (err) {

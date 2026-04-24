@@ -29,7 +29,7 @@ function NotificationsPage() {
 
   const { showToast } = useToast();
 
- const fetchNotifications = async () => {
+  const fetchNotifications = async () => {
     try {
       setLoading(true);
 

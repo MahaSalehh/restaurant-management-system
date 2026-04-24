@@ -25,7 +25,6 @@ const ScrollTopBtn = () => {
   return (
     <button className="scroll-top-btn" onClick={scrollToTop}>
       <FaAnglesUp />
-      
     </button>
   );
 };

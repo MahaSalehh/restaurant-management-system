@@ -4,6 +4,7 @@ import { useAsync } from "../../hooks/useAsync";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../context/ToastContext";
 import Loader from "../../components/Loader";
+import { FaXmark } from "react-icons/fa6";
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -128,8 +129,7 @@ const updateQty = async (id, qty) => {
               {cartItems.map((item) => {
                 const price = item.menu_item?.price || 0;
                 const qty = item.quantity;
-                const itemTotal = price * qty;
-
+                const itemTotal = Number((price * qty)).toFixed(2);
                 return (
                   <div className="cart-card" key={item.id}>
 
@@ -146,7 +146,7 @@ const updateQty = async (id, qty) => {
                       <h5>{item.menu_item?.name}</h5>
 
                       <p className="muted">
-                        ${price} × {qty}
+                        ${price} <FaXmark /> {qty}
                       </p>
 
                       <div className="qty-box">
@@ -173,7 +173,7 @@ const updateQty = async (id, qty) => {
                         className="remove"
                         onClick={() => removeItem(item.id)}
                       >
-                        ✕
+                        <FaXmark /> 
                       </button>
                     </div>
 

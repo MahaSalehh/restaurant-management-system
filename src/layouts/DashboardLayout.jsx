@@ -62,26 +62,26 @@ function DashboardLayout() {
   }, [notifOpen]);
 
   const formatTime = (dateString) => {
-  const date = new Date(dateString);
-  const now = new Date();
+    const date = new Date(dateString);
+    const now = new Date();
 
-  const diffMs = now - date;
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-  if (diffMins < 1) return "Just now";
-  if (diffMins < 60)
-    return `${diffMins} min${diffMins > 1 ? "s" : ""} ago`;
-  if (diffHours < 24)
-    return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
-  if (diffDays === 1) return "Yesterday";
+    if (diffMins < 1) return "Just now";
+    if (diffMins < 60)
+      return `${diffMins} min${diffMins > 1 ? "s" : ""} ago`;
+    if (diffHours < 24)
+      return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
+    if (diffDays === 1) return "Yesterday";
 
-  return date.toLocaleDateString();
-};
-const sortedNotifications = [...notifications].sort(
-  (a, b) => new Date(b.created_at) - new Date(a.created_at)
-);
+    return date.toLocaleDateString();
+  };
+  const sortedNotifications = [...notifications].sort(
+    (a, b) => new Date(b.created_at) - new Date(a.created_at)
+  );
 
   if (!isAuthenticated) return <Navigate to="/login" replace />;
 
@@ -150,7 +150,6 @@ const sortedNotifications = [...notifications].sort(
         </div>
       </Navbar>
 
-      {/* MOBILE MENU */}
       <Offcanvas
         show={showMenu}
         onHide={() => setShowMenu(false)}
@@ -166,9 +165,8 @@ const sortedNotifications = [...notifications].sort(
                 to={item.path}
                 key={item.path}
                 onClick={() => setShowMenu(false)}
-                className={`nav-links ${
-                  isActive(item.path) ? "active-tab" : ""
-                }`}
+                className={`nav-links ${isActive(item.path) ? "active-tab" : ""
+                  }`}
               >
                 {item.icon}
                 <span className="ms-2">{item.label}</span>
@@ -202,56 +200,55 @@ const sortedNotifications = [...notifications].sort(
             </div>
 
             <div className="notif-body">
-  {sortedNotifications.length ? (
-    sortedNotifications.map((n) => (
-      <div
-        key={n.id}
-        className={`notif-item ${
-          n.is_read ? "read" : "unread"
-        }`}
-        onClick={() => markAsRead(n.id)}
-      >
+              {sortedNotifications.length ? (
+                sortedNotifications.map((n) => (
+                  <div
+                    key={n.id}
+                    className={`notif-item ${n.is_read ? "read" : "unread"
+                      }`}
+                    onClick={() => markAsRead(n.id)}
+                  >
 
-        <div className="notif-icon">
-          <FaRegBell />
-        </div>
+                    <div className="notif-icon">
+                      <FaRegBell />
+                    </div>
 
-        <div className="notif-content">
+                    <div className="notif-content">
 
-          <div className="notif-top">
-            <div className="notif-title">
-              {n.title || "Notification"}
+                      <div className="notif-top">
+                        <div className="notif-title">
+                          {n.title || "Notification"}
+                        </div>
+
+                        <button
+                          className="notif-delete"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            deleteNotification(n.id);
+                          }}
+                        >
+                          <FaXmark />
+                        </button>
+                      </div>
+
+                      <div className="notif-text">
+                        {n.message}
+                      </div>
+
+                      <div className="notif-time">
+                        {formatTime(n.created_at || n.updated_at)}
+                      </div>
+
+                    </div>
+
+                  </div>
+                ))
+              ) : (
+                <div className="text-muted p-2">
+                  No notifications
+                </div>
+              )}
             </div>
-
-            <button
-              className="notif-delete"
-              onClick={(e) => {
-                e.stopPropagation();
-                deleteNotification(n.id);
-              }}
-            >
-              <FaXmark />
-            </button>
-          </div>
-
-          <div className="notif-text">
-            {n.message}
-          </div>
-
-          <div className="notif-time">
-            {formatTime(n.created_at || n.updated_at)}
-          </div>
-
-        </div>
-
-      </div>
-    ))
-  ) : (
-    <div className="text-muted p-2">
-      No notifications
-    </div>
-  )}
-</div>
 
           </div>
         </div>

@@ -24,8 +24,6 @@ import Bookings from "./pages/dashboard/Bookings";
 import Users from "./pages/dashboard/Users";
 import AdminProfile from "./pages/dashboard/AdminProfile";
 import Blogs from "./pages/dashboard/Blogs";
-
-
 import Messages from "./pages/dashboard/Messages";
 import ArticleDetails from "./pages/public/ArticleDetails";
 import Booking from "./pages/private/Booking";

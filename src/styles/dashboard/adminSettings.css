@@ -1,4 +1,3 @@
-
 .notif-overlay {
   position: fixed;
   inset: 0;
@@ -15,7 +14,6 @@
   pointer-events: all;
 }
 
-/* PANEL (OFFCANVAS STYLE) */
 .notif-panel {
   position: fixed;
   top: 0;
@@ -32,12 +30,10 @@
   z-index: 999;
 }
 
-/* OPEN */
 .notif-panel.open {
   transform: translateX(0);
 }
 
-/* HEADER (like bootstrap offcanvas) */
 .notif-header {
   padding: 16px 18px;
   border-bottom: 1px solid var(--border);
@@ -48,7 +44,7 @@
   font-weight: 600;
 }
 
-/* BODY */
+
 .notif-body {
   flex: 1;
   overflow-y: auto;
@@ -84,7 +80,7 @@
   transform: translateX(-2px);
 }
 
-/* ICON */
+
 .notif-icon {
   width: 34px;
   height: 34px;
@@ -99,7 +95,7 @@
   justify-content: space-between;
   align-items: center;
 }
-/* CONTENT */
+
 .notif-content {
   flex: 1;
   display: flex;
@@ -123,12 +119,6 @@
   color: var(--text-3);
 }
 
-/* TYPES */
-.notif-success .notif-icon { background: var(--success-bg); color: var(--success); }
-.notif-danger .notif-icon { background: var(--danger-bg); color: var(--danger); }
-.notif-warning .notif-icon { background: var(--warning-bg); color: var(--warning); }
-.notif-info .notif-icon { background: var(--info-bg); color: var(--info); }
-
 .notif-delete {
   background: transparent;
   border: none;
@@ -140,70 +130,6 @@
 
 .notif-delete:hover {
   color: var(--text-1);
-}
-
-
-/* MOBILE */
-@media (max-width: 576px) {
-  .notif-panel {
-    width: 92vw;
-  }
-}
-
-@media (max-width: 992px) {
-  .notif-panel.open {
-    width: 280px;
-  }
-}
-
-/* ===============================
-   MOBILE → FLOATING CARD STYLE (NOT FULL SCREEN)
-   =============================== */
-@media (max-width: 768px) {
-
-  .notif-panel {
-    position: fixed;
-    top: 70px;
-    right: 12px;
-    height: calc(100vh - 90px);
-    width: 0;
-    border-radius: var(--r-lg);
-    box-shadow: var(--shadow-lg);
-    z-index: 999;
-    border: 1px solid var(--border);
-  }
-
-  .notif-panel.open {
-    width: 92vw;
-    max-width: 340px;
-  }
-
-  .notif-header {
-    border-top-left-radius: var(--r-lg);
-    border-top-right-radius: var(--r-lg);
-  }
-}
-
-/* ===============================
-   SMALL MOBILE (extra polish)
-   =============================== */
-@media (max-width: 480px) {
-
-  .notif-panel.open {
-    width: 95vw;
-    max-width: none;
-    right: 8px;
-    top: 65px;
-  }
-
-  .notif-body {
-    padding: 10px;
-    gap: 8px;
-  }
-
-  .notif-item {
-    padding: 10px;
-  }
 }
 
 
@@ -233,7 +159,120 @@
 }
 
 
+.admin-modal .modal-content {
+  border: none;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--surface, #fff);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  animation: modalPop 0.25s ease;
+}
+
+
+.admin-modal .modal-header {
+  background: linear-gradient(135deg, #8ba6e9, #6f8de8);
+  color: white;
+  border-bottom: none;
+  padding: 16px 18px;
+}
+
+
+.admin-modal .modal-title {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+
+.admin-modal .modal-body {
+  padding: 20px;
+}
+
+.admin-modal .form-control {
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  padding: 10px 12px;
+  transition: 0.2s;
+}
+
+.admin-modal .form-control:focus {
+  border-color: #8ba6e9;
+  box-shadow: 0 0 0 3px rgba(139, 166, 233, 0.2);
+}
+
+
+.admin-modal .modal-footer {
+  border-top: none;
+  padding: 14px 18px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.admin-modal .btn-custom {
+  border-radius: 10px;
+  padding: 6px 14px;
+  font-size: 13px;
+}
+
+.admin-modal .btn-primary-custom {
+  background: #6f8de8;
+  border: 1px solid #6f8de8;
+}
+
+.admin-modal .btn-primary-custom:hover {
+  background: #5b79d6;
+  border: 1px solid #5b79d6;
+}
+
+.admin-modal-backdrop {
+  background-color: rgba(15, 23, 42, 0.6) !important;
+  backdrop-filter: blur(4px);
+}
+
+@keyframes modalPop {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+
+@media (max-width: 992px) {
+  .notif-panel.open {
+    width: 280px;
+  }
+}
+
+
+
+
 @media (max-width: 768px) {
+  .notif-panel {
+    position: fixed;
+    top: 70px;
+    right: 12px;
+    height: calc(100vh - 90px);
+    width: 0;
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-lg);
+    z-index: 999;
+    border: 1px solid var(--border);
+  }
+
+  .notif-panel.open {
+    width: 92vw;
+    max-width: 340px;
+  }
+
+  .notif-header {
+    border-top-left-radius: var(--r-lg);
+    border-top-right-radius: var(--r-lg);
+  }
 
   .admin-profile .align-items-center {
     flex-direction: column;
@@ -269,7 +308,11 @@
   }
 }
 
+
 @media (max-width: 576px) {
+  .notif-panel {
+    width: 92vw;
+  }
 
   .admin-profile .card {
     border-radius: 10px;
@@ -284,100 +327,6 @@
     font-size: 14px;
     padding: 10px;
   }
-}
-
-
-/* =========================
-   ADMIN PROFILE MODAL
-   ========================= */
-
-.admin-modal .modal-content {
-  border: none;
-  border-radius: 16px;
-  overflow: hidden;
-  background: var(--surface, #fff);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-  animation: modalPop 0.25s ease;
-}
-
-/* HEADER */
-.admin-modal .modal-header {
-  background: linear-gradient(135deg, #8ba6e9, #6f8de8);
-  color: white;
-  border-bottom: none;
-  padding: 16px 18px;
-}
-
-/* TITLE */
-.admin-modal .modal-title {
-  font-weight: 600;
-  font-size: 16px;
-}
-
-/* BODY */
-.admin-modal .modal-body {
-  padding: 20px;
-}
-
-/* INPUTS */
-.admin-modal .form-control {
-  border-radius: 10px;
-  border: 1px solid #e5e7eb;
-  padding: 10px 12px;
-  transition: 0.2s;
-}
-
-.admin-modal .form-control:focus {
-  border-color: #8ba6e9;
-  box-shadow: 0 0 0 3px rgba(139, 166, 233, 0.2);
-}
-
-/* FOOTER */
-.admin-modal .modal-footer {
-  border-top: none;
-  padding: 14px 18px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-/* BUTTONS */
-.admin-modal .btn-custom {
-  border-radius: 10px;
-  padding: 6px 14px;
-  font-size: 13px;
-}
-
-.admin-modal .btn-primary-custom {
-  background: #6f8de8;
-  border: 1px solid #6f8de8;
-}
-
-.admin-modal .btn-primary-custom:hover {
-  background: #5b79d6;
-  border: 1px solid #5b79d6;
-}
-
-/* BACKDROP */
-.admin-modal-backdrop {
-  background-color: rgba(15, 23, 42, 0.6) !important;
-  backdrop-filter: blur(4px);
-}
-
-/* ANIMATION */
-@keyframes modalPop {
-  from {
-    transform: scale(0.95);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-/* MOBILE */
-@media (max-width: 576px) {
 
   .admin-modal .modal-content {
     border-radius: 14px;
@@ -385,5 +334,24 @@
 
   .admin-modal .modal-body {
     padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .notif-panel.open {
+    width: 95vw;
+    max-width: none;
+    right: 8px;
+    top: 65px;
+  }
+
+  .notif-body {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .notif-item {
+    padding: 10px;
   }
 }

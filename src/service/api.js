@@ -9,9 +9,6 @@ export const api = axios.create({
 
 export const STORAGE_URL = "https://restaurant-api-production-b087.up.railway.app/storage/";
 
-
-// Request Interceptor (Token + Headers handling)
-
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("ACCESS_TOKEN");
@@ -19,7 +16,6 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-
 
     if (!(config.data instanceof FormData)) {
       config.headers["Content-Type"] = "application/json";
@@ -42,16 +38,12 @@ api.interceptors.response.use(
 );
 
 
-
-
 // AUTH
 export const authAPI = {
   register: (data) => api.post("/register", data),
   login: (data) => api.post("/login", data),
   logout: () => api.post("/logout"),
 };
-
-
 
 
 // PROFILE + NOTIFICATIONS
@@ -63,7 +55,6 @@ export const settingsAPI = {
   markAsRead: (id) => api.put(`/notifications/${id}/read`),
   deleteNotification: (id) => api.delete(`/notifications/${id}`),
 };
-
 
 // PUBLIC
 export const publicAPI = {
@@ -111,8 +102,7 @@ export const contactAPI = {
 // ADMIN
 export const adminAPI = {
   getContacts: () => api.get("/admin/contacts"),
-
-  // ---------- USERS ----------
+  // USERS
   getUsers: () => api.get("/admin/users"),
   updateUserRole: (id, data) =>
     api.put(`/admin/users/${id}/role`, data),
@@ -121,7 +111,7 @@ export const adminAPI = {
   restoreUser: (id) =>
     api.post(`/admin/users/${id}/restore`),
 
-  // ---------- CATEGORIES ----------
+  // CATEGORIES
   createCategory: (data) =>
     api.post("/admin/admin/categories", data),
   updateCategory: (id, data) =>
@@ -129,19 +119,18 @@ export const adminAPI = {
   deleteCategory: (id) =>
     api.delete(`/admin/admin/categories/${id}`),
 
-  // ---------- MENU ITEMS----------
+  // MENU ITEMS
   createMenuItem: (data) =>
     api.post("/admin/menu-items", data),
 
   updateMenuItem: (id, data) =>
-    api.post(`/admin/menu-items/${id}?_method=PUT`, data), 
+    api.post(`/admin/menu-items/${id}?_method=PUT`, data),
 
   deleteMenuItem: (id) =>
     api.delete(`/admin/menu-items/${id}`),
-
-  // ---------- ARTICLES ----------
+  // ARTICLES
   createArticle: (data) =>
-    api.post("/admin/articles", data), 
+    api.post("/admin/articles", data),
 
   updateArticle: (id, data) =>
     api.post(`/admin/articles/${id}?_method=PUT`, data),
@@ -149,14 +138,14 @@ export const adminAPI = {
   deleteArticle: (id) =>
     api.delete(`/admin/articles/${id}`),
 
-  // ---------- ORDERS ----------
+  // ORDERS
   getAllOrders: () => api.get("/admin/orders"),
   updateOrderStatus: (id, data) =>
     api.put(`/admin/orders/${id}/status`, data),
   deleteOrder: (id) =>
     api.delete(`/admin/orders/${id}`),
 
-  // ---------- BOOKINGS ----------
+  // BOOKINGS
   getAllBookings: () => api.get("/admin/bookings"),
   getBooking: (id) =>
     api.get(`/admin/bookings/${id}`),

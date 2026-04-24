@@ -47,15 +47,6 @@ function Orders() {
 
   const data = tab === "current" ? currentOrders : previousOrders;
 
-  const getBadge = (status) =>
-    ({
-      pending: "warning",
-      accepted: "info",
-      in_progress: "primary",
-      delivered: "success",
-      rejected: "danger",
-    }[status] || "secondary");
-
   if (loading) return <Loader />;
 
   return (
@@ -95,7 +86,7 @@ function Orders() {
           >
             <div>
               <h6>Order #{order.id}</h6>
-              <p>{order.total_price} EGP</p>
+              <p>{order.total_price} $</p>
             </div>
 
             <span className={`status ${order.status}`}>
@@ -135,12 +126,12 @@ function Orders() {
                     <div>
                       <strong>{item.menu_item?.name}</strong>
                       <p className="meta">
-                        {price} EGP × {qty}
+                        {price} $ × {qty}
                       </p>
                     </div>
 
                     <span className="price">
-                      {price * qty} EGP
+                      {price * qty} $
                     </span>
                   </div>
                 );
@@ -150,7 +141,7 @@ function Orders() {
 
               <div className="total-row">
                 <span>Total</span>
-                <b>{selectedOrder.total_price} EGP</b>
+                <b>{selectedOrder.total_price} $</b>
               </div>
             </>
           )}

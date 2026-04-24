@@ -107,24 +107,6 @@
   box-shadow: var(--shadow-hover);
 }
 
-@media (max-width: 768px) {
-  .profile-card {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 14px;
-  }
-
-  .profile-actions {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .profile-tabs {
-    justify-content: flex-start;
-    flex-wrap: wrap;
-  }
-}
-
 .info-card h6 {
   margin-bottom: 10px;
 }
@@ -132,20 +114,6 @@
 .info-card p {
   margin: 6px 0;
   color: var(--neutral-06);
-}
-
-@media (max-width: 768px) {
-
-  .profile-card {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  .logout-btn {
-    margin-left: 0;
-  }
-  
 }
 
 .info-card h5 {
@@ -157,22 +125,6 @@
   color: var(--neutral-06);
 }
 
-@media (max-width: 576px) {
-  .edit-btn,
-  .logout-btn{
-    padding: 5px 12px;
-    font-size: 14px;
-  }
-  .info-card h6 {
-  margin-bottom: 10px;
-}
-
-.info-card p {
-  font-size: 14px;
-  margin: 4px 0;
-}
-
-}
 .section-title {
   font-weight: var(--fw-medium);
   margin-bottom: 15px;
@@ -319,9 +271,6 @@
 }
 
 
-
-
-
 .toast-container-custom {
   position: fixed;
   top: 20px;
@@ -381,6 +330,22 @@
     justify-content: center;
   }
 
+    .profile-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .profile-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .profile-tabs {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  } 
+
   .logout-btn {
     margin-left: 0;
   }
@@ -392,4 +357,19 @@
   }
 }
 
+@media (max-width: 576px) {
+  .edit-btn,
+  .logout-btn{
+    padding: 5px 12px;
+    font-size: 14px;
+  }
+  .info-card h6 {
+  margin-bottom: 10px;
+}
 
+.info-card p {
+  font-size: 14px;
+  margin: 4px 0;
+}
+
+}

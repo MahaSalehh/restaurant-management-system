@@ -49,10 +49,10 @@ function MenuItems() {
   );
 
   function getImage(item) {
-  if (!item?.image_url) return "/placeholder-food.jpg";
+    if (!item?.image_url) return "/placeholder-food.jpg";
 
-  return STORAGE_URL + item.image_url;
-}
+    return STORAGE_URL + item.image_url;
+  }
 
   function openAdd() {
     setModalMode("add");
@@ -99,16 +99,16 @@ function MenuItems() {
     const fd = new FormData();
 
     Object.entries(formData).forEach(([key, value]) => {
-  if (value !== null && value !== "") {
+      if (value !== null && value !== "") {
 
-    if (key === "image_url") {
-      fd.append("image_url", value); 
-    } else {
-      fd.append(key, value);
-    }
+        if (key === "image_url") {
+          fd.append("image_url", value);
+        } else {
+          fd.append(key, value);
+        }
 
-  }
-});
+      }
+    });
 
     try {
       if (modalMode === "add") {
@@ -134,7 +134,7 @@ function MenuItems() {
 
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
-          <h2 className="fw-bold mb-1" style={{ color: "var(--primary-color)" }}>
+          <h2 className="fw-bold mb-1">
             Menu Items
           </h2>
           <p className="text-muted mb-0">
@@ -170,86 +170,86 @@ function MenuItems() {
       ) : (
         <Row className="g-4">
 
-          {filtered.map( item => {
+          {filtered.map(item => {
             console.log("ITEM:", item);
-              return (
-            <Col key={item.id} xl={3} lg={4} md={6}>
+            return (
+              <Col key={item.id} xl={3} lg={4} md={6}>
 
-              <Card className="h-100 border-0 shadow-sm">
+                <Card className="h-100 border-0 shadow-sm">
 
-                <Card.Img
-                  variant="top"
-                  src={getImage(item)}
-                  onError={(e) => {
-                    e.target.src = "/placeholder-food.jpg";
-                  }}
-                  style={{
-                    height: "180px",
-                    objectFit: "cover",
-                  }}
-                />
+                  <Card.Img
+                    variant="top"
+                    src={getImage(item)}
+                    onError={(e) => {
+                      e.target.src = "/placeholder-food.jpg";
+                    }}
+                    style={{
+                      height: "180px",
+                      objectFit: "cover",
+                    }}
+                  />
 
-                <Card.Body className="d-flex flex-column">
+                  <Card.Body className="d-flex flex-column">
 
-                  <Badge bg="secondary" className="mb-2 align-self-start">
-                    {item.category?.name || "—"}
-                  </Badge>
+                    <Badge bg="secondary" className="mb-2 align-self-start">
+                      {item.category?.name || "—"}
+                    </Badge>
 
-                  <Card.Title className="h6">
-                    {item.name}
-                  </Card.Title>
+                    <Card.Title className="h6">
+                      {item.name}
+                    </Card.Title>
 
-                  <Card.Text className="text-muted small">
-                    {item.description?.substring(0, 60)}...
-                  </Card.Text>
+                    <Card.Text className="text-muted small">
+                      {item.description?.substring(0, 60)}...
+                    </Card.Text>
 
-                  <div className="mt-auto">
-                    <h5 className="fw-bold" style={{ color: "var(--primary-color)" }}>
-                      ${item.price}
-                    </h5>
+                    <div className="mt-auto">
+                      <h5 className="fw-bold" style={{ color: "var(--primary-color)" }}>
+                        ${item.price}
+                      </h5>
 
-                    <div className="d-flex gap-2">
+                      <div className="d-flex gap-2">
 
-                      <Button
-                        size="sm"
-                        variant="primary"
-                        className="flex-fill"
-                        onClick={() => {
-                          setSelectedItem(item);
-                          setShowDetailModal(true);
-                        }}
-                      >
-                        <FaEye />
-                      </Button>
+                        <Button
+                          size="sm"
+                          variant="primary"
+                          className="flex-fill"
+                          onClick={() => {
+                            setSelectedItem(item);
+                            setShowDetailModal(true);
+                          }}
+                        >
+                          <FaEye />
+                        </Button>
 
-                      <Button
-                        size="sm"
-                        variant="outline-secondary"
-                        className="flex-fill"
-                        onClick={() => openEdit(item)}
-                      >
-                        <FaEdit />
-                      </Button>
+                        <Button
+                          size="sm"
+                          variant="outline-secondary"
+                          className="flex-fill"
+                          onClick={() => openEdit(item)}
+                        >
+                          <FaEdit />
+                        </Button>
 
-                      <Button
-                        size="sm"
-                        variant="outline-danger"
-                        className="flex-fill"
-                        onClick={() => handleDelete(item.id)}
-                      >
-                        <FaTrash />
-                      </Button>
+                        <Button
+                          size="sm"
+                          variant="outline-danger"
+                          className="flex-fill"
+                          onClick={() => handleDelete(item.id)}
+                        >
+                          <FaTrash />
+                        </Button>
 
+                      </div>
                     </div>
-                  </div>
 
-                </Card.Body>
+                  </Card.Body>
 
-              </Card>
+                </Card>
 
-            </Col>
-              );
-})}
+              </Col>
+            );
+          })}
 
         </Row>
       )}
@@ -281,9 +281,7 @@ function MenuItems() {
                 <p className="text-muted">
                   {selectedItem.description}
                 </p>
-
                 <hr />
-
                 <p><strong>Price:</strong> ${selectedItem.price}</p>
                 <p><strong>Category ID:</strong> {selectedItem.category_id}</p>
               </Col>

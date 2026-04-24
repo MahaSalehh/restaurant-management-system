@@ -65,15 +65,15 @@ function AdminProfile() {
       updateUser(updatedUser);
       await refreshUser();
 
-      setShow(false); // ✅ close modal
+      setShow(false);
       showToast("success", "Profile updated successfully");
 
     } catch (err) {
       showToast(
         "error",
         err?.response?.data?.message ||
-          err.message ||
-          "Update failed"
+        err.message ||
+        "Update failed"
       );
     }
   };
@@ -126,10 +126,9 @@ function AdminProfile() {
         </Col>
       </Row>
 
-      {/* MODAL */}
       <Modal show={show} onHide={() => setShow(false)} centered
-          dialogClassName="admin-modal"
-  backdropClassName="admin-modal-backdrop">
+        dialogClassName="admin-modal"
+        backdropClassName="admin-modal-backdrop">
         <Modal.Header closeButton>
           <Modal.Title>Edit Profile</Modal.Title>
         </Modal.Header>

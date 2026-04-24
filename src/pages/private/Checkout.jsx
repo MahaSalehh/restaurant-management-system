@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "../../context/ToastContext";
 import { Button } from "react-bootstrap";
 import Loader from "../../components/Loader";
+import { FaXmark } from "react-icons/fa6";
 
 const Checkout = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -35,10 +36,14 @@ const Checkout = () => {
     fetchCart();
   }, []);
 
-  const totalPrice = cartItems.reduce(
-    (t, i) => t + (i.menu_item?.price || 0) * i.quantity,
+  const subtotal = cartItems.reduce(
+    (sum, item) =>
+      sum + (item.menu_item?.price || 0) * item.quantity,
     0
   );
+
+  const deliveryFee = subtotal > 0 ? 25 : 0;
+  const total = subtotal + deliveryFee;
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -165,7 +170,7 @@ const Checkout = () => {
               {cartItems.map((item) => (
                 <div className="summary-row" key={item.id}>
                   <span>
-                    {item.menu_item?.name} × {item.quantity}
+                    {item.menu_item?.name} <FaXmark /> {item.quantity}
                   </span>
                   <span>
                     ${(item.menu_item?.price || 0) * item.quantity}
@@ -174,10 +179,21 @@ const Checkout = () => {
               ))}
 
               <hr />
+              
+                <div className="row-line">
+                  <span>Subtotal</span>
+                  <span>${subtotal.toFixed(2)}</span>
+                </div>
+
+                <div className="row-line">
+                  <span>Delivery</span>
+                  <span>${deliveryFee.toFixed(2)}</span>
+                </div>
 
               <div className="summary-total">
+                
                 <span>Total</span>
-                <strong>${totalPrice.toFixed(2)}</strong>
+                <strong>${total.toFixed(2)}</strong>
               </div>
 
             </div>

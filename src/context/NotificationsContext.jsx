@@ -10,7 +10,6 @@ export const NotificationProvider = ({ children }) => {
   const { token } = useAuth();
   const [notifications, setNotifications] = useState([]);
 
-  // 🔹 Normalize data (important for consistency)
   const normalize = (n) => ({
     ...n,
     is_read:
@@ -19,7 +18,6 @@ export const NotificationProvider = ({ children }) => {
       n.is_read === "true",
   });
 
-  // 🔹 Fetch notifications
   const fetchNotifications = useCallback(async () => {
     try {
       const res = await settingsAPI.getNotifications();
@@ -34,7 +32,6 @@ export const NotificationProvider = ({ children }) => {
     }
   }, []);
 
-  // 🔹 Mark as read (optimistic update)
   const markAsRead = async (id) => {
     const prev = notifications;
 
@@ -48,11 +45,10 @@ export const NotificationProvider = ({ children }) => {
       await settingsAPI.markAsRead(id);
     } catch (err) {
       console.error("Mark as read error:", err);
-      setNotifications(prev); // rollback
+      setNotifications(prev);
     }
   };
 
-  // 🔹 Delete notification (optimistic update)
   const deleteNotification = async (id) => {
     const prev = notifications;
 
@@ -64,17 +60,15 @@ export const NotificationProvider = ({ children }) => {
       await settingsAPI.deleteNotification(id);
     } catch (err) {
       console.error("Delete notification error:", err);
-      setNotifications(prev); // rollback
+      setNotifications(prev);
     }
   };
 
-  // 🔹 Unread count (auto derived)
   const unreadCount = notifications.reduce(
     (acc, n) => acc + (!n.is_read ? 1 : 0),
     0
   );
 
-  // 🔹 Initial fetch + polling
   useEffect(() => {
     if (!token) return;
 

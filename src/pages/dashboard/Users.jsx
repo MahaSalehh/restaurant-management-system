@@ -58,7 +58,7 @@ function Users() {
 
   return (
     <Container fluid className="py-3">
-      <h2 className="fw-bold mb-1" style={{ color: "var(--primary-color)" }}>Users</h2>
+      <h2 className="fw-bold mb-1">Users</h2>
       <p className="text-muted mb-4">Manage user accounts and roles</p>
 
       <Row className="mb-3">
@@ -89,10 +89,10 @@ function Users() {
                 <td data-label="Email">{u.email}</td>
                 <td data-label="Role">
                   <Badge bg={u.role === "admin" ? "dark" : "primary"}>
-                  {u.role === "admin" ? "Admin" : "User"}
-                </Badge></td>
+                    {u.role === "admin" ? "Admin" : "User"}
+                  </Badge></td>
                 <td data-label="Status">
-                  <Badge bg={u.status  === "deleted"? "danger" : "success"}>
+                  <Badge bg={u.status === "deleted" ? "danger" : "success"}>
                     {u.status === "deleted" ? "Deleted" : "Active"}
                   </Badge>
                 </td>
@@ -104,7 +104,7 @@ function Users() {
                     </Button>
                     {u.status === "deleted" ? (
                       <Button size="sm" variant="outline-success" onClick={() => handleRestore(u.id)}>
-                        <FaUndo /> 
+                        <FaUndo />
                       </Button>
                     ) : (
                       <Button size="sm" variant="outline-danger" onClick={() => handleDelete(u.id)}>

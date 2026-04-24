@@ -44,12 +44,6 @@ function Bookings() {
 
   const data = tab === "current" ? currentBookings : previousBookings;
 
-  const getBadge = (status) =>
-    ({
-      pending: "warning",
-      accepted: "success",
-      rejected: "danger",
-    }[status] || "secondary");
 
   if (loading) return <Loader />;
 

@@ -62,7 +62,7 @@ function Categories() {
     <Container fluid className="py-3">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
-          <h2 className="fw-bold mb-1" style={{ color: "var(--primary-color)" }}>Categories</h2>
+          <h2 className="fw-bold mb-1" >Categories</h2>
           <p className="text-muted mb-0">Organize your menu into categories</p>
         </div>
         <Button variant="primary" onClick={openAdd}><FaPlus className="me-2" />Add Category</Button>

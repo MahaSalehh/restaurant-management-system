@@ -29,18 +29,18 @@ function Bookings() {
   useToastError(error);
 
   const bookings = (data?.data ?? data ?? [])
-  .slice()
-  .sort((a, b) => new Date(b.created_at || b.date) - new Date(a.created_at || a.date));
-  
+    .slice()
+    .sort((a, b) => new Date(b.created_at || b.date) - new Date(a.created_at || a.date));
+
   const filtered = bookings
-  .filter(b =>
-    String(b.id).includes(search) ||
-    (b.user?.name || b.name || "").toLowerCase().includes(search.toLowerCase())
-  )
-  .filter(b => {
-    if (statusFilter === "all") return true;
-    return b.status === statusFilter;
-  });
+    .filter(b =>
+      String(b.id).includes(search) ||
+      (b.user?.name || b.name || "").toLowerCase().includes(search.toLowerCase())
+    )
+    .filter(b => {
+      if (statusFilter === "all") return true;
+      return b.status === statusFilter;
+    });
 
   async function handleDelete(id) {
     if (!window.confirm("Delete this booking?")) return;
@@ -66,7 +66,7 @@ function Bookings() {
 
   return (
     <Container fluid className="py-3">
-      <h2 className="fw-bold mb-1" style={{ color: "var(--primary-color)" }}>Bookings</h2>
+      <h2 className="fw-bold mb-1" >Bookings</h2>
       <p className="text-muted mb-4">Manage table reservations and bookings</p>
 
       <Row className="mb-3">
@@ -79,27 +79,27 @@ function Bookings() {
         </Col>
       </Row>
 
-<div className="d-flex flex-wrap gap-2 mb-3">
-  <Button
-    size="sm"
-    variant={statusFilter === "all" ? "primary" : "outline-secondary"}
-    onClick={() => setStatusFilter("all")}
-  >
-    All
-  </Button>
+      <div className="d-flex flex-wrap gap-2 mb-3">
+        <Button
+          size="sm"
+          variant={statusFilter === "all" ? "primary" : "outline-secondary"}
+          onClick={() => setStatusFilter("all")}
+        >
+          All
+        </Button>
 
-  {BOOKING_STATUSES.map(status => (
-    <Button
-      key={status}
-      size="sm"
-      variant={statusFilter === status ? "primary" : "outline-secondary"}
-      onClick={() => setStatusFilter(status)}
-      className="text-capitalize"
-    >
-      {status}
-    </Button>
-  ))}
-</div>
+        {BOOKING_STATUSES.map(status => (
+          <Button
+            key={status}
+            size="sm"
+            variant={statusFilter === status ? "primary" : "outline-secondary"}
+            onClick={() => setStatusFilter(status)}
+            className="text-capitalize"
+          >
+            {status}
+          </Button>
+        ))}
+      </div>
 
       {loading ? (
         <div className="text-center py-5"><Spinner animation="border" /></div>
@@ -139,8 +139,7 @@ function Bookings() {
           </tbody>
         </Table>
       )}
-
-      {/* Detail Modal */}
+\
       <Modal show={showDetailModal} onHide={() => setShowDetailModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Booking #{selectedBooking?.id}</Modal.Title>
@@ -163,7 +162,6 @@ function Bookings() {
         </Modal.Body>
       </Modal>
 
-      {/* Status Modal */}
       <Modal show={showStatusModal} onHide={() => setShowStatusModal(false)}>
         <Modal.Header closeButton><Modal.Title>Update Booking Status</Modal.Title></Modal.Header>
         <Modal.Body>

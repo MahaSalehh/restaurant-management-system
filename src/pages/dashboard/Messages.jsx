@@ -18,11 +18,11 @@ function Messages() {
   useToastError(error);
 
   const messages = (data?.data ?? data ?? [])
-  .slice()
-  .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    .slice()
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   return (
     <Container fluid className="py-3">
-      <h2 className="fw-bold mb-1" style={{ color: "var(--primary-color)" }}>Messages</h2>
+      <h2 className="fw-bold mb-1">Messages</h2>
       <p className="text-muted mb-4">Customer contact form submissions</p>
 
       {loading ? (

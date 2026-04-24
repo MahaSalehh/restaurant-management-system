@@ -111,13 +111,6 @@
     padding: 40px;
 }
 
-
-@media (max-width: 768px) {
-    .notif-filter {
-        flex-wrap: wrap;
-    }
-}
-
 .notif-time {
     display: block;
     margin-top: 6px;
@@ -142,7 +135,6 @@
     padding: 0;
     display: inline-flex;
 }
-
 
 .notif-badge {
     position: absolute;
@@ -176,5 +168,8 @@
         min-width: 16px;
         height: 16px;
         font-size: 10px;
+    }
+    .notif-filter {
+        flex-wrap: wrap;
     }
 }

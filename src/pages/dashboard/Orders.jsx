@@ -30,18 +30,18 @@ function Orders() {
   useToastError(error);
 
   const orders = (data?.data ?? data ?? [])
-  .slice()
-  .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-  
+    .slice()
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
   const filtered = orders
-  .filter(o =>
-    String(o.id).includes(search) ||
-    (o.user?.name || "").toLowerCase().includes(search.toLowerCase())
-  )
-  .filter(order => {
-    if (statusFilter === "all") return true;
-    return order.status === statusFilter;
-  });
+    .filter(o =>
+      String(o.id).includes(search) ||
+      (o.user?.name || "").toLowerCase().includes(search.toLowerCase())
+    )
+    .filter(order => {
+      if (statusFilter === "all") return true;
+      return order.status === statusFilter;
+    });
 
   async function handleDelete(id) {
     if (!window.confirm("Delete this order?")) return;
@@ -67,7 +67,7 @@ function Orders() {
 
   return (
     <Container fluid className="py-3">
-      <h2 className="fw-bold mb-1" style={{ color: "var(--primary-color)" }}>Orders</h2>
+      <h2 className="fw-bold mb-1">Orders</h2>
       <p className="text-muted mb-4">Track and manage customer orders</p>
 
       <Row className="mb-3">
@@ -79,27 +79,27 @@ function Orders() {
           </InputGroup>
         </Col>
       </Row>
-<div className="d-flex flex-wrap gap-2 mb-3">
-  <Button
-    size="sm"
-    variant={statusFilter === "all" ? "primary" : "outline-secondary"}
-    onClick={() => setStatusFilter("all")}
-  >
-    All
-  </Button>
+      <div className="d-flex flex-wrap gap-2 mb-3">
+        <Button
+          size="sm"
+          variant={statusFilter === "all" ? "primary" : "outline-secondary"}
+          onClick={() => setStatusFilter("all")}
+        >
+          All
+        </Button>
 
-  {ORDER_STATUSES.map(status => (
-    <Button
-      key={status}
-      size="sm"
-      variant={statusFilter === status ? "primary" : "outline-secondary"}
-      onClick={() => setStatusFilter(status)}
-      className="text-capitalize"
-    >
-      {status.replace("_", " ")}
-    </Button>
-  ))}
-</div>
+        {ORDER_STATUSES.map(status => (
+          <Button
+            key={status}
+            size="sm"
+            variant={statusFilter === status ? "primary" : "outline-secondary"}
+            onClick={() => setStatusFilter(status)}
+            className="text-capitalize"
+          >
+            {status.replace("_", " ")}
+          </Button>
+        ))}
+      </div>
       {loading ? (
         <div className="text-center py-5"><Spinner animation="border" /></div>
       ) : (
@@ -135,7 +135,6 @@ function Orders() {
         </Table>
       )}
 
-      {/* Detail Modal */}
       <Modal show={showDetailModal} onHide={() => setShowDetailModal(false)} size="lg">
         <Modal.Header closeButton>
           <Modal.Title>Order #{selectedOrder?.id} Details</Modal.Title>
@@ -151,7 +150,7 @@ function Orders() {
               <p><strong>Total:</strong> ${selectedOrder.total_price || selectedOrder.total}</p>
               <p><strong>Date:</strong> {new Date(selectedOrder.created_at).toLocaleString()}</p>
               <p><strong>Notes:</strong> {selectedOrder.notes || selectedOrder.special_requests || "—"}</p>
-              
+
               <hr />
               <h6>Items</h6>
               <Table size="sm" bordered>
@@ -171,7 +170,6 @@ function Orders() {
         </Modal.Body>
       </Modal>
 
-      {/* Status Modal */}
       <Modal show={showStatusModal} onHide={() => setShowStatusModal(false)}>
         <Modal.Header closeButton><Modal.Title>Update Order Status</Modal.Title></Modal.Header>
         <Modal.Body>

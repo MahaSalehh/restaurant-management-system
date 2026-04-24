@@ -93,14 +93,6 @@
   flex-shrink: 0;
 }
 
-@media (max-width: 320px) {
-  .signin {
-    padding: 4px 8px;
-    font-size: 12px;
-    white-space: nowrap;
-  }
-}
-
 .icon-badge-wrapper {
   position: relative;
   display: inline-flex;
@@ -114,7 +106,7 @@
   box-shadow: none;
   padding: 0;
   display: inline-flex;
-  margin-right: 4px ;
+  margin-right: 4px;
 }
 
 .icon-btn,
@@ -127,6 +119,7 @@
   outline: none !important;
   transform: none !important;
 }
+
 button,
 button:focus,
 button:active,
@@ -136,7 +129,7 @@ button:focus-visible {
   transform: none !important;
 }
 
-.icon-btn svg{
+.icon-btn svg {
   font-size: clamp(22px, 1.8vw, 28px);
 }
 
@@ -150,33 +143,12 @@ button:focus-visible {
   background: var(--neutral-03);
 }
 
-@media (max-width: 768px) {
-  .custom-toggler {
-    width: 34px;
-    height: 34px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
 
 .offcanvas {
   background: var(--neutral-01);
   width: 240px !important;
 }
 
-@media (min-width: 768px) {
-  .offcanvas {
-    width: 320px !important;
-  }
-}
-
-@media (min-width: 992px) {
-  .offcanvas {
-    width: 340px !important;
-  }
-}
 
 .offcanvas-header {
   border-bottom: 1px solid var(--neutral-03);
@@ -305,11 +277,6 @@ button:focus-visible {
   transform: scale(1.05);
 }
 
-@media (max-width: 735px) {
-  .footer-images {
-    display: none;
-  }
-}
 
 .footer-bottom {
   margin-top: 40px;
@@ -331,11 +298,44 @@ button:focus-visible {
   z-index: 999;
 }
 
+@media (min-width: 992px) {
+  .offcanvas {
+    width: 340px !important;
+  }
+}
+
 @media (max-width: 768px) {
+  .custom-toggler {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .offcanvas {
+    width: 320px !important;
+  }
+
   .scroll-top-btn {
     bottom: 20px;
     right: 20px;
     width: 40px;
     height: 40px;
+  }
+}
+
+@media (max-width: 735px) {
+  .footer-images {
+    display: none;
+  }
+}
+
+@media (max-width: 320px) {
+  .signin {
+    padding: 4px 8px;
+    font-size: 12px;
+    white-space: nowrap;
   }
 }

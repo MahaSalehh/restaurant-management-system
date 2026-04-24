@@ -19,7 +19,7 @@ function Blogs() {
   const [formData, setFormData] = useState({
     title: "",
     content: "",
-    image_url: null, // ✅ FIXED (was image_url)
+    image_url: null,
   });
 
   const { showToast } = useToast();
@@ -86,7 +86,6 @@ function Blogs() {
     fd.append("title", formData.title);
     fd.append("content", formData.content);
 
-    // ✅ FIXED upload field
     if (formData.image_url) {
       fd.append("image_url", formData.image_url);
     }
@@ -118,7 +117,7 @@ function Blogs() {
 
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
-          <h2 className="fw-bold mb-1" style={{ color: "var(--primary-color)" }}>
+          <h2 className="fw-bold mb-1">
             Articles
           </h2>
           <p className="text-muted mb-0">
@@ -161,7 +160,7 @@ function Blogs() {
 
                 <Card.Img
                   variant="top"
-                  src={getImage(article)}   
+                  src={getImage(article)}
                   onError={(e) => {
                     e.target.src = "/placeholder-food.jpg";
                   }}
@@ -227,7 +226,6 @@ function Blogs() {
         </Row>
       )}
 
-      {/* DETAIL MODAL */}
       <Modal
         show={showDetailModal}
         onHide={() => setShowDetailModal(false)}
@@ -259,7 +257,6 @@ function Blogs() {
         </Modal.Body>
       </Modal>
 
-      {/* ADD / EDIT MODAL */}
       <Modal
         show={showModal}
         onHide={() => setShowModal(false)}

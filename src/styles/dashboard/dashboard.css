@@ -5,9 +5,6 @@
   color: var(--text-1);
 }
 
-/* =========================
-   CHARTS LAYOUT
-========================= */
 
 .charts-layout {
   display: grid;
@@ -16,23 +13,18 @@
   margin-top: 20px;
 }
 
-/* LEFT SIDE */
 .charts-layout .left {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-/* RIGHT SIDE */
 .charts-layout .right {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-/* =========================
-   CARD BASE
-========================= */
 
 .card.big,
 .card-app {
@@ -49,10 +41,6 @@
   box-shadow: var(--shadow-md);
 }
 
-/* =========================
-   CARD HEADER
-========================= */
-
 .card-header {
   display: flex;
   justify-content: space-between;
@@ -66,7 +54,6 @@
   color: var(--text-1);
 }
 
-/* LEGEND */
 .legend {
   display: flex;
   align-items: center;
@@ -90,10 +77,6 @@
   border: 2px dashed var(--accent);
   background: transparent;
 }
-
-/* =========================
-   TRAFFIC LIST
-========================= */
 
 .traffic-list,
 .activity-list {
@@ -123,25 +106,16 @@
   background: var(--accent-light);
 }
 
-/* right dots */
 .traffic-list li span {
   color: var(--text-3);
   letter-spacing: 2px;
 }
-
-/* =========================
-   STATS GRID RESPONSIVE
-========================= */
 
 @media (max-width: 992px) {
   .charts-layout {
     grid-template-columns: 1fr;
   }
 }
-
-/* =========================
-   MOBILE FIX
-========================= */
 
 @media (max-width: 576px) {
   .dash-page.modern {
@@ -159,4 +133,3 @@
     gap: 6px;
   }
 }
-

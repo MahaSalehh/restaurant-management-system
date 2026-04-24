@@ -42,17 +42,16 @@
     background-image: url("data:image/svg+xml;utf8,<svg fill='%23666' height='20' viewBox='0 0 20 20' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M5 7l5 5 5-5z'/></svg>");
 }
 
-
-
 .booking-card input,
 .booking-card select {
     width: 100%;
 
 }
+
 .booking-card .contact-field input:focus,
 .booking-card .contact-field select:focus {
-  border-color: var(--primary);
-  box-shadow: none;
+    border-color: var(--primary);
+    box-shadow: none;
 }
 
 
@@ -65,13 +64,7 @@
     padding-right: 40px;
 }
 
-@media (max-width: 768px) {
-    .booking-card select {
-        background-position: right 10px center;
-        padding-right: 28px;
-        background-size: 14px;
-    }
-}
+
 
 .booking-btn {
     width: 100%;
@@ -101,6 +94,12 @@
 }
 
 @media (max-width: 768px) {
+    .booking-card select {
+        background-position: right 10px center;
+        padding-right: 28px;
+        background-size: 14px;
+    }
+
     .field-row {
         flex-direction: column;
     }
