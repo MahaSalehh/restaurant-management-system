@@ -70,11 +70,11 @@ function AdminProfile() {
 
     } catch (err) {
       showToast(
-        "error",
-        err?.response?.data?.message ||
-        err.message ||
-        "Update failed"
-      );
+    "error",
+    err?.response?.data?.message ||
+    err?.response?.data?.errors?.phone?.[0] ||
+    "Update failed"
+  );
     }
   };
 
