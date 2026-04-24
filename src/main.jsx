@@ -8,11 +8,11 @@ import { ToastProvider } from './context/ToastContext.jsx'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
-      <NotificationProvider>
-        <ToastProvider>
+      <ToastProvider>
+        <NotificationProvider>
           <App />
-        </ToastProvider>
-      </NotificationProvider>
+        </NotificationProvider>
+      </ToastProvider>
     </AuthProvider>
   </StrictMode>,
 )

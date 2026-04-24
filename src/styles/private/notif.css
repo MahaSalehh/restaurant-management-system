@@ -97,13 +97,6 @@
     background: var(--primary);
 }
 
-.read-icon {
-    position: absolute;
-    right: 12px;
-    top: 12px;
-    color: #2ecc71;
-}
-
 
 .notif-empty {
     text-align: center;
@@ -117,7 +110,25 @@
     font-size: 12px;
     color: var(--neutral-05);
 }
+.notification-delete {
+    position: absolute;
+    top: 12px;
+    right: 12px;
 
+    background: transparent;
+    border: none;
+    cursor: pointer;
+
+    color: var(--neutral-05);
+    font-size: 14px;
+
+    transition: 0.2s;
+}
+
+.notification-delete:hover {
+    color: #ff3b3b;
+    transform: scale(1.1);
+}
 .icon-badge-wrapper {
     position: relative;
     display: inline-flex;

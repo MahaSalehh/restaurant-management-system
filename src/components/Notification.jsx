@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useMemo } from "react";
-import { settingsAPI } from "../service/api";
+import React, { useEffect, useMemo, useState } from "react";
+import { useNotifications } from "../context/NotificationsContext";
 import { useToast } from "../context/ToastContext";
-import { FaCheckCircle } from "react-icons/fa";
+import { FaCheckCircle, FaTrash } from "react-icons/fa";
+import { FaXmark } from "react-icons/fa6";
 
 const formatTime = (dateString) => {
   const date = new Date(dateString);
@@ -23,48 +24,40 @@ const formatTime = (dateString) => {
 };
 
 function NotificationsPage() {
-  const [notifications, setNotifications] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("all");
+  const {
+    notifications,
+    fetchNotifications,
+    markAsRead,
+    deleteNotification,
+  } = useNotifications();
 
   const { showToast } = useToast();
 
-  const fetchNotifications = async () => {
-    try {
-      setLoading(true);
-
-      const res = await settingsAPI.getNotifications();
-      const data = res.data?.data ?? [];
-
-      const formatted = (Array.isArray(data) ? data : []).map((n) => ({
-        ...n,
-        is_read:
-          n.is_read === true ||
-          n.is_read === 1 ||
-          n.is_read === "true",
-      }));
-
-      setNotifications(formatted);
-    } catch {
-      showToast("error", "Failed to load notifications");
-      setNotifications([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
-    fetchNotifications();
+    const load = async () => {
+      try {
+        setLoading(true);
+        await fetchNotifications();
+      } catch {
+        showToast("error", "Failed to load notifications");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    load();
   }, []);
 
   const sortedNotifications = useMemo(() => {
     return [...notifications].sort(
-      (a, b) =>
-        new Date(b.created_at) - new Date(a.created_at)
+      (a, b) => new Date(b.created_at) - new Date(a.created_at)
     );
   }, [notifications]);
 
-    const filtered = useMemo(() => {
+  const filtered = useMemo(() => {
     if (filter === "unread")
       return sortedNotifications.filter((n) => !n.is_read);
 
@@ -73,23 +66,6 @@ function NotificationsPage() {
 
     return sortedNotifications;
   }, [filter, sortedNotifications]);
-
-    const markAsRead = async (id) => {
-    const old = notifications;
-
-    setNotifications((prev) =>
-      prev.map((n) =>
-        n.id === id ? { ...n, is_read: true } : n
-      )
-    );
-
-    try {
-      await settingsAPI.markAsRead(id);
-    } catch {
-      showToast("error", "Failed to update notification");
-      setNotifications(old);
-    }
-  };
 
   return (
     <div className="notif-page">
@@ -104,21 +80,21 @@ function NotificationsPage() {
           className={filter === "all" ? "active" : ""}
           onClick={() => setFilter("all")}
         >
-          <span>All</span>
+          All
         </button>
 
         <button
           className={filter === "unread" ? "active" : ""}
           onClick={() => setFilter("unread")}
         >
-          <span>Unread</span>
+          Unread
         </button>
 
         <button
           className={filter === "read" ? "active" : ""}
           onClick={() => setFilter("read")}
         >
-          <span>Read</span>
+          Read
         </button>
       </div>
 
@@ -134,16 +110,24 @@ function NotificationsPage() {
           filtered.map((note) => (
             <div
               key={note.id}
-              className={`notif-card ${
-                note.is_read ? "read" : "unread"
-              }`}
+              className={`notif-card ${note.is_read ? "read" : "unread"}`}
               onClick={() => markAsRead(note.id)}
             >
 
               <div className="notif-card-title">
                 {!note.is_read && <span className="dot" />}
-                {note.title}
+                {"Notification"}
               </div>
+              
+                <button
+                  className="notification-delete"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deleteNotification(note.id);
+                  }}
+                >
+                  <FaXmark />
+                </button>
 
               <p className="notif-card-msg">
                 {note.message}
@@ -153,9 +137,9 @@ function NotificationsPage() {
                 {formatTime(note.created_at || note.updated_at)}
               </small>
 
-              {note.is_read && (
-                <FaCheckCircle className="read-icon" />
-              )}
+              <div className="notif-actions">
+                {note.is_read}
+              </div>
 
             </div>
           ))

@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { settingsAPI } from "../service/api";
 import { useAuth } from "./AuthContext";
+import { useToast } from "./ToastContext";
 
 const NotificationContext = createContext(null);
 
@@ -9,7 +10,7 @@ export const useNotifications = () => useContext(NotificationContext);
 export const NotificationProvider = ({ children }) => {
   const { token } = useAuth();
   const [notifications, setNotifications] = useState([]);
-
+  const { showToast } = useToast();
   const normalize = (n) => ({
     ...n,
     is_read:
@@ -50,19 +51,25 @@ export const NotificationProvider = ({ children }) => {
   };
 
   const deleteNotification = async (id) => {
-    const prev = notifications;
+  const prev = notifications;
 
-    setNotifications((old) =>
-      old.filter((n) => n.id !== id)
-    );
+  setNotifications((old) =>
+    old.filter((n) => n.id !== id)
+  );
 
-    try {
-      await settingsAPI.deleteNotification(id);
-    } catch (err) {
-      console.error("Delete notification error:", err);
-      setNotifications(prev);
-    }
-  };
+  try {
+    await settingsAPI.deleteNotification(id);
+
+    showToast("success", "Notification deleted successfully");
+
+  } catch (err) {
+    console.error("Delete notification error:", err);
+
+    showToast("error", "Failed to delete notification");
+
+    setNotifications(prev);
+  }
+};
 
   const unreadCount = notifications.reduce(
     (acc, n) => acc + (!n.is_read ? 1 : 0),
