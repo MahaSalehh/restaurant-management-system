@@ -79,7 +79,7 @@ function ArticleDetails() {
         <div className="articles-grid mt-4">
           {articles
             .filter((item) => item.id !== article.id)
-            .slice(0, 4)
+            .slice(5,9)
             .map((item) => (
               <div
                 key={item.id}
