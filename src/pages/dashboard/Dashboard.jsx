@@ -20,14 +20,17 @@ import {
 import { adminAPI, publicAPI } from "../../service/api";
 import { useAsync } from "../../hooks/useAsync";
 import { useToastError } from "../../hooks/useToastsError";
+import { useNavigate } from "react-router-dom";
 
-function StatsCard({ icon, label, value, color, loading }) {
+function StatsCard({ icon, label, value, color, loading, path }) {
+  const navigate = useNavigate();
   return (
     <Card className="border-0 shadow-sm h-100">
       <Card.Body className="d-flex align-items-center gap-3">
         <div
+          onClick={() => navigate(path)}
           className="rounded-circle d-flex align-items-center justify-content-center"
-          style={{ width: 56, height: 56, backgroundColor: `${color}20`, color, fontSize: 22 }}
+          style={{ width: 56, height: 56, backgroundColor: `${color}20`, color, fontSize: 22 , cursor: "pointer"}}
         >
           {icon}
         </div>
@@ -94,10 +97,10 @@ export default function Dashboard() {
   };
 
   const stats = [
-    { icon: <FaUsers />, label: "Total Users", value: count(usersData), loading: ul, color: "#0d6efd" },
-    { icon: <FaShoppingCart />, label: "Total Orders", value: count(ordersData), loading: ol, color: "#198754" },
-    { icon: <FaCalendarAlt />, label: "Total Bookings", value: count(bookingsData), loading: bl, color: "#ffc107" },
-    { icon: <FaUtensils />, label: "Menu Items", value: count(itemsData), loading: il, color: "#dc3545" },
+    { icon: <FaUsers />, label: "Total Users", value: count(usersData), loading: ul, color: "#0d6efd", path: "/dashboard/users" },
+    { icon: <FaShoppingCart />, label: "Total Orders", value: count(ordersData), loading: ol, color: "#198754", path: "/dashboard/orders" },
+    { icon: <FaCalendarAlt />, label: "Total Bookings", value: count(bookingsData), loading: bl, color: "#ffc107", path: "/dashboard/bookings" },
+    { icon: <FaUtensils />, label: "Menu Items", value: count(itemsData), loading: il, color: "#dc3545", path: "/dashboard/menu" },
   ];
 
 
