@@ -88,7 +88,7 @@ const updateQty = async (id, qty) => {
     0
   );
 
-  const deliveryFee = subtotal > 0 ? 25 : 0;
+  const deliveryFee = subtotal > 0 ? 0 : 0;
   const total = subtotal + deliveryFee;
 
   if (loading)
@@ -196,6 +196,11 @@ const updateQty = async (id, qty) => {
                   <span>Delivery</span>
                   <span>${deliveryFee.toFixed(2)}</span>
                 </div>
+                <div className="row-line">
+                  <span>{" "}</span>
+                  <span style={{color: "#0f9447"}}>Free delivery for now!</span>
+
+                  </div>
 
                 <div className="row-line total">
                   <span>Total</span>

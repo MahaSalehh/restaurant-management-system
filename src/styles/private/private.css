@@ -302,9 +302,6 @@
   background: rgba(231, 76, 60, 0.5);
 }
 
-.toast-card.info {
-  background: rgba(52, 152, 219, 0.5);
-}
 
 @keyframes slideIn {
   from {

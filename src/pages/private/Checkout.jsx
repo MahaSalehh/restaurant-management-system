@@ -42,7 +42,7 @@ const Checkout = () => {
     0
   );
 
-  const deliveryFee = subtotal > 0 ? 25 : 0;
+  const deliveryFee = subtotal > 0 ? 0 : 0;
   const total = subtotal + deliveryFee;
 
   const handleChange = (e) => {
@@ -190,6 +190,10 @@ const Checkout = () => {
                   <span>Delivery</span>
                   <span>${deliveryFee.toFixed(2)}</span>
                 </div>
+                <div className="row-line">
+                  <span>{" "}</span>
+                  <span style={{color: "#0f9447"}}>Free delivery for now!</span>
+                  </div>
 
               <div className="summary-total">
                 

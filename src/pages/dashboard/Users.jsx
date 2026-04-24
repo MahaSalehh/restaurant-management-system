@@ -127,7 +127,6 @@ function Users() {
           <Form.Select value={newRole} onChange={e => setNewRole(e.target.value)}>
             <option value="user">User</option>
             <option value="admin">Admin</option>
-            <option value="staff">Staff</option>
           </Form.Select>
         </Modal.Body>
         <Modal.Footer>

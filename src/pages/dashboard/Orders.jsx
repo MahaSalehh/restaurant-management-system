@@ -116,6 +116,7 @@ function Orders() {
                 <td data-label="Status">
                   <Badge bg={STATUS_COLORS[order.status] || "secondary"}>{order.status}</Badge>
                 </td>
+                <td data-label="Phone">{order.user?.phone || "—"}</td>
                 <td data-label="Date">{new Date(order.created_at).toLocaleDateString()}</td>
                 <td data-label="Actions">
                   <div className="d-flex gap-2">
