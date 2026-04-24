@@ -126,6 +126,7 @@ const Checkout = () => {
                   name="phone"
                   value={form.phone}
                   onChange={handleChange}
+                  pattern="[0-9]{11}"
                   placeholder="01XXXXXXXXX"
                 />
               </div>
@@ -173,7 +174,7 @@ const Checkout = () => {
                     {item.menu_item?.name} <FaXmark /> {item.quantity}
                   </span>
                   <span>
-                    ${(item.menu_item?.price || 0) * item.quantity}
+                    ${Number(item.menu_item.price * item.quantity).toFixed(2)}
                   </span>
                 </div>
               ))}
@@ -193,7 +194,7 @@ const Checkout = () => {
               <div className="summary-total">
                 
                 <span>Total</span>
-                <strong>${total.toFixed(2)}</strong>
+                <strong>${Number(total.toFixed(2))}</strong>
               </div>
 
             </div>
