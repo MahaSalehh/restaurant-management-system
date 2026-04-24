@@ -41,8 +41,8 @@ function Profile() {
       return;
     }
 
-    if (formData.phone.length !== 11) {
-      showToast("error", "Phone must be 11 digits");
+    if (!/^01\d{9}$/.test(formData.phone) ) {
+      showToast("error", "Phone must start with 01 and be 11 digits");
       return;
     }
 
@@ -65,9 +65,11 @@ function Profile() {
       showToast("success", "Profile updated successfully");
     } catch (err) {
       showToast(
-        "error",
-        err?.response?.data?.message || err.message || "Update failed"
-      );
+    "error",
+    err?.response?.data?.message ||
+    err?.response?.data?.errors?.phone?.[0] ||
+    "Update failed"
+  );
     }
   };
 
@@ -165,6 +167,7 @@ function Profile() {
                 <Form.Label>Name</Form.Label>
 
                 <Form.Control
+                  minLength={3}
                   value={formData.name}
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
@@ -176,6 +179,7 @@ function Profile() {
                 <Form.Label>Phone</Form.Label>
 
                 <Form.Control
+                  maxLength={11}
                   value={formData.phone}
                   onChange={(e) =>
                     setFormData({ ...formData, phone: e.target.value })
