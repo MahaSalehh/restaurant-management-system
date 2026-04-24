@@ -3,7 +3,7 @@ import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/light.css";
 import { bookingAPI } from "../../service/api";
 import { useToast } from "../../context/ToastContext";
-import { Card, Col, Container, Form, Row, Spinner} from "react-bootstrap";
+import { Card, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 const Booking = () => {
@@ -14,17 +14,33 @@ const Booking = () => {
     date: "",
     time: "",
     guests: 1,
+    nameTouched: false,
+    phoneTouched: false,
   });
 
   const [loading, setLoading] = useState(false);
   const { showToast } = useToast();
+  const handleBlur = (e) => {
+    const { name } = e.target;
 
+    setForm((prev) => ({
+      ...prev,
+      [`${name}Touched`]: true,
+    }));
+  };
   const handleChange = (e) => {
     setForm((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
   };
+  const handlePhoneChange = (e) => {
+    const value = e.target.value.replace(/\D/g, "");
+    setForm((prev) => ({
+      ...prev,
+      phone: value,
+    }));
+  }
 
   const handleDateChange = ([date]) => {
     setForm((prev) => ({ ...prev, date }));
@@ -143,9 +159,16 @@ const Booking = () => {
                           name="name"
                           value={form.name}
                           onChange={handleChange}
+                          onBlur={handleBlur}
                           placeholder="Enter your name"
+                          minLength={3}
+                          pattern="^[A-Za-z\s]{3,}$"
                           required
+                          isInvalid={form.nameTouched && !/^[A-Za-z\s]{3,}$/.test(form.name)}
                         />
+                        <Form.Control.Feedback type="invalid">
+                          Name must be at least 3 characters and contain only letters and spaces
+                        </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
 
@@ -155,10 +178,17 @@ const Booking = () => {
                         <Form.Control
                           name="phone"
                           value={form.phone}
-                          onChange={handleChange}
+                          onChange={handlePhoneChange}
+                          onBlur={handleBlur}
                           placeholder="x-xxx-xxx-xxxx"
+                          pattern="^01[0-9]{9}$"
+                          maxLength={11}
                           required
+                          isInvalid={form.phoneTouched && !/^01[0-9]{9}$/.test(form.phone)}
                         />
+                        <Form.Control.Feedback type="invalid">
+                          Phone number must start with 01 and be 11 digits
+                        </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
                   </Row>

@@ -9,6 +9,10 @@ function Contact() {
     email: "",
     subject: "",
     message: "",
+    nameTouched: false,
+    subjectTouched: false,
+    messageTouched: false,
+    emailTouched: false,
   });
 
   const [loading, setLoading] = useState(false);
@@ -18,8 +22,20 @@ function Contact() {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  const handleBlur = (e) => {
+    const { name } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [`${name}Touched`]: true,
+    }));
+  };
 
   const handleSubmit = async (e) => {
+    if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+      showToast("error", "Please fill all required fields");
+      return;
+    }
     e.preventDefault();
 
     setLoading(true);
@@ -71,9 +87,15 @@ function Contact() {
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                         placeholder="Enter your name"
                         required
+                        minLength={3}
+                        isInvalid={formData.nameTouched && !/^[A-Za-z\s]{3,}$/.test(formData.name)}
                       />
+                      <Form.Control.Feedback type="invalid">
+                        Name must be at least 3 characters and contain only letters and spaces
+                      </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
 
@@ -85,9 +107,14 @@ function Contact() {
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                         placeholder="Enter email address"
                         required
+                        isInvalid={formData.emailTouched && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)}
                       />
+                      <Form.Control.Feedback type="invalid">
+                        Please enter a valid email address
+                      </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                 </Row>
@@ -98,9 +125,14 @@ function Contact() {
                     name="subject"
                     value={formData.subject}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     placeholder="Write a subject"
                     required
+                    isInvalid={formData.subjectTouched && formData.subject.trim().length === 0}
                   />
+                  <Form.Control.Feedback type="invalid">
+                    Subject cannot be empty
+                  </Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group className="contact-field">
@@ -111,9 +143,14 @@ function Contact() {
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     placeholder="Write your message"
                     required
+                    isInvalid={formData.messageTouched && formData.message.trim().length === 0}
                   />
+                  <Form.Control.Feedback type="invalid">
+                    Message cannot be empty
+                  </Form.Control.Feedback>
                 </Form.Group>
 
                 <button

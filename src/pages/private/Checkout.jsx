@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { cartAPI, orderAPI } from "../../service/api";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../context/ToastContext";
-import { Button } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import Loader from "../../components/Loader";
 import { FaXmark } from "react-icons/fa6";
 
@@ -19,6 +19,9 @@ const Checkout = () => {
     phone: "",
     notes: "",
     payment_method: "cash",
+
+    addressTouched: false,
+    phoneTouched: false,
   });
 
   const fetchCart = async () => {
@@ -44,6 +47,15 @@ const Checkout = () => {
 
   const deliveryFee = subtotal > 0 ? 0 : 0;
   const total = subtotal + deliveryFee;
+
+  const handleBlur = (e) => {
+    const { name } = e.target;
+
+    setForm((prev) => ({
+      ...prev,
+      [`${name}Touched`]: true,
+    }));
+  };
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -92,13 +104,13 @@ const Checkout = () => {
       <div className="menu-container">
 
         <div className="checkout-header">
-          <Button
+          <button
             variant="dark"
             onClick={handleBack}
-            className="back-button"
+            className="back-button btn-custom btn-outline-custom"
           >
             ← Back
-          </Button>
+          </button>
 
           <h2 className="h2 checkout-title">Checkout</h2>
         </div>
@@ -107,58 +119,93 @@ const Checkout = () => {
 
           <div className="col-lg-7">
 
-            <form className="checkout-card" onSubmit={handleSubmit}>
+            <Form className="checkout-card" onSubmit={handleSubmit}>
 
-              <div className="field">
-                <label>Address</label>
-                <textarea
+              <Form.Group className="contact-field">
+                <Form.Label>Address</Form.Label>
+
+                <Form.Control
+                  as="textarea"
                   name="address"
                   value={form.address}
                   onChange={handleChange}
-                  rows="3"
+                  onBlur={handleBlur}
+                  rows={3}
                   placeholder="Enter your address"
+                  required
+                  isInvalid={
+                    form.addressTouched &&
+                    form.address.trim().length === 0
+                  }
                 />
-              </div>
 
-              <div className="field">
-                <label>Phone</label>
-                <input
+                <Form.Control.Feedback type="invalid">
+                  Address is required
+                </Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Group className="contact-field">
+                <Form.Label>Phone</Form.Label>
+
+                <Form.Control
                   name="phone"
                   value={form.phone}
-                  onChange={handleChange}
-                  pattern="[0-9]{11}"
+                  onChange={(e) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      phone: e.target.value.replace(/\D/g, ""),
+                    }))
+                  }
+                  onBlur={handleBlur}
                   placeholder="01XXXXXXXXX"
+                  pattern="^01[0-9]{9}$"
+                  maxLength={11}
+                  required
+                  isInvalid={
+                    form.phoneTouched &&
+                    !/^01[0-9]{9}$/.test(form.phone)
+                  }
                 />
-              </div>
 
-              <div className="field">
-                <label>Notes</label>
-                <textarea
+                <Form.Control.Feedback type="invalid">
+                  Phone must start with 01 and be 11 digits
+                </Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Group className="contact-field">
+                <Form.Label>Notes</Form.Label>
+
+                <Form.Control
+                  as="textarea"
                   name="notes"
                   value={form.notes}
                   onChange={handleChange}
-                  rows="2"
+                  rows={2}
                   placeholder="Optional notes..."
                 />
-              </div>
+              </Form.Group>
 
-              <div className="field">
-                <label>Payment Method</label>
-                <select
+              <Form.Group className="contact-field">
+                <Form.Label>Payment Method</Form.Label>
+
+                <Form.Select
                   name="payment_method"
                   value={form.payment_method}
                   onChange={handleChange}
                 >
                   <option value="cash">Cash</option>
                   <option value="card">Card</option>
-                </select>
-              </div>
+                </Form.Select>
+              </Form.Group>
 
-              <button className="contact-btn" disabled={submitting}>
+              <button
+                type="submit"
+                className="contact-btn"
+                disabled={submitting}>
                 {submitting ? "Processing..." : "Place Order"}
               </button>
 
-            </form>
+            </Form>
 
           </div>
 
@@ -180,23 +227,23 @@ const Checkout = () => {
               ))}
 
               <hr />
-              
-                <div className="row-line">
-                  <span>Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
-                </div>
 
-                <div className="row-line">
-                  <span>Delivery</span>
-                  <span>${deliveryFee.toFixed(2)}</span>
-                </div>
-                <div className="row-line">
-                  <span>{" "}</span>
-                  <span style={{color: "#0f9447"}}>Free delivery for now!</span>
-                  </div>
+              <div className="row-line">
+                <span>Subtotal</span>
+                <span>${subtotal.toFixed(2)}</span>
+              </div>
+
+              <div className="row-line">
+                <span>Delivery</span>
+                <span>${deliveryFee.toFixed(2)}</span>
+              </div>
+              <div className="row-line">
+                <span>{" "}</span>
+                <span style={{ color: "#0f9447" }}>Free delivery for now!</span>
+              </div>
 
               <div className="summary-total">
-                
+
                 <span>Total</span>
                 <strong>${Number(total.toFixed(2))}</strong>
               </div>
