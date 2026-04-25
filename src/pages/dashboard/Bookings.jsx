@@ -30,7 +30,7 @@ function Bookings() {
 
   const bookings = (data?.data ?? data ?? [])
     .slice()
-    .sort((a, b) => new Date(b.created_at || b.date) - new Date(a.created_at || a.date));
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
   const filtered = bookings
     .filter(b =>
@@ -139,7 +139,6 @@ function Bookings() {
           </tbody>
         </Table>
       )}
-\
       <Modal show={showDetailModal} onHide={() => setShowDetailModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Booking #{selectedBooking?.id}</Modal.Title>

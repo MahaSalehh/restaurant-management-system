@@ -10,7 +10,7 @@ import { useToastError } from "../../hooks/useToastsError";
 import { useToast } from "../../context/ToastContext";
 
 const STATUS_COLORS = {
-  pending: "", in_progress: "warning", accepted: "primary",
+  pending: "secondary", in_progress: "warning", accepted: "primary",
   delivered: "success", rejected: "danger",
 };
 
@@ -148,9 +148,10 @@ function Orders() {
                 <strong>Status:</strong>{" "}
                 <Badge bg={STATUS_COLORS[selectedOrder.status]}>{selectedOrder.status}</Badge>
               </p>
-              <p><strong>Total:</strong> ${selectedOrder.total_price || selectedOrder.total}</p>
+              <p><strong>Total:</strong> ${selectedOrder.total_price}</p>
+              <p><strong>Address:</strong> {selectedOrder.address}</p>
               <p><strong>Date:</strong> {new Date(selectedOrder.created_at).toLocaleString()}</p>
-              <p><strong>Notes:</strong> {selectedOrder.notes || selectedOrder.special_requests || "—"}</p>
+              <p><strong>Notes:</strong> {selectedOrder.notes || "—"}</p>
 
               <hr />
               <h6>Items</h6>
