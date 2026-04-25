@@ -1,5 +1,5 @@
-import { Container, Navbar, Nav, Offcanvas } from "react-bootstrap";
-import { Link, useLocation, Outlet } from "react-router-dom";
+import { Container, Navbar, Nav, Offcanvas, Button } from "react-bootstrap";
+import { Link, useLocation, Outlet, useNavigate } from "react-router-dom";
 import {
   FaUser,
   FaBell,
@@ -24,9 +24,9 @@ import { useEffect, useState } from "react";
 import { cartAPI } from "../service/api";
 
 function PublicLayout() {
-  const { isAuthenticated, loading, token } = useAuth();
+  const { isAuthenticated, loading, token, user } = useAuth();
   const location = useLocation();
-
+  const navigate = useNavigate();
   const notifContext = useNotifications();
   const unreadCount = notifContext?.unreadCount || 0;
 
@@ -44,9 +44,35 @@ function PublicLayout() {
   }, [location.pathname]);
 
   useEffect(() => {
-    if (!token) return;
-    let isMounted = true; const fetchCart = async () => { try { const res = await cartAPI.getCart(); const items = res.data?.data?.cart_items || []; const total = items.reduce((sum, item) => sum + (item.quantity || 0), 0); if (isMounted) { setCartCount(total); } } catch { if (isMounted) { setCartCount(0); } } }; fetchCart(); const interval = setInterval(fetchCart, 3000); return () => { isMounted = false; clearInterval(interval); };
-  }, [token]);
+    if (!token || user?.role === "admin") return;
+
+    let isMounted = true;
+
+    const fetchCart = async () => {
+      try {
+        const res = await cartAPI.getCart();
+
+        const items = res.data?.data?.cart_items || [];
+        const total = items.reduce(
+          (sum, item) => sum + (item.quantity || 0),
+          0
+        );
+
+        if (isMounted) setCartCount(total);
+      } catch {
+        if (isMounted) setCartCount(0);
+      }
+    };
+
+    fetchCart();
+
+    const interval = setInterval(fetchCart, 3000);
+
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, [token, user]);
 
   if (loading) return <Loader />;
 
@@ -90,7 +116,7 @@ function PublicLayout() {
             <Link to="/articles" className={`nav-link ${isArticlesActive ? "active" : ""}`}>Articles</Link>
             <Link to="/contact" className={`nav-link ${isActive("/contact") ? "active" : ""}`}>Contact</Link>
 
-            {isAuthenticated && (
+            {isAuthenticated && user?.role !== "admin" && (
               <Link to="/booking" className="btn-custom btn-primary-custom btn-sm">
                 Book A Table
               </Link>
@@ -104,27 +130,37 @@ function PublicLayout() {
               </Link>
             ) : (
               <>
-                <Link to="/cart" className="icon-btn cart-icon">
-                  <div className="icon-badge-wrapper">
-                    <FaShoppingCart />
-                    {cartCount > 0 && (
-                      <span className="notif-badge">
-                        {cartCount > 99 ? "99+" : cartCount}
-                      </span>
-                    )}
-                  </div>
-                </Link>
+                {user?.role === "admin" && (
+                  <Button onClick={() => navigate("/dashboard")} variant="outline-dark">
+                    Dashboard
+                  </Button>
+                )}
 
-                <Link to="/notifications" className="icon-btn notif-icon">
-                  <div className="icon-badge-wrapper">
-                    <FaBell />
-                    {unreadCount > 0 && (
-                      <span className="notif-badge">
-                        {unreadCount > 99 ? "99+" : unreadCount}
-                      </span>
-                    )}
-                  </div>
-                </Link>
+                {user?.role !== "admin" && (
+                  <Link to="/cart" className="icon-btn cart-icon">
+                    <div className="icon-badge-wrapper">
+                      <FaShoppingCart />
+                      {cartCount > 0 && (
+                        <span className="notif-badge">
+                          {cartCount > 99 ? "99+" : cartCount}
+                        </span>
+                      )}
+                    </div>
+                  </Link>
+                )}
+
+                {user?.role !== "admin" && (
+                  <Link to="/notifications" className="icon-btn notif-icon">
+                    <div className="icon-badge-wrapper">
+                      <FaBell />
+                      {unreadCount > 0 && (
+                        <span className="notif-badge">
+                          {unreadCount > 99 ? "99+" : unreadCount}
+                        </span>
+                      )}
+                    </div>
+                  </Link>
+                )}
 
                 <Link to="/profile" className="icon-btn">
                   <FaUser />

@@ -6,7 +6,7 @@ import {
   Offcanvas,
   Button,
 } from "react-bootstrap";
-import { Link, useLocation, Outlet, Navigate } from "react-router-dom";
+import { Link, useLocation, Outlet, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useNotifications } from "../context/NotificationsContext";
 import {
@@ -26,7 +26,8 @@ import {
 import { FaX, FaXmark } from "react-icons/fa6";
 
 function DashboardLayout() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+  const navigate = useNavigate();
   const location = useLocation();
 
   const {
@@ -126,7 +127,11 @@ function DashboardLayout() {
         </Nav>
 
         <div className="top-actions">
-
+          {user?.role === "admin" && (
+          <Button variant="outline-dark" onClick={() => navigate("/")} variant="outline-dark">
+            Home
+          </Button>
+        )}
           <button
             className="icon-btn icon-button"
             onClick={() => setNotifOpen((p) => !p)}

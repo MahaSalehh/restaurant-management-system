@@ -16,7 +16,7 @@ import didiFood from "../../assets/Menu/apps/didi-food.svg";
 import Loader from "../../components/Loader";
 
 function Menu() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const { showToast } = useToast();
 
   const [activeCategory, setActiveCategory] = useState(null);
@@ -53,7 +53,7 @@ function Menu() {
     : menuItems;
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && user?.role !== "admin") {
       fetchCart();
     }
   }, [isAuthenticated]);
@@ -78,6 +78,7 @@ function Menu() {
   };
 
   const addToCart = async (item) => {
+    if (user?.role === "admin") return;
     try {
       const res = await cartAPI.addItem({
         menu_item_id: item.id,
@@ -101,6 +102,7 @@ function Menu() {
   };
 
   const updateQty = async (item, newQty) => {
+    if (user?.role === "admin") return;
     const current = cartState[item.id];
 
     if (newQty === 0) {
@@ -209,7 +211,7 @@ function Menu() {
                     <h4 className="body-xl-bold neutral6">{item.name}</h4>
                     <p className="neutral5">{item.description}</p>
 
-                    {isAuthenticated && (
+                    {isAuthenticated && user?.role !== "admin" && (
                       <div className="cart-control neutral7">
                         {!cartState[item.id] ? (
                           <button

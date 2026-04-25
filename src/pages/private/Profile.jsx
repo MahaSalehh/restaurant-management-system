@@ -107,47 +107,60 @@ function Profile() {
 
         </div>
 
-        <div className="profile-tabs">
+        {user?.role !== "admin" && (
+  <div className="profile-tabs">
 
-          <button
-            className={activeTab === "profile" ? "active" : ""}
-            onClick={() => setActiveTab("profile")}
-          >
-            <span>Profile</span>
-          </button>
+    <button
+      className={activeTab === "profile" ? "active" : ""}
+      onClick={() => setActiveTab("profile")}
+    >
+      <span>Profile</span>
+    </button>
 
-          <button
-            className={activeTab === "orders" ? "active" : ""}
-            onClick={() => setActiveTab("orders")}
-          >
-            <span>Orders</span>
-          </button>
+    <button
+      className={activeTab === "orders" ? "active" : ""}
+      onClick={() => setActiveTab("orders")}
+    >
+      <span>Orders</span>
+    </button>
 
-          <button
-            className={activeTab === "bookings" ? "active" : ""}
-            onClick={() => setActiveTab("bookings")}
-          >
-            <span>Bookings</span>
-          </button>
+    <button
+      className={activeTab === "bookings" ? "active" : ""}
+      onClick={() => setActiveTab("bookings")}
+    >
+      <span>Bookings</span>
+    </button>
 
-        </div>
+  </div>
+)}
 
         <div className="profile-content">
 
-          {activeTab === "profile" && (
-            <div className="info-card">
-              <h6>Personal Information</h6>
+  {user?.role === "admin" ? (
+    <div className="info-card">
+      <h6>Admin Profile</h6>
 
-              <p><b>Name:</b> {user?.name}</p>
-              <p><b>Email:</b> {user?.email}</p>
-              <p><b>Phone:</b> {user?.phone}</p>
-            </div>
-          )}
-
-          {activeTab === "orders" && <UserOrders />}
-          {activeTab === "bookings" && <UserBookings />}
-
+      <p><b>Name:</b> {user?.name}</p>
+      <p><b>Email:</b> {user?.email}</p>
+      <p><b>Role:</b> Admin</p>
+    </div>
+  ) : (
+    <>
+      {activeTab === "profile" && (
+        <div className="info-card">
+          <h6>Personal Information</h6>
+          <p><b>Name:</b> {user?.name}</p>
+          <p><b>Email:</b> {user?.email}</p>
+          <p><b>Phone:</b> {user?.phone}</p>
         </div>
+      )}
+
+      {activeTab === "orders" && <UserOrders />}
+      {activeTab === "bookings" && <UserBookings />}
+    </>
+  )}
+
+</div>
 
         <Modal
           show={showEdit}

@@ -5,9 +5,17 @@ import { bookingAPI } from "../../service/api";
 import { useToast } from "../../context/ToastContext";
 import { Card, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { useAuth } from "../../context/AuthContext";
 const Booking = () => {
+  const {user} = useAuth();
   const navigate = useNavigate();
+  const isAdmin = user?.role === "admin";
+  const renderTooltip = (props) => (
+  <Tooltip {...props}>
+    Admin cannot book a table
+  </Tooltip>
+);
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -208,20 +216,28 @@ const Booking = () => {
                     </Form.Select>
                   </Form.Group>
 
-                  <button
-                    type="submit"
-                    className="contact-btn btn-primary-custom"
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <>
-                        <Spinner size="sm" className="me-2" />
-                        Booking...
-                      </>
-                    ) : (
-                      "Book A Table"
-                    )}
-                  </button>
+                  <OverlayTrigger
+  placement="top"
+  overlay={isAdmin ? renderTooltip : <></>}
+>
+  <span className="d-inline-block w-100">
+    <button
+      type="submit"
+      className="contact-btn btn-primary-custom"
+      disabled={loading || isAdmin}
+      style={{ cursor: isAdmin ? "not-allowed" : "pointer" }}
+    >
+      {loading ? (
+        <>
+          <Spinner size="sm" className="me-2" />
+          Booking...
+        </>
+      ) : (
+        "Book A Table"
+      )}
+    </button>
+  </span>
+</OverlayTrigger>
 
                 </Form>
 
