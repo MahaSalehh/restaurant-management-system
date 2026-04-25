@@ -28,6 +28,7 @@ import Messages from "./pages/dashboard/Messages";
 import ArticleDetails from "./pages/public/ArticleDetails";
 import Booking from "./pages/private/Booking";
 import NotificationsPage from "./components/Notification";
+import UserOnlyRoute from "./layouts/UserRoute";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/index.css";
@@ -35,38 +36,42 @@ import "./styles/index.css";
 function App() {
   return (
     <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          {/* public pages */}
-          <Route path="/" element={<PublicLayout />}>
-            <Route index element={<Home />} />
-            <Route path="menu" element={<Menu />}/>
-            <Route path="articles" element={<Articles />} />
-            <Route path="articles/:id" element={<ArticleDetails />} />
-            <Route path="about" element={<About />} />
-            <Route path="contact" element={<Contact />} />
-            {/* private pages */}
-            <Route path="booking" element={<ProtectedRoute><Booking /></ProtectedRoute>} />
-            <Route path="cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
-            <Route path="checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
-            <Route path="profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-            <Route path="notifications" element={<ProtectedRoute><NotificationsPage></NotificationsPage></ProtectedRoute>} />
-          </Route>
-            {/* Admin dashboard routes */}
-          <Route path="/dashboard" element= {<AdminRoute><DashboardLayout /></AdminRoute>}>
-            <Route index element={<Dashboard />} />
-            <Route path="orders" element={<Orders />} />
-            <Route path="bookings" element={<Bookings />} />
-            <Route path="menu" element={<MenuItems />} />
-            <Route path="categories" element={<Categories />} />
-            <Route path="blogs" element={<Blogs />} />
-            <Route path="users" element={<Users />} />
-            <Route path="messages" element={<Messages />} />
-            <Route path="profile" element={<AdminProfile />} />
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        {/* public pages */}
+        <Route path="/" element={<PublicLayout />}>
+          <Route index element={<Home />} />
+          <Route path="menu" element={<Menu />} />
+          <Route path="articles" element={<Articles />} />
+          <Route path="articles/:id" element={<ArticleDetails />} />
+          <Route path="about" element={<About />} />
+          <Route path="contact" element={<Contact />} />
+          {/* private pages */}
+          <Route element={<ProtectedRoute />}>
+            <Route element={<UserOnlyRoute />}>
+              <Route path="cart" element={<Cart />} />
+              <Route path="checkout" element={<Checkout />} />
+            </Route>
+            <Route path="booking" element={<Booking />} />
+            <Route path="profile" element={<Profile />} />
             <Route path="notifications" element={<NotificationsPage />} />
           </Route>
-        </Routes>
+        </Route>
+        {/* Admin dashboard routes */}
+        <Route path="/dashboard" element={<AdminRoute><DashboardLayout /></AdminRoute>}>
+          <Route index element={<Dashboard />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="bookings" element={<Bookings />} />
+          <Route path="menu" element={<MenuItems />} />
+          <Route path="categories" element={<Categories />} />
+          <Route path="blogs" element={<Blogs />} />
+          <Route path="users" element={<Users />} />
+          <Route path="messages" element={<Messages />} />
+          <Route path="profile" element={<AdminProfile />} />
+          <Route path="notifications" element={<NotificationsPage />} />
+        </Route>
+      </Routes>
     </BrowserRouter>
   );
 }
